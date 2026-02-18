@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YonedaAI Research Collective</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-2: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e4e4ef;
+      --text-dim: #8888a0;
+      --accent: #6c5ce7;
+      --accent-glow: rgba(108, 92, 231, 0.15);
+      --accent-2: #a29bfe;
+      --tag-bg: rgba(108, 92, 231, 0.12);
+      --success: #00b894;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .noise {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108, 92, 231, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-orb-1 { top: -200px; right: -100px; }
+    .glow-orb-2 { bottom: -200px; left: -100px; background: radial-gradient(circle, rgba(0, 184, 148, 0.06) 0%, transparent 70%); }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #a29bfe);
+      margin-bottom: 24px;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -1px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .badge strong { color: var(--text); }
+
+    /* Papers Grid */
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-2);
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    section { margin-bottom: 64px; }
+
+    .papers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .paper-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .paper-card:hover {
+      border-color: var(--accent);
+      background: var(--surface-2);
+      box-shadow: 0 0 40px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .paper-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--tag-bg);
+      color: var(--accent-2);
+      margin-bottom: 12px;
+    }
+
+    .paper-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .paper-meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .paper-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .paper-footer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .paper-footer .review-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--success);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+    }
+
+    /* Framework */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .framework-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .framework-item h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--accent-2);
+    }
+
+    .framework-item p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Code */
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: var(--text-dim);
+      overflow-x: auto;
+    }
+
+    .code-block .dir { color: var(--accent-2); }
+    .code-block .file { color: var(--text-dim); }
+    .code-block .comment { color: #555568; }
+
+    /* Footer */
+    footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    .author-block {
+      margin-bottom: 16px;
+    }
+
+    .author-block strong {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2rem; }
+      header { padding: 48px 0 40px; }
+      .papers-grid { grid-template-columns: 1fr; }
+      .framework-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
+
+  <div class="container">
+    <header>
+      <div class="logo-mark">Y</div>
+      <h1>YonedaAI Research Collective</h1>
+      <p class="subtitle">
+        Category-theoretic foundations for open problems in quantum mechanics, gravity, and observer theory.
+        Applying the Yoneda Constraint to six foundational problems in physics.
+      </p>
+      <div class="badge-row">
+        <span class="badge"><strong>6</strong> Papers</span>
+        <span class="badge"><strong>179</strong> Pages</span>
+        <span class="badge"><strong>6</strong> Haskell Codebases</span>
+        <span class="badge"><strong>6</strong> Peer Reviews</span>
+      </div>
+    </header>
+
+    <section>
+      <div class="section-title">Papers</div>
+      <div class="papers-grid">
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/black-hole-information-paradox.pdf">
+          <span class="paper-tag">hep-th</span>
+          <h3>Black Hole Information Paradox</h3>
+          <p class="paper-meta">26 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">Representable functors, epistemic horizons, and the structure of Hawking radiation. Page curve as Kan extension along radiation subsystem inclusion.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 5 modules</span>
+          </div>
+        </a>
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/hidden-variable-debates.pdf">
+          <span class="paper-tag">quant-ph</span>
+          <h3>Hidden Variable Debates</h3>
+          <p class="paper-meta">27 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">Unified treatment of Bell, Kochen-Specker, PBR, von Neumann, and Free Will theorems as presheaf obstructions. Contextuality as cohomological obstruction.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 8 modules</span>
+          </div>
+        </a>
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/measurement-problem.pdf">
+          <span class="paper-tag">quant-ph</span>
+          <h3>Measurement Problem</h3>
+          <p class="paper-meta">28 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">Measurement problem as Yoneda obstruction with cohomological invariant. Born rule derived from natural transformation of representable presheaves.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 4 modules</span>
+          </div>
+        </a>
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/wigners-friend.pdf">
+          <span class="paper-tag">quant-ph</span>
+          <h3>Wigner's Friend</h3>
+          <p class="paper-meta">32 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">Presheaf Irreconcilability Theorem proves Friend's and Wigner's presheaves are non-isomorphic. Frauchiger-Renner paradox as Kan extension transitivity failure.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 2 modules</span>
+          </div>
+        </a>
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/horizon-problems.pdf">
+          <span class="paper-tag">hep-th</span>
+          <h3>Horizon Problems</h3>
+          <p class="paper-meta">33 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">All horizon types (cosmological, event, Rindler, de Sitter, holographic) as accessible subcategory inclusions with classified Kan extension deficits.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 3 modules</span>
+          </div>
+        </a>
+
+        <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/limits-quantum-gravity-observation.pdf">
+          <span class="paper-tag">gr-qc</span>
+          <h3>Limits of Quantum Gravity Observation</h3>
+          <p class="paper-meta">33 pages &middot; GrokRxiv:2026.02</p>
+          <p class="paper-desc">Three independent Yoneda obstructions to Planck-scale observation, proven universal across LQG, strings, asymptotic safety, and causal sets.</p>
+          <div class="paper-footer">
+            <span class="review-status"><span class="dot"></span> Peer Reviewed</span>
+            <span>Haskell &middot; 4 modules</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">Core Framework</div>
+      <div class="framework-grid">
+        <div class="framework-item">
+          <h4>Measurement Categories</h4>
+          <p>Observer-system interactions encoded as morphisms in structured categories</p>
+        </div>
+        <div class="framework-item">
+          <h4>Yoneda Embedding</h4>
+          <p>Accessible knowledge characterized via representable presheaves</p>
+        </div>
+        <div class="framework-item">
+          <h4>Kan Extension Deficits</h4>
+          <p>Information loss at epistemic horizons quantified categorically</p>
+        </div>
+        <div class="framework-item">
+          <h4>Cohomological Obstructions</h4>
+          <p>No-go theorems unified as presheaf global section failures</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">Repository Structure</div>
+      <div class="code-block">
+<span class="dir">sources/</span>              <span class="comment"># Original .tex research (7 papers)</span>
+<span class="dir">papers/</span>
+  <span class="dir">latex/</span>              <span class="comment"># New papers (.tex source)</span>
+  <span class="dir">pdf/</span>                <span class="comment"># Compiled papers (.pdf)</span>
+<span class="dir">reviews/</span>              <span class="comment"># Gemini CLI peer reviews</span>
+<span class="dir">src/</span>
+  <span class="dir">black-hole-information-paradox/</span>
+  <span class="dir">hidden-variable-debates/</span>
+  <span class="dir">measurement-problem/</span>
+  <span class="dir">wigners-friend/</span>
+  <span class="dir">horizon-problems/</span>
+  <span class="dir">limits-quantum-gravity-observation/</span>
+      </div>
+    </section>
+
+    <footer>
+      <div class="author-block">
+        <strong>Matthew Long</strong><br>
+        The YonedaAI Collaboration &middot; YonedaAI Research Collective<br>
+        Chicago, IL
+      </div>
+      <a href="mailto:matthew@yonedaai.com">matthew@yonedaai.com</a> &middot;
+      <a href="https://yonedaai.com">yonedaai.com</a> &middot;
+      <a href="https://github.com/MagnetonIO/yoneda-ai">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
