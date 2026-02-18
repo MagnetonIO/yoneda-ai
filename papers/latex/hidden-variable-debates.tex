@@ -1,0 +1,993 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{doi}
+\usepackage{abstract}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\geometry{margin=1in}
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catAlg}{\mathbf{Alg}}
+\newcommand{\catBan}{\mathbf{Ban}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catvNAlg}{\mathbf{vNAlg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+\newcommand{\HV}{\mathrm{HV}}
+\newcommand{\QM}{\mathrm{QM}}
+
+%% ---- GrokRxiv DOI sidebar (official template) ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.hidden-variable-debates\quad
+       [\,quant-ph\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Title ----
+\title{\textbf{Hidden Variable Debates Reconsidered:\\A Yoneda Constraint Analysis of Structural\\Inaccessibility in Quantum Foundations}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We revisit the century-long debate over hidden variables in quantum mechanics through the lens of the Yoneda Constraint on Observer Knowledge, a category-theoretic framework in which an embedded observer $\Sys$ accesses reality $\R$ only through the representable presheaf $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$. We argue that the hidden variable question---whether quantum indeterminacy reflects genuine ontological randomness or merely epistemic ignorance of underlying deterministic variables---admits a precise reformulation in terms of presheaf-theoretic obstructions and Kan extension deficits. The Yoneda Constraint reveals that ``hidden'' variables are not hidden by contingent practical limitations but by \emph{structural inaccessibility}: features of $\R$ that are not in the image of the Yoneda embedding from the observer's position, and hence are not captured by any morphism in the representable presheaf of any embedded observer. We demonstrate that the major no-go theorems---von Neumann's theorem, the Kochen--Specker theorem, Bell's theorem, the PBR theorem, and the Free Will theorem---each arise as specific instances of presheaf obstructions within the measurement category $\catMeas_Q$. The framework provides a unified perspective in which deterministic hidden variable theories (Bohmian mechanics), stochastic hidden variable theories, and orthodox quantum mechanics correspond to different functorial completions of the observer's partial data, with the Kan extension deficit $\Delta(\Sys)$ quantifying the irreducible gap that any hidden variable theory must bridge. We develop the Yoneda perspective on contextuality as a cohomological obstruction, connect the extension deficit to Bell inequality violations, and show that the measurement boundary problem renders the hidden variable question structurally undecidable from within the emergent framework. Accompanying Haskell code provides computational verification of the categorical structures.
+
+\medskip
+\noindent\textbf{Keywords:} hidden variables, Yoneda lemma, category theory, Bell's theorem, Kochen--Specker theorem, contextuality, quantum foundations, presheaf obstructions, Kan extensions, measurement boundary problem
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The question of whether quantum mechanics is complete---whether the quantum state provides the most detailed possible description of a physical system, or whether there exist additional ``hidden'' variables whose specification would render quantum processes deterministic---is among the oldest and most consequential debates in the foundations of physics. Beginning with Einstein, Podolsky, and Rosen's celebrated 1935 argument \cite{epr1935} that quantum mechanics must be incomplete, through Bohr's response \cite{bohr1935}, von Neumann's no-go theorem \cite{vonneumann1932}, Bohm's construction of an explicit hidden variable theory \cite{bohm1952a,bohm1952b}, Bell's groundbreaking inequality \cite{bell1964}, the Kochen--Specker theorem \cite{kochen1967}, and the modern developments including the PBR theorem \cite{pbr2012} and the Conway--Kochen Free Will theorem \cite{conwaykochen2006}, the hidden variable debate has shaped our understanding of the nature of physical reality.
+
+Despite the mathematical precision of these individual results, the overall landscape of the hidden variable debate remains conceptually fragmented. The various no-go theorems employ different assumptions, address different classes of hidden variable theories, and carry different interpretive implications. Moreover, the question of what ``hidden'' means has shifted over time: from Einstein's original concern about completeness, to Bell's demonstration that locality and hidden variables are jointly incompatible, to the modern understanding that contextuality---the dependence of measurement outcomes on the broader experimental context---is the central obstruction.
+
+In this paper, we propose that the Yoneda Constraint on Observer Knowledge, developed in previous work by the YonedaAI Collaboration \cite{yoneda_constraint_v1,yoneda_constraint_v2,embedded_observer_v1,embedded_observer_v2}, provides a unifying framework for understanding the hidden variable debates. The central insight is deceptively simple: the Yoneda lemma, applied to the measurement category $\catMeas$, tells us that an embedded observer's knowledge of reality is \emph{entirely relational}---determined by the representable presheaf from the observer's position---and this relational knowledge, while maximal from that position, is generically incomplete as knowledge of the total reality $\R$.
+
+A ``hidden variable,'' in this framework, is simply a feature of $\R$ that lies outside the representable presheaf $\yo^{(\Sys, \sigma_\Sys)}$. The Yoneda embedding's fullness and faithfulness guarantees that such features are not merely \emph{practically} inaccessible but \emph{structurally} inaccessible from the observer's position in $\catMeas$. This transforms the hidden variable question from a question about the existence of additional parameters into a question about the categorical structure of the measurement category and the relationship between local (observer-accessible) and global (total-reality) descriptions.
+
+The main contributions of this paper are as follows.
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=6pt]
+
+\item \textbf{Categorical reformulation of hidden variable theories} (\cref{sec:categorical-hv}): We show that hidden variable theories correspond to functorial completions---extensions of the observer's representable presheaf to a richer functor that encodes the additional variables---and classify these completions using Kan extensions.
+
+\item \textbf{Unified treatment of no-go theorems} (\cref{sec:nogo}): We demonstrate that von Neumann's theorem, the Kochen--Specker theorem, Bell's theorem, the PBR theorem, and the Free Will theorem all arise as presheaf obstructions within $\catMeas_Q$, differing in the type of completion they prohibit.
+
+\item \textbf{Contextuality as cohomological obstruction} (\cref{sec:contextuality}): Building on the sheaf-theoretic framework of Abramsky--Brandenburger \cite{abramsky2011}, we develop the Yoneda perspective on contextuality and show how the extension deficit $\Delta(\Sys)$ quantifies contextual obstructions.
+
+\item \textbf{Structural undecidability} (\cref{sec:undecidability}): Using the Measurement Boundary Problem (MBP) framework \cite{measurement_paradox,mbp_godel}, we prove that the hidden variable question is structurally undecidable from within the emergent theory---an instance of the Emergence Incompleteness Theorem.
+
+\item \textbf{Bohmian mechanics as a specific Kan extension} (\cref{sec:bohm}): We characterize Bohmian mechanics as a particular functorial completion and analyze the non-locality that arises as a necessary feature of any faithful Kan extension beyond the observer's epistemic horizon.
+
+\item \textbf{Computational verification} (\cref{sec:code}): We describe accompanying Haskell code that implements the categorical structures and verifies the presheaf obstructions computationally.
+
+\end{enumerate}
+
+The paper is organized as follows. \Cref{sec:background} reviews the necessary background from category theory and the Yoneda Constraint framework. \Cref{sec:historical} provides a historical overview of the hidden variable debates, emphasizing the evolving notion of what ``hidden'' means. \Cref{sec:categorical-hv} develops the categorical reformulation of hidden variable theories. \Cref{sec:nogo} provides the unified treatment of no-go theorems. \Cref{sec:contextuality} develops contextuality as a cohomological obstruction. \Cref{sec:bohm} analyzes Bohmian mechanics. \Cref{sec:undecidability} proves structural undecidability. \Cref{sec:bell} connects the framework to Bell inequalities. \Cref{sec:implications} discusses implications. \Cref{sec:code} describes the computational implementation. \Cref{sec:conclusion} concludes.
+
+%% ============================================================
+\section{Background: The Yoneda Constraint Framework}\label{sec:background}
+%% ============================================================
+
+We briefly review the categorical framework developed in \cite{yoneda_constraint_v1,yoneda_constraint_v2,embedded_observer_v1,embedded_observer_v2} that forms the foundation for our analysis.
+
+\subsection{The Measurement Category}
+
+\begin{definition}[Measurement Category \cite{yoneda_constraint_v2}]\label{def:meas-cat}
+Fix a total physical system $\R$. The \emph{measurement category} $\catMeas = \catMeas(\R)$ has:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Objects:} Pairs $(\Sys, \sigma_\Sys)$ where $\Sys \subseteq \R$ is a subsystem and $\sigma_\Sys = \R|_\Sys$ is the state restricted to $\Sys$.
+\item \textbf{Morphisms:} State-preserving channels---CPTP maps in the quantum case, measure-preserving maps classically---with $f(\sigma_1) = \sigma_2$.
+\item \textbf{Composition:} Sequential composition of channels.
+\item \textbf{Identity:} The identity channel.
+\end{enumerate}
+The quantum measurement category $\catMeas_Q$ specializes to density operators on Hilbert spaces with CPTP morphisms. In the quantum setting, $\catMeas_Q$ is naturally enriched over $\catBan$ (Banach spaces), where the hom-objects carry the completely bounded norm; the enriched Yoneda lemma \cite{kelly1982} applies in this setting.
+\end{definition}
+
+\subsection{The Yoneda Constraint}
+
+\begin{proposition}[Yoneda Constraint on Observer Knowledge \cite{yoneda_constraint_v2}]\label{prop:yoneda-constraint}
+An embedded observer $\Sys \subsetneq \R$ accesses $\R$ only through the representable functor $\yo^{(\Sys, \sigma_\Sys)} = \Hom_{\catMeas}((\Sys, \sigma_\Sys), -)$. This determines $(\Sys, \sigma_\Sys)$ up to isomorphism but does not determine $\R$ unless $\Sys = \R$.
+\end{proposition}
+
+The key features for the hidden variable analysis are:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item \textbf{Completeness from position:} The Yoneda embedding is full and faithful, so $\yo^{(\Sys, \sigma_\Sys)}$ captures \emph{all} categorical information about the observer's position.
+\item \textbf{Incompleteness of $\R$:} Different total states $\rho \neq \rho'$ can yield the same reduced state $\sigma_\Sys = \Tr_{\Env}(\rho) = \Tr_{\Env}(\rho')$, so the observer's relational data generically underdetermines $\R$.
+\item \textbf{Structural gap:} The Kan extension deficit $\Delta(\Sys) = \coker(\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R})$ quantifies the irreducible gap between local and global descriptions. Here $J: \catMeas|_\Sys \hookrightarrow \catMeas$ is the inclusion of the observer's accessible subcategory, $\mathfrak{D}$ is the description functor, $\mathfrak{R}$ is the total description functor, and $\Lan_J$ denotes the left Kan extension---the universal ``best approximation'' to $\mathfrak{R}$ constructible from data available to $\Sys$. For bipartite quantum systems in pure state $|\psi\rangle$, the deficit is non-trivial precisely when the entanglement entropy $S(\rho_\Sys) = -\Tr(\rho_\Sys \log \rho_\Sys) > 0$ \cite{yoneda_constraint_v2}.
+\end{enumerate}
+
+\subsection{The Measurement Boundary Problem}
+
+The Measurement Boundary Problem (MBP), developed in \cite{measurement_paradox,mbp_godel}, establishes that if spacetime (or more generally, the observational framework) is emergent from a deeper substrate, then no measurement within the emergent theory can directly access the pre-emergent degrees of freedom. The MBP is characterized categorically by the non-faithfulness and non-fullness of the emergence functor $\Phi: \catC_P \to \catC_E$, and the associated Emergence Incompleteness Theorem \cite{mbp_godel} shows that there exist well-defined pre-geometric observables that are undetectable by emergent measurements.
+
+\subsection{The Self-Reference Incompleteness Principle}
+
+The Self-Reference Incompleteness Principle (SRIP) \cite{srip_unified} provides the meta-mathematical framework: any sufficiently expressive self-referential system cannot generate a complete internal description of itself. This applies to the hidden variable debate because the question ``are there hidden variables?'' is a self-referential question asked by an observer embedded within the system it seeks to describe.
+
+%% ============================================================
+\section{Historical Overview of the Hidden Variable Debates}\label{sec:historical}
+%% ============================================================
+
+We provide a historical overview emphasizing the evolving notion of ``hiddenness'' that the Yoneda Constraint framework will clarify.
+
+\subsection{The EPR Argument and Completeness}
+
+Einstein, Podolsky, and Rosen \cite{epr1935} argued that quantum mechanics is incomplete based on two premises: (1) locality---physical effects do not propagate faster than light---and (2) realism---if the value of a physical quantity can be predicted with certainty without disturbing the system, then there exists an ``element of physical reality'' corresponding to that quantity. For entangled states, these premises imply the existence of variables not captured by the quantum state---hidden variables.
+
+From the Yoneda perspective, the EPR argument identifies the non-trivial extension deficit $\Delta(\Sys)$ for entangled states: Alice's representable presheaf $\yo^{(\Sys_A, \rho_A)}$ does not capture the correlations with Bob, and the EPR argument asks whether there exists a ``completion'' that accounts for these correlations deterministically.
+
+\subsection{Von Neumann's No-Go Theorem}
+
+Von Neumann's 1932 proof \cite{vonneumann1932} that hidden variables are impossible rests on the assumption that the expectation value functional is linear over all observables, including non-commuting ones. As Bell \cite{bell1966} later showed, this assumption is physically unwarranted---there is no reason to require linearity for quantities that cannot be simultaneously measured. Von Neumann's error, from the Yoneda perspective, was to assume that the hidden variable completion must preserve the linear structure of $\yo^{(\Sys, \rho_\Sys)}$ on the full algebra of observables, rather than respecting the contextual structure of non-commuting measurements.
+
+\subsection{Bohm's Hidden Variable Theory}
+
+Bohm's 1952 pilot-wave theory \cite{bohm1952a,bohm1952b} provides an explicit deterministic hidden variable model that reproduces all predictions of quantum mechanics. The hidden variables are the particle positions $\mathbf{q}$, guided by the wave function $\psi$ through the guidance equation $\dot{\mathbf{q}} = \nabla S / m$ where $\psi = R e^{iS/\hbar}$. Bohm's theory demonstrates that hidden variable theories are \emph{possible}, contradicting von Neumann's no-go claim, but at the cost of non-locality: the guidance equation for a multi-particle system involves instantaneous dependence on distant configurations.
+
+\subsection{Bell's Theorem}
+
+Bell's 1964 theorem \cite{bell1964} shows that any hidden variable theory reproducing quantum mechanics must be non-local. Specifically, for any local hidden variable model with variables $\lambda$ and local response functions $A(\mathbf{a}, \lambda)$, $B(\mathbf{b}, \lambda)$, the CHSH inequality \cite{chsh1969}
+\[
+|E(\mathbf{a}, \mathbf{b}) - E(\mathbf{a}, \mathbf{b}')| + |E(\mathbf{a}', \mathbf{b}) + E(\mathbf{a}', \mathbf{b}')| \leq 2
+\]
+must hold, while quantum mechanics allows violation up to $2\sqrt{2}$ (Tsirelson's bound \cite{tsirelson1980}).
+
+\subsection{The Kochen--Specker Theorem}
+
+Kochen and Specker \cite{kochen1967} proved that for Hilbert space dimension $d \geq 3$, there is no non-contextual value assignment: no function $v: \mathcal{P}(\mathcal{H}) \to \{0,1\}$ satisfying $v(\mathbf{1}) = 1$ and $v(P_1) + v(P_2) + v(P_3) = 1$ for any orthogonal triple of rank-1 projectors. This establishes that any hidden variable model must be \emph{contextual}: the value assigned to an observable must depend on which other observables are measured simultaneously.
+
+\subsection{Modern Developments}
+
+The PBR theorem \cite{pbr2012} shows that if the quantum state is merely epistemic (a state of knowledge about an underlying ontic state), then distinct quantum states cannot share the same ontic support under reasonable assumptions. The Free Will theorem of Conway and Kochen \cite{conwaykochen2006} shows that if experimenters have free will (their choices are not determined by prior events), then the particles' responses cannot be determined by prior events either.
+
+These results progressively constrain the space of viable hidden variable theories, and the Yoneda Constraint provides a unified language for understanding why.
+
+%% ============================================================
+\section{Categorical Reformulation of Hidden Variable Theories}\label{sec:categorical-hv}
+%% ============================================================
+
+We now develop the category-theoretic reformulation of hidden variable theories in terms of functorial completions of the observer's representable presheaf.
+
+\subsection{Hidden Variables as Unseen Morphisms}
+
+\begin{definition}[Hidden Variable in $\catMeas$]\label{def:hv-categorical}
+A \emph{hidden variable} for observer $\Sys$ is any morphism $f \in \Mor(\catMeas)$ or any object $X \in \Ob(\catMeas)$ that lies outside the image of the inclusion functor $J: \catMeas|_\Sys \hookrightarrow \catMeas$. Equivalently, a hidden variable is a feature of $\R$ not captured by the representable functor $\yo^{(\Sys, \sigma_\Sys)}$.
+\end{definition}
+
+This definition captures the intuition that hidden variables are features of reality inaccessible to the observer. The key insight is that the Yoneda embedding's fullness and faithfulness implies these features are \emph{structurally} inaccessible---not merely beyond current experimental reach, but outside the categorical structure available from the observer's position.
+
+\begin{proposition}[Structural Hiddenness]\label{prop:structural-hiddenness}
+Let $\lambda \in \R \setminus \R|_\Sys$ be a degree of freedom not accessible to $\Sys$. Then:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item $\lambda$ is not detectable by any morphism originating from $(\Sys, \sigma_\Sys)$.
+\item No natural transformation from $\yo^{(\Sys, \sigma_\Sys)}$ to any functor $F$ can depend on $\lambda$.
+\item The value of $\lambda$ is ``hidden'' in the precise sense that $\yo^{(\Sys, \sigma_\Sys)}$ factors through the quotient that identifies $\lambda$-values compatible with $\sigma_\Sys$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) follows from the definition of $\catMeas|_\Sys$: morphisms from $(\Sys, \sigma_\Sys)$ are CPTP maps whose domain is $\mathcal{B}(\mathcal{H}_\Sys)$, which has no dependence on $\lambda$. (ii) follows from the Yoneda lemma: $\Nat(\yo^{(\Sys, \sigma_\Sys)}, F) \cong F(\Sys, \sigma_\Sys)$, which depends on $(\Sys, \sigma_\Sys)$ and hence only on $\sigma_\Sys = \Tr_\Env(\rho)$, not on $\lambda$. (iii) follows from the fact that the partial trace defines a quotient: $\sigma_\Sys = \Tr_\Env(\rho)$ identifies all states $\rho$ that agree on $\Sys$.
+\end{proof}
+
+\subsection{Hidden Variable Theories as Functorial Completions}
+
+\begin{definition}[Functorial Completion]\label{def:functorial-completion}
+A \emph{hidden variable theory} for observer $\Sys$ is a triple $(\catMeas^+, \iota, \pi)$ where:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item $\catMeas^+ = \catMeas_\HV$ is an \emph{extended measurement category} whose objects include pairs $(\Sys, \sigma_\Sys, \lambda)$ with additional hidden variables $\lambda \in \Lambda$.
+\item $\iota: \catMeas \hookrightarrow \catMeas^+$ is a faithful embedding of the quantum measurement category into the extended category.
+\item $\pi: \catMeas^+ \to \catMeas$ is a projection (averaging) functor such that $\pi \circ \iota = \id_\catMeas$ and $\pi$ marginalizes over $\Lambda$.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Characterization of HV Theories]\label{prop:hv-characterization}
+A hidden variable theory $(\catMeas^+, \iota, \pi)$ is empirically adequate if and only if the composition
+\[
+\yo^{(\Sys, \sigma_\Sys)} = \pi_* \circ \yo^{(\Sys, \sigma_\Sys, \lambda)}
+\]
+holds for all $(\Sys, \sigma_\Sys) \in \catMeas$ and some distribution over $\lambda$.
+\end{proposition}
+
+\begin{proof}
+Empirical adequacy means that the observable predictions of the hidden variable theory agree with quantum mechanics when averaged over $\lambda$. In categorical language, this is the condition that the pushforward $\pi_*$ of the extended representable functor recovers the original representable functor. The averaging over $\lambda$ is encoded in the projection $\pi$.
+\end{proof}
+
+\subsection{Classification of Completions}
+
+\begin{definition}[Types of Functorial Completion]\label{def:completion-types}
+We classify hidden variable theories by the properties of the extended category $\catMeas^+$:
+\begin{enumerate}[label=(\roman*),itemsep=6pt]
+\item \textbf{Deterministic completion:} Objects $(\Sys, \sigma_\Sys, \lambda)$ with $\lambda$ specifying a unique outcome for every measurement. Morphisms in $\catMeas^+$ are deterministic.
+\item \textbf{Stochastic completion:} Objects $(\Sys, \sigma_\Sys, \lambda)$ where $\lambda$ reduces but does not eliminate indeterminacy.
+\item \textbf{Local completion:} $\catMeas^+$ has a monoidal structure such that $\yo^{(\Sys_1 \cup \Sys_2, \sigma, \lambda)}$ factors as $\yo^{(\Sys_1, \sigma_1, \lambda_1)} \times \yo^{(\Sys_2, \sigma_2, \lambda_2)}$ for spacelike-separated subsystems.
+\item \textbf{Non-contextual completion:} The value assigned to an observable in $\catMeas^+$ does not depend on which other observables are jointly measured.
+\item \textbf{$\psi$-ontic completion:} Different quantum states $\sigma_\Sys \neq \sigma'_\Sys$ correspond to disjoint sets of hidden variable values: $\Lambda_\sigma \cap \Lambda_{\sigma'} = \emptyset$.
+\end{enumerate}
+\end{definition}
+
+This classification sets the stage for understanding the no-go theorems as statements about which types of completion are impossible.
+
+\subsection{The Kan Extension as Optimal Completion}
+
+\begin{proposition}[Kan Extension as Best Possible HV Theory]\label{prop:kan-completion}
+The left Kan extension $\Lan_J(\yo^{(\Sys, \sigma_\Sys)})$ along the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas$ provides the \emph{optimal} functorial completion of the observer's data---the best possible extrapolation of local knowledge to global descriptions. Any empirically adequate hidden variable theory must be compatible with this Kan extension in the sense that its projection onto $\catMeas|_\Sys$ agrees with $\yo^{(\Sys, \sigma_\Sys)}$.
+\end{proposition}
+
+\begin{proof}
+By the universal property of the left Kan extension, $\Lan_J(\yo^{(\Sys, \sigma_\Sys)})$ is the initial object among functors on $\catMeas$ that extend $\yo^{(\Sys, \sigma_\Sys)}$ from $\catMeas|_\Sys$. Any hidden variable theory, being such an extension, must factor through $\Lan_J(\yo^{(\Sys, \sigma_\Sys)})$ via a natural transformation.
+\end{proof}
+
+\begin{corollary}[Extension Deficit as HV Obstruction]\label{cor:deficit-hv}
+The extension deficit $\Delta(\Sys)$ measures the minimum additional structure that any hidden variable theory must provide beyond the observer's accessible data. In particular, $\Delta(\Sys) = 0$ if and only if no hidden variables are needed (the observer has complete information).
+\end{corollary}
+
+%% ============================================================
+\section{Unified Treatment of No-Go Theorems}\label{sec:nogo}
+%% ============================================================
+
+We now show that the major no-go theorems of quantum foundations arise as specific instances of presheaf obstructions within $\catMeas_Q$.
+
+\subsection{Von Neumann's Theorem as a Linearity Obstruction}
+
+\begin{theorem}[Von Neumann Obstruction, Categorical Formulation]\label{thm:vonneumann-cat}
+There is no functorial completion $\catMeas^+$ of $\catMeas_Q$ that simultaneously satisfies:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item Determinism: each $\lambda$ specifies outcomes for all observables.
+\item Linearity: the extended representable functor $\yo^{(\Sys, \sigma, \lambda)}$ is additive on all observables, including non-commuting ones.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Condition (ii) requires that the natural transformation $\beta_\lambda: \yo^{(\Sys, \sigma, \lambda)} \Rightarrow P_\lambda$ (the Born-rule analogue at fixed $\lambda$) satisfies $\beta_\lambda(A + B) = \beta_\lambda(A) + \beta_\lambda(B)$ for all observables $A, B$, including $[A, B] \neq 0$. But a deterministic assignment $v_\lambda$ that assigns a definite value to every observable cannot be additive on non-commuting observables: if $v_\lambda(A) = a_i$ and $v_\lambda(B) = b_j$, there is no guarantee that $a_i + b_j$ is an eigenvalue of $A + B$. This contradicts the assumption that $v_\lambda$ assigns eigenvalues.
+\end{proof}
+
+\begin{remark}[Bell's Critique]\label{rem:bell-critique}
+As Bell \cite{bell1966} observed, condition (ii) is unreasonable: there is no physical justification for requiring additivity of expectation values for observables that cannot be simultaneously measured. In presheaf language, von Neumann demands that the natural transformation $\beta$ be ``globally additive,'' whereas the structure of $\catMeas_Q$ only requires additivity within each commutative context. The mistake is to conflate a local property of presheaves (additivity within contexts) with a global property (additivity across all contexts).
+\end{remark}
+
+\subsection{The Kochen--Specker Theorem as a Global Section Obstruction}
+
+\begin{theorem}[Kochen--Specker Obstruction, Categorical Formulation]\label{thm:ks-cat}
+There is no non-contextual deterministic completion of $\catMeas_Q$ when $\dim \mathcal{H} \geq 3$. Specifically, the valuation presheaf $\mathcal{V}: \catC_Q^{\op} \to \catSet$ defined on the context category $\catC_Q$ (poset of commutative subalgebras) has no global section.
+\end{theorem}
+
+\begin{proof}
+Recall (\cref{def:completion-types}) that a non-contextual completion assigns values to observables independently of the measurement context. This is equivalent to a global section of the valuation presheaf $\mathcal{V}$: a consistent family of value assignments $\{v_V: V \to \mathbb{R}\}_{V \in \catC_Q}$ compatible with restriction. The Kochen--Specker theorem \cite{kochen1967} proves by explicit construction (involving 117 directions in $\mathbb{R}^3$) that no such consistent family exists. In presheaf language: $\mathcal{V}$ is a presheaf that fails to be a sheaf, and the obstruction to glueing local sections into a global section is the Kochen--Specker obstruction.
+
+Categorically, the non-existence of a global section means that there is no natural transformation from the terminal presheaf $1: \catC_Q^{\op} \to \catSet$ to $\mathcal{V}$. Since a non-contextual hidden variable model requires precisely such a natural transformation (assigning values that are consistent across contexts), the model is impossible.
+\end{proof}
+
+\begin{proposition}[KS Obstruction from the Yoneda Constraint]\label{prop:ks-yoneda}
+The Kochen--Specker obstruction is a consequence of the Yoneda Constraint applied to the context category. Specifically, the Yoneda Constraint implies that no single object in $\catMeas_Q$ can serve as a universal vantage point from which all contexts are simultaneously accessible.
+\end{proposition}
+
+\begin{proof}
+Suppose there existed an object $(\Sys, \sigma^{\mathrm{univ}}) \in \catMeas_Q$ whose representable functor $\yo^{(\Sys, \sigma^{\mathrm{univ}})}$, restricted to $\catC_Q$, yielded a global section of $\mathcal{V}$. This would require $\sigma^{\mathrm{univ}}$ to be simultaneously diagonal in every orthonormal basis---possible only if $\sigma^{\mathrm{univ}} = \frac{1}{d}\mathbf{1}$ (the maximally mixed state), which assigns equal probabilities to all outcomes and does not define a deterministic valuation. Hence no such universal object exists, and the representable functor from any position in $\catMeas_Q$ is inherently contextual.
+\end{proof}
+
+\subsection{Bell's Theorem as a Locality Obstruction}
+
+\begin{theorem}[Bell Obstruction, Categorical Formulation]\label{thm:bell-cat}
+There is no local deterministic completion of $\catMeas_Q$ that reproduces quantum predictions for entangled states. Specifically, for any bipartite system $\Sys_A \cup \Sys_B$ in an entangled state $\rho$, there is no functorial completion $\catMeas^+$ that simultaneously satisfies:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item Determinism: each $\lambda$ specifies outcomes for all local measurements.
+\item Locality: $\yo^{(\Sys_A \cup \Sys_B, \rho, \lambda)}$ factors as $\yo^{(\Sys_A, \rho_A, \lambda_A)} \times \yo^{(\Sys_B, \rho_B, \lambda_B)}$.
+\item Empirical adequacy: averaging over $\lambda$ reproduces quantum predictions.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Condition (ii) is precisely the presheaf factorizability condition of \cite{yoneda_constraint_v2}, which we proved equivalent to separability (\cite[Proposition~5.7]{yoneda_constraint_v2}). For entangled states, the representable functor does not factorize. If the extended functors $\yo^{(\cdot, \cdot, \lambda)}$ factorize for each $\lambda$, then the average $\int \yo^{(\Sys, \rho, \lambda)} d\mu(\lambda)$ also factorizes (as a convex combination of products), contradicting the non-factorizability of $\yo^{(\Sys, \rho)}$ for entangled states. Quantitatively, the factorized model yields the CHSH inequality $|\langle\text{CHSH}\rangle| \leq 2$, while quantum mechanics achieves $2\sqrt{2}$.
+\end{proof}
+
+\begin{corollary}[Non-Locality of Faithful Completions]\label{cor:nonlocality}
+Any deterministic functorial completion of $\catMeas_Q$ that is empirically adequate must be non-local: the extended representable functors $\yo^{(\Sys, \rho, \lambda)}$ cannot factorize across spacelike separations.
+\end{corollary}
+
+This corollary explains why Bohmian mechanics is necessarily non-local: it provides a deterministic completion (via particle positions guided by the wave function), and Bell's theorem forces this completion to involve non-local correlations.
+
+\subsection{The PBR Theorem as an Ontic Overlap Obstruction}
+
+\begin{theorem}[PBR Obstruction, Categorical Formulation]\label{thm:pbr-cat}
+Under the preparation independence assumption, distinct quantum states correspond to non-overlapping functorial completions. Specifically, if $\sigma_\Sys \neq \sigma'_\Sys$, then $\Lambda_\sigma \cap \Lambda_{\sigma'} = \emptyset$ in any empirically adequate completion.
+\end{theorem}
+
+\begin{proof}
+The PBR theorem \cite{pbr2012} shows that if two quantum states $|\phi\rangle$ and $|\psi\rangle$ are compatible with the same ontic state $\lambda$ (i.e., the epistemic distributions overlap), then product states $|\phi\rangle^{\otimes n} \otimes |\psi\rangle^{\otimes n}$ are compatible with the same ontic state $\lambda^{\otimes 2n}$ (preparation independence). But for suitable choices of $|\phi\rangle, |\psi\rangle$, and measurement, this leads to zero-probability events being assigned non-zero probability, a contradiction.
+
+In categorical language, this means the projection $\pi: \catMeas^+ \to \catMeas$ cannot map distinct objects $(\Sys, \sigma, \lambda)$ and $(\Sys, \sigma', \lambda)$ (same $\lambda$, different quantum states) to objects $(\Sys, \sigma)$ and $(\Sys, \sigma')$ while maintaining empirical adequacy. The functorial completion must be $\psi$-ontic: the fibers $\pi^{-1}(\sigma)$ and $\pi^{-1}(\sigma')$ are disjoint.
+\end{proof}
+
+\begin{remark}
+The PBR theorem constrains the structure of the projection functor $\pi: \catMeas^+ \to \catMeas$: it must be a fibration with disjoint fibers over distinct quantum states. This is a strong constraint on the categorical structure of any hidden variable extension.
+\end{remark}
+
+\subsection{The Free Will Theorem as a Determinism Obstruction}
+
+\begin{theorem}[Free Will Obstruction, Categorical Formulation]\label{thm:freewill-cat}
+Under the assumptions of SPIN (quantum mechanical prediction for spin-1 measurements), TWIN (perfect anti-correlation for entangled pairs), and MIN (experimenters' choices are not determined by prior information), the outcomes of measurements on individual particles are not determined by any prior information.
+\end{theorem}
+
+\begin{proof}[Proof (sketch)]
+Conway and Kochen \cite{conwaykochen2006} show that if the experimenter's choice of measurement axis is ``free'' (not a function of the hidden variable $\lambda$ and past history), then the particle's response cannot be a function of $\lambda$ and the axis choice. In categorical language, the MIN assumption means that the morphism from the experimenter's choice object to the measurement object in $\catMeas$ is not in the image of any functor from the hidden variable category. If the choice is truly ``external'' to the functorial structure of $\catMeas^+$, then the response must also be external---i.e., not determined by the hidden variables.
+\end{proof}
+
+\subsection{Summary: A Taxonomy of Obstructions}
+
+The following table summarizes the no-go theorems as presheaf obstructions:
+
+\begin{center}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{Theorem} & \textbf{Type of Obstruction} & \textbf{Prohibited Completion} \\
+\midrule
+Von Neumann & Linearity & Globally linear deterministic \\
+Kochen--Specker & Global section & Non-contextual deterministic \\
+Bell & Factorizability & Local deterministic \\
+PBR & Fiber overlap & $\psi$-epistemic \\
+Free Will & Functional determinism & Deterministic (with free choice) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each theorem eliminates a different type of functorial completion, progressively constraining the space of viable hidden variable theories. What remains viable---contextual, non-local, $\psi$-ontic theories like Bohmian mechanics---is precisely what the Yoneda Constraint predicts: the only completions that can bridge the extension deficit $\Delta(\Sys)$ are those that exploit the non-local structure of the full measurement category $\catMeas$.
+
+%% ============================================================
+\section{Contextuality as Cohomological Obstruction}\label{sec:contextuality}
+%% ============================================================
+
+We develop the Yoneda perspective on contextuality, building on the sheaf-theoretic framework of Abramsky and Brandenburger \cite{abramsky2011} and connecting it to the extension deficit.
+
+\subsection{The Presheaf of Empirical Models}
+
+\begin{definition}[Empirical Model Presheaf]\label{def:empirical-presheaf}
+An \emph{empirical model} on a measurement scenario $(X, \mathcal{M}, O)$---where $X$ is a set of observables, $\mathcal{M} \subseteq \mathcal{P}(X)$ is a family of compatible subsets (contexts), and $O$ is the set of outcomes---is a compatible family of probability distributions:
+\[
+e = \{p_C \in \mathcal{D}(O^C)\}_{C \in \mathcal{M}}
+\]
+satisfying the marginalization condition: if $C' \subseteq C$, then the marginal of $p_C$ on $C'$ is $p_{C'}$.
+
+The presheaf $\mathcal{E}: \mathcal{M}^{\op} \to \catSet$ assigns $\mathcal{E}(C) = \mathcal{D}(O^C)$ with restriction by marginalization.
+\end{definition}
+
+\begin{proposition}[Contextuality as Presheaf Non-Extendability]\label{prop:contextuality-presheaf}
+An empirical model is \emph{non-contextual} if and only if there exists a global section of $\mathcal{E}$: a joint distribution $p \in \mathcal{D}(O^X)$ whose marginals agree with all $p_C$. Quantum mechanics produces empirical models that have no global section, establishing quantum contextuality as a presheaf-theoretic obstruction.
+\end{proposition}
+
+\subsection{Cohomological Quantification}
+
+Abramsky and Brandenburger \cite{abramsky2011} showed that the obstruction to global sections can be quantified using \v{C}ech cohomology. We connect this to the extension deficit.
+
+\begin{definition}[Contextual Fraction]\label{def:contextual-fraction}
+The \emph{contextual fraction} $\mathrm{CF}(e)$ of an empirical model $e$ is the maximum weight of a non-contextual sub-model:
+\[
+\mathrm{CF}(e) = 1 - \max\{w : e = w \cdot e_{\mathrm{NC}} + (1-w) \cdot e'\}
+\]
+where $e_{\mathrm{NC}}$ is non-contextual. This measures the degree of contextuality.
+\end{definition}
+
+\begin{proposition}[Contextual Fraction and Extension Deficit]\label{prop:cf-deficit}
+For an empirical model $e$ arising from quantum state $\rho_\Sys$ via the Born rule, the contextual fraction is bounded by the extension deficit:
+\[
+\mathrm{CF}(e) \leq c \cdot \|\Delta(\Sys)\|
+\]
+for a constant $c$ depending on the measurement scenario. The extension deficit provides an upper bound on the degree of contextuality, reflecting the fact that contextuality arises from the gap between local and global descriptions.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+The extension deficit $\Delta(\Sys)$ measures the failure of the Kan extension to recover the total description. A non-contextual model corresponds to a case where the Kan extension \emph{does} recover a global description (the global section). The contextual fraction measures how far the empirical model is from admitting such a recovery. Since the Kan extension is the optimal recovery, and $\Delta(\Sys)$ quantifies its failure, the contextual fraction is bounded by the deficit.
+\end{proof}
+
+\subsection{\v{C}ech Cohomology and Presheaf Obstructions}
+
+\begin{definition}[\v{C}ech Cohomology of Measurement Scenarios]\label{def:cech}
+For the measurement scenario $(X, \mathcal{M}, O)$ with presheaf $\mathcal{E}$, the \v{C}ech cohomology groups $\check{H}^n(\mathcal{M}, \mathcal{E})$ are defined using the nerve of the covering $\mathcal{M}$:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item $\check{H}^0(\mathcal{M}, \mathcal{E})$ classifies global sections.
+\item $\check{H}^1(\mathcal{M}, \mathcal{E})$ classifies obstructions to glueing local sections.
+\item Higher groups classify higher-order obstructions.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Contextuality as Non-Trivial First Cohomology]\label{prop:cohomology-contextuality}
+An empirical model $e$ is contextual if and only if $\check{H}^0(\mathcal{M}, \mathcal{E}) = \emptyset$ (no global sections) or, equivalently, the obstruction class $[e] \in \check{H}^1(\mathcal{M}, \mathcal{E})$ is non-trivial. From the Yoneda perspective, this cohomological obstruction is a categorical shadow of the extension deficit: the failure of the Kan extension to produce a global section.
+\end{proposition}
+
+\subsection{The Hardy Paradox}
+
+\begin{example}[Hardy Paradox as Presheaf Obstruction]\label{ex:hardy}
+Hardy's argument \cite{hardy1993} demonstrates quantum non-locality without inequalities. Consider a two-qubit system with measurement contexts $\{A_1 B_1, A_1 B_2, A_2 B_1, A_2 B_2\}$ and outcomes $\{0, 1\}$. Hardy's conditions are:
+\begin{align}
+P(A_1 = 1, B_1 = 1) &> 0 \\
+P(A_1 = 1, B_2 = 0) &= 0 \\
+P(A_2 = 0, B_1 = 1) &= 0 \\
+P(A_2 = 0, B_2 = 0) &= 0
+\end{align}
+
+These conditions define local sections of the empirical model presheaf that cannot be glued into a global section. Conditions (2)--(4) force: if $A_1 = 1$ then $B_2 = 1$; if $B_1 = 1$ then $A_2 = 1$; and $A_2 = 1$ or $B_2 = 1$. But then $A_1 = 1, B_1 = 1$ implies $A_2 = 1, B_2 = 1$, which contradicts (4) only if we assume non-contextuality. The presheaf obstruction is $\check{H}^1 \neq 0$.
+\end{example}
+
+%% ============================================================
+\section{Bohmian Mechanics as a Kan Extension}\label{sec:bohm}
+%% ============================================================
+
+We now analyze Bohmian mechanics (pilot-wave theory) as a specific functorial completion within the Yoneda framework.
+
+\subsection{The Bohmian Extended Category}
+
+\begin{definition}[Bohmian Measurement Category]\label{def:bohm-cat}
+The \emph{Bohmian measurement category} $\catMeas_{\mathrm{Bohm}}$ extends $\catMeas_Q$ as follows:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Objects:} Triples $(\Sys, \psi, \mathbf{q})$ where $\psi \in \mathcal{H}_\Sys$ is the wave function and $\mathbf{q} \in \mathcal{Q}$ is the configuration (position).
+\item \textbf{Morphisms:} Maps that preserve both the quantum evolution (Schr\"odinger equation) and the guidance equation ($\dot{\mathbf{q}} = \nabla S / m$).
+\item \textbf{Projection:} $\pi_{\mathrm{Bohm}}: \catMeas_{\mathrm{Bohm}} \to \catMeas_Q$ by $(\Sys, \psi, \mathbf{q}) \mapsto (\Sys, |\psi\rangle\langle\psi|)$ with averaging over $\mathbf{q} \sim |\psi(\mathbf{q})|^2$.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Bohm as a Functorial Completion]\label{prop:bohm-completion}
+The Bohmian extension $(\catMeas_{\mathrm{Bohm}}, \iota, \pi_{\mathrm{Bohm}})$ is an empirically adequate functorial completion of $\catMeas_Q$. It is:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Deterministic:} Each $(\psi, \mathbf{q})$ determines all measurement outcomes.
+\item \textbf{Contextual:} The outcome of measuring an observable depends on the measurement apparatus (as shown by the contextuality of Bohmian mechanics \cite{bell1966}).
+\item \textbf{Non-local:} For multi-particle systems, $\mathbf{q} = (\mathbf{q}_1, \ldots, \mathbf{q}_N)$ and the guidance equation for $\mathbf{q}_i$ depends on the full configuration, including distant particles.
+\item \textbf{$\psi$-ontic:} Different wave functions have disjoint supports in $\catMeas_{\mathrm{Bohm}}$ (since $\psi$ is part of the ontic state).
+\end{enumerate}
+\end{proposition}
+
+\subsection{Non-Locality as a Kan Extension Artifact}
+
+\begin{proposition}[Bohmian Non-Locality from the Extension Deficit]\label{prop:bohm-nonlocality}
+The non-locality of Bohmian mechanics is a necessary consequence of bridging the extension deficit. Specifically, for an entangled state $\rho$ of $\Sys_A \cup \Sys_B$:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item The extension deficit $\Delta(\Sys_A)$ is non-zero (by entanglement).
+\item Any deterministic completion that bridges this deficit must access information outside $\Sys_A$'s representable presheaf.
+\item This accessing of non-local information is precisely what the guidance equation provides: $\dot{\mathbf{q}}_A$ depends on $\psi(\mathbf{q}_A, \mathbf{q}_B)$, which encodes information about $\mathbf{q}_B$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+By \cref{cor:nonlocality}, any deterministic completion that reproduces quantum predictions for entangled states must be non-local. The Bohmian guidance equation $\dot{\mathbf{q}}_i = \frac{\hbar}{m_i} \im\left(\frac{\nabla_i \psi}{\psi}\right)(\mathbf{q}_1, \ldots, \mathbf{q}_N)$ explicitly exhibits this non-locality: the velocity of particle $i$ depends on the positions of \emph{all} particles through the wave function. This non-local dependence is the mechanism by which the Bohmian theory bridges the extension deficit $\Delta(\Sys_A)$---it supplements Alice's local data with information about the global configuration that would otherwise be inaccessible through the representable presheaf $\yo^{(\Sys_A, \rho_A)}$.
+\end{proof}
+
+\subsection{Equivariance and the Quantum Equilibrium Hypothesis}
+
+\begin{proposition}[Quantum Equilibrium as Functorial Naturality]\label{prop:equilibrium}
+The quantum equilibrium hypothesis---that the distribution of positions is $|\psi|^2$---is equivalent to the naturality of the projection $\pi_{\mathrm{Bohm}}$. That is, $\pi_{\mathrm{Bohm}}$ is a natural transformation from the ``Bohmian presheaf'' to the ``quantum presheaf'' if and only if the position distribution is given by $|\psi|^2$.
+\end{proposition}
+
+\begin{proof}
+Naturality of $\pi_{\mathrm{Bohm}}$ requires that the diagram
+\[
+\begin{tikzcd}
+\yo^{(\Sys, \psi, \mathbf{q})}(M) \arrow[r, "\pi_M"] \arrow[d, "f_*"'] & \yo^{(\Sys, |\psi\rangle\langle\psi|)}(M) \arrow[d, "f_*"] \\
+\yo^{(\Sys, \psi', \mathbf{q}')}(M') \arrow[r, "\pi_{M'}"'] & \yo^{(\Sys, |\psi'\rangle\langle\psi'|)}(M')
+\end{tikzcd}
+\]
+commutes for all measurement refinements $f: M \to M'$. The projection $\pi$ averages over $\mathbf{q}$ with distribution $\mu(\mathbf{q})$. For the diagram to commute under time evolution (a particular class of morphisms), $\mu$ must be equivariant under the Bohmian flow, which holds if and only if $\mu(\mathbf{q}) = |\psi(\mathbf{q})|^2$ (D\"urr, Goldstein, Zangh\`i \cite{durr1992}).
+\end{proof}
+
+%% ============================================================
+\section{Structural Undecidability of the Hidden Variable Question}\label{sec:undecidability}
+%% ============================================================
+
+We now prove that the hidden variable question---``do hidden variables exist?''---is structurally undecidable from within the quantum framework, using the Measurement Boundary Problem and the Emergence Incompleteness Theorem.
+
+\subsection{The Question as a Self-Referential Problem}
+
+The hidden variable question asks whether the quantum description $\sigma_\Sys$ is complete or whether there exist additional variables $\lambda$ not captured by $\sigma_\Sys$. From the Yoneda perspective, this is the question of whether $\Delta(\Sys) = 0$ (quantum mechanics is complete) or $\Delta(\Sys) \neq 0$ (there is additional structure not captured by the observer's presheaf).
+
+\begin{proposition}[Self-Referential Nature of the HV Question]\label{prop:self-referential}
+The question ``does $\Delta(\Sys) = 0$?'' is a self-referential question in the sense of the SRIP \cite{srip_unified}: it asks an embedded observer to determine whether its own description is complete---a question about the relationship between the observer's internal perspective and the external reality.
+\end{proposition}
+
+\subsection{The Measurement Boundary Problem Applied to Hidden Variables}
+
+\begin{theorem}[Structural Undecidability of Hidden Variables]\label{thm:undecidability}
+The hidden variable question is structurally undecidable from within $\catMeas_Q$. Specifically:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item The observer in $\catMeas_Q$ cannot determine whether there exist degrees of freedom outside the measurement category.
+\item Any experimental test of hidden variables operates within $\catMeas_Q$ and can only detect \emph{specific types} of hidden variable theories (local, non-contextual, etc.), not the existence of hidden variables in general.
+\item The extension deficit $\Delta(\Sys)$, while non-zero for entangled states, measures the gap between the observer's description and the \emph{quantum} description of the total system---not the gap between the quantum description and a hypothetical deeper description.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) follows from the Yoneda Constraint: the observer's knowledge is determined by $\yo^{(\Sys, \sigma_\Sys)}$, which captures all categorical information about the observer's position in $\catMeas_Q$. Features outside $\catMeas_Q$---including hypothetical hidden variable categories $\catMeas^+$---are invisible from within $\catMeas_Q$.
+
+(ii) follows from the structure of the no-go theorems: Bell's theorem rules out local hidden variables, the KS theorem rules out non-contextual hidden variables, and the PBR theorem rules out $\psi$-epistemic hidden variables. But none of these rules out \emph{all} hidden variable theories---contextual, non-local, $\psi$-ontic theories like Bohmian mechanics remain viable.
+
+(iii) follows from the MBP \cite{measurement_paradox}: the extension deficit $\Delta(\Sys)$ for observer $\Sys \subsetneq \R$ measures the gap within the quantum framework (between $\Sys$'s knowledge and the quantum state of $\R$). Whether the quantum state of $\R$ is itself ``complete'' or admits further hidden variable extension is a question about the relationship between $\catMeas_Q$ and hypothetical $\catMeas^+$, which cannot be settled from within $\catMeas_Q$.
+\end{proof}
+
+\subsection{Connection to the Emergence Incompleteness Theorem}
+
+\begin{corollary}[HV Question as Emergence Incompleteness]\label{cor:emergence-incompleteness}
+If the quantum framework is emergent from a deeper substrate (as suggested by approaches to quantum gravity), then the Emergence Incompleteness Theorem \cite{mbp_godel} implies that there exist well-defined properties of the substrate that are undetectable by quantum measurements. These undetectable properties are precisely the ``hidden variables'' that the emergent quantum theory cannot access, and their existence or non-existence cannot be decided within the emergent theory.
+\end{corollary}
+
+\begin{proof}
+The Emergence Incompleteness Theorem states that for any emergence structure $(\catC_P, \catC_E, \Phi)$ satisfying the MBP axioms, there exist pre-geometric observables $O \in \catC_P$ such that $O \notin \im(\Phi^*)$. If we identify $\catC_E = \catMeas_Q$ and $\catC_P = \catMeas^+$ (the hypothetical complete theory), then these undetectable observables are hidden variables by definition. The incompleteness theorem guarantees their existence (under the emergence assumption) while simultaneously guaranteeing their inaccessibility.
+\end{proof}
+
+\subsection{The Diagonal Argument}
+
+\begin{proposition}[Diagonal Obstruction to Self-Knowledge]\label{prop:diagonal}
+The hidden variable question instantiates the diagonal argument of the SRIP \cite{srip_unified}: the observer asks ``is my description complete?'', which requires comparing the internal description with the external reality. But the comparison itself is an operation within the internal description, leading to a fixed-point obstruction: any ``completeness certificate'' generated internally is either vacuous (trivially satisfied) or paradoxical (contradicts its own existence).
+\end{proposition}
+
+This connects the hidden variable debate to the broader theme of self-referential limitations explored in the SRIP paper: just as no formal system can prove its own consistency (G\"odel II), no measurement framework can certify its own completeness.
+
+%% ============================================================
+\section{Bell Inequalities and the Extension Deficit}\label{sec:bell}
+%% ============================================================
+
+We develop the quantitative connection between Bell inequality violations and the Kan extension deficit.
+
+\subsection{CHSH Inequality from Presheaf Factorizability}
+
+\begin{proposition}[CHSH Bound from Factorizability]\label{prop:chsh-bound}
+The CHSH inequality
+\[
+|\langle \mathrm{CHSH} \rangle| \leq 2
+\]
+holds for any empirical model whose presheaf factorizes:
+$\yo^{(\Sys, \rho, \lambda)} = \yo^{(\Sys_A, \rho_A, \lambda_A)} \times \yo^{(\Sys_B, \rho_B, \lambda_B)}$.
+\end{proposition}
+
+\begin{proof}
+For a factorizable presheaf, the correlations $E(\mathbf{a}, \mathbf{b}) = \sum_\lambda \mu(\lambda) A(\mathbf{a}, \lambda_A) B(\mathbf{b}, \lambda_B)$ satisfy
+\begin{align}
+|E(\mathbf{a}, \mathbf{b}) - E(\mathbf{a}, \mathbf{b}')| &\leq \sum_\lambda \mu(\lambda) |B(\mathbf{b}, \lambda_B) - B(\mathbf{b}', \lambda_B)| \\
+|E(\mathbf{a}', \mathbf{b}) + E(\mathbf{a}', \mathbf{b}')| &\leq \sum_\lambda \mu(\lambda) |B(\mathbf{b}, \lambda_B) + B(\mathbf{b}', \lambda_B)|
+\end{align}
+Since $B(\mathbf{b}, \lambda_B) \in \{-1, +1\}$ (eigenvalues of the spin observable along direction $\mathbf{b}$), for each $\lambda_B$ either $B(\mathbf{b}, \lambda_B) = B(\mathbf{b}', \lambda_B)$ (giving $|B - B'| = 0, |B + B'| = 2$) or $B(\mathbf{b}, \lambda_B) = -B(\mathbf{b}', \lambda_B)$ (giving $|B - B'| = 2, |B + B'| = 0$). In either case the integrand sums to $2$, yielding $|E(\mathbf{a},\mathbf{b}) - E(\mathbf{a},\mathbf{b}')| + |E(\mathbf{a}',\mathbf{b}) + E(\mathbf{a}',\mathbf{b}')| \leq 2$.
+\end{proof}
+
+\subsection{Quantum Violation and the Extension Deficit}
+
+\begin{proposition}[Violation Magnitude and Deficit]\label{prop:violation-deficit}
+For a singlet state $|\Psi^-\rangle$ of two qubits, the maximal CHSH violation $2\sqrt{2}$ is achieved when the measurement settings exploit the full non-factorizability of the representable presheaf. The violation magnitude $V = |\langle \mathrm{CHSH}\rangle_{\QM}| - 2$ satisfies:
+\[
+V > 0 \quad \Longleftrightarrow \quad \Delta(\Sys_A) \neq 0
+\]
+That is, Bell inequality violation occurs precisely when the extension deficit is non-trivial.
+\end{proposition}
+
+\begin{proof}
+The forward direction: if $\Delta(\Sys_A) = 0$, the state is a product state and all correlations are factorizable, giving $V = 0$. The reverse: if $\Delta(\Sys_A) \neq 0$, the state is entangled, and for appropriate measurement settings (e.g., $\mathbf{a} - \mathbf{b} = \pi/4$), the CHSH value exceeds 2. The maximal violation $V = 2\sqrt{2} - 2 \approx 0.828$ is achieved for maximally entangled states where $\Delta(\Sys_A)$ is maximal.
+\end{proof}
+
+\subsection{Speculative Remark: Tsirelson's Bound and the Yoneda Constraint}
+
+\begin{remark}[Tsirelson's Bound as a Yoneda Bound---Future Direction]\label{rem:tsirelson}
+It is natural to ask whether Tsirelson's bound $|\langle \mathrm{CHSH}\rangle| \leq 2\sqrt{2}$ can be derived from the Yoneda Constraint applied to $\catMeas_Q$. The bound $2\sqrt{2}$ would then reflect the maximum non-factorizability of representable functors in the quantum measurement category, constrained by the Hilbert space structure (specifically, the operator norm bound on observables). A proof would require showing that the enriched Yoneda embedding (in the $\catBan$-enriched setting) constrains the correlations achievable by any representable functor to the quantum set, which is known to be strictly between the classical set (Bell polytope) and the no-signaling set (Popescu--Rohrlich box). The key step would be connecting the enriched Yoneda embedding to the operator norm bound $\|A \otimes B\|_{\mathrm{op}} \leq \|A\|_{\mathrm{op}} \|B\|_{\mathrm{op}}$ that underlies Tsirelson's original proof \cite{tsirelson1980}. We leave this as an open problem for future investigation.
+\end{remark}
+
+%% ============================================================
+\section{The EPR Argument Revisited}\label{sec:epr}
+%% ============================================================
+
+We revisit the EPR argument from the Yoneda perspective, showing how the framework clarifies the logical structure of the debate.
+
+\subsection{EPR's Premises in Categorical Language}
+
+\begin{definition}[EPR Premises, Categorical Version]\label{def:epr-categorical}
+The EPR argument \cite{epr1935} rests on:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Reality criterion:} If $\Hom_{\catMeas_Q}((\Sys_A, \sigma_A), M) \neq \emptyset$ for a measurement $M$ that yields a definite outcome, then $M$ corresponds to an ``element of reality'' and should be in the image of the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas^+$.
+\item \textbf{Locality:} The representable presheaf $\yo^{(\Sys_A, \sigma_A)}$ is independent of Bob's choice of measurement: $\yo^{(\Sys_A, \sigma_A)}$ does not change when Bob measures $B_1$ vs.\ $B_2$.
+\item \textbf{Completeness criterion:} $\catMeas_Q$ is complete iff every ``element of reality'' is represented in $\yo^{(\Sys, \sigma_\Sys)}$.
+\end{enumerate}
+\end{definition}
+
+\subsection{The EPR Dilemma from the Yoneda Perspective}
+
+\begin{proposition}[EPR Dilemma as Extension Problem]\label{prop:epr-dilemma}
+For the singlet state $|\Psi^-\rangle$, measuring $\sigma_z$ on Bob's particle determines Alice's $\sigma_z$ outcome with certainty, and measuring $\sigma_x$ on Bob's particle determines Alice's $\sigma_x$ outcome with certainty. The EPR premises then imply:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item Both $\sigma_z$ and $\sigma_x$ are ``elements of reality'' for Alice.
+\item Locality implies these elements exist independently of Bob's measurement choice.
+\item But $[\sigma_z, \sigma_x] \neq 0$, so no single object in $\catMeas_Q$ has a representable presheaf that assigns definite values to both simultaneously.
+\end{enumerate}
+The dilemma: either quantum mechanics is incomplete (conclusion (c) means hidden variables exist) or locality fails (premise (ii) is violated).
+\end{proposition}
+
+\begin{proof}
+This is the standard EPR argument recast in categorical language. The key insight from the Yoneda perspective is that conclusion (c) is precisely the Kochen--Specker obstruction: there is no object in $\catMeas_Q$ that serves as a universal vantage point for all observables. The EPR argument identifies this obstruction and interprets it as incompleteness; Bohr's response interprets it as a failure of the classical reality criterion; Bell's theorem shows that supplementing quantum mechanics with hidden variables to remove the obstruction necessarily violates locality.
+\end{proof}
+
+\subsection{Resolution via the Yoneda Constraint}
+
+\begin{proposition}[Yoneda Resolution of EPR]\label{prop:epr-resolution}
+The Yoneda Constraint dissolves the EPR dilemma by rejecting the implicit assumption that reality must be describable by a single representable presheaf from a single vantage point. The constraint says:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item Alice's knowledge is $\yo^{(\Sys_A, \rho_A)}$---complete from her position, incomplete as knowledge of $\R$.
+\item The ``elements of reality'' that EPR identifies are features of different representable presheaves $\yo^{(\Sys_A, \rho^z_A)}$ and $\yo^{(\Sys_A, \rho^x_A)}$, corresponding to different measurement contexts.
+\item These presheaves are individually well-defined and maximal (by the Yoneda embedding), but they cannot be unified into a single presheaf (by Kochen--Specker).
+\item The extension deficit $\Delta(\Sys_A)$ quantifies the gap: Alice cannot recover the full singlet correlations from her local data.
+\end{enumerate}
+\end{proposition}
+
+The Yoneda Constraint thus offers a \emph{structural resolution} of the EPR paradox: the paradox arises from the implicit demand that knowledge be non-perspectival (a single global section), while the Yoneda lemma shows that all knowledge available to an embedded observer is inherently perspectival (a representable presheaf from a specific position).
+
+%% ============================================================
+\section{Implications and Discussion}\label{sec:implications}
+%% ============================================================
+
+\subsection{What ``Hidden'' Really Means}
+
+The Yoneda Constraint framework reveals that ``hidden'' in the hidden variable debates has three distinct meanings:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=6pt]
+\item \textbf{Practically hidden:} Variables that are in principle accessible but difficult to measure with current technology. These lie within $\catMeas|_\Sys$ but are hard to probe. This is not the interesting sense.
+
+\item \textbf{Structurally hidden (within QM):} Information in $\R$ that is lost in the restriction $\R|_\Sys$---i.e., degrees of freedom traced out by the partial trace. The extension deficit $\Delta(\Sys)$ measures this. This is the sense relevant to entanglement and Bell inequalities.
+
+\item \textbf{Categorically hidden:} Variables in a hypothetical $\catMeas^+$ that lie entirely outside $\catMeas_Q$. The Emergence Incompleteness Theorem guarantees their existence if quantum mechanics is emergent, while the MBP guarantees their inaccessibility. This is the deepest sense of ``hidden.''
+\end{enumerate}
+
+The no-go theorems address meaning (2): they constrain the structure of the extension from $\catMeas|_\Sys$ to $\catMeas_Q$. The structural undecidability theorem (\cref{thm:undecidability}) addresses meaning (3): no experiment within $\catMeas_Q$ can detect variables in $\catMeas^+$.
+
+\subsection{The Status of Bohmian Mechanics}
+
+From the Yoneda perspective, Bohmian mechanics is a valid functorial completion that:
+\begin{itemize}[itemsep=4pt]
+\item Bridges the extension deficit by supplementing $\yo^{(\Sys, \sigma_\Sys)}$ with position data.
+\item Achieves determinism at the cost of non-locality and contextuality.
+\item Is empirically indistinguishable from standard quantum mechanics (by construction).
+\item Is one of many possible completions compatible with the Yoneda Constraint.
+\end{itemize}
+
+The framework does not adjudicate between Bohmian mechanics and other interpretations; rather, it classifies all viable completions by their categorical properties and shows that any deterministic completion must share certain features (non-locality, contextuality, $\psi$-onticity) by the no-go theorems.
+
+\subsection{Implications for Quantum Foundations}
+
+The Yoneda Constraint framework suggests several shifts in perspective on the hidden variable debates:
+
+\begin{enumerate}[label=\textbf{(\alph*)},itemsep=6pt]
+
+\item \textbf{From ontological to structural:} The question ``do hidden variables exist?'' is replaced by ``what is the categorical structure of the measurement category?'' The former is metaphysical and undecidable; the latter is mathematical and tractable.
+
+\item \textbf{From completeness to perspectival adequacy:} Instead of asking whether quantum mechanics is ``complete,'' we ask whether the representable presheaf from a given observer position provides adequate descriptions for practical purposes. The Yoneda lemma guarantees adequacy \emph{from that position}.
+
+\item \textbf{From hidden to structurally inaccessible:} Variables are not ``hidden'' by nature's conspiracy but by the categorical structure of embedded observation. The Yoneda Constraint makes this structural inaccessibility precise and quantifiable through the extension deficit.
+
+\item \textbf{Unification of no-go theorems:} The various no-go theorems become instances of a single phenomenon---presheaf obstructions to functorial completions---differing only in which type of completion they prohibit.
+
+\end{enumerate}
+
+\subsection{Connection to Other YonedaAI Papers}
+
+This paper builds on and connects to the broader YonedaAI research program:
+\begin{itemize}[itemsep=4pt]
+\item The \textbf{Measurement Boundary Problem} \cite{measurement_paradox} provides the concept of epistemic horizons and measurement opacity that underlies structural hiddenness.
+\item The \textbf{Emergence Incompleteness Theorem} \cite{mbp_godel} provides the diagonal argument establishing that the hidden variable question is undecidable from within the emergent theory.
+\item The \textbf{SRIP} \cite{srip_unified} provides the meta-theoretical framework: the hidden variable question is an instance of the self-referential limitation that any sufficiently expressive system faces.
+\item The \textbf{Embedded Observer Constraint} \cite{embedded_observer_v1,embedded_observer_v2} provides the information-theoretic bounds on observer knowledge.
+\item The \textbf{Yoneda Constraint} papers \cite{yoneda_constraint_v1,yoneda_constraint_v2} provide the core mathematical framework: representable presheaves, Kan extensions, and the extension deficit.
+\end{itemize}
+
+%% ============================================================
+\section{Computational Implementation}\label{sec:code}
+%% ============================================================
+
+We have developed accompanying Haskell code that implements the categorical structures and verifies the presheaf obstructions computationally. The code is available in the \texttt{src/hidden-variable-debates/} directory and includes:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=4pt]
+\item \textbf{Category.hs:} Core categorical definitions---objects, morphisms, functors, natural transformations, and the Yoneda embedding.
+\item \textbf{MeasurementCategory.hs:} Implementation of $\catMeas_Q$ with density operators and CPTP maps.
+\item \textbf{Presheaf.hs:} Presheaf operations, including factorizability checks and global section detection.
+\item \textbf{KochenSpecker.hs:} Verification of the Kochen--Specker obstruction for specific configurations.
+\item \textbf{Bell.hs:} CHSH inequality computation and violation detection.
+\item \textbf{KanExtension.hs:} Computation of Kan extensions and extension deficits.
+\item \textbf{HiddenVariable.hs:} Implementation of hidden variable models and functorial completions.
+\item \textbf{Main.hs:} Executable demonstrations of the main results.
+\end{enumerate}
+
+The Haskell implementation leverages the language's type system to enforce categorical laws at the type level. Functors are represented as type classes, natural transformations as polymorphic functions, and the Yoneda lemma as the isomorphism between \texttt{Nat (Hom a) f} and \texttt{f a}.
+
+\begin{remark}[Scope of the code]
+The computational implementation operates in the finite-dimensional setting (qubit systems), which is the natural domain for the Kochen--Specker theorem and Bell inequalities. The Bohmian mechanics analysis in \texttt{HiddenVariable.hs} uses simplified continuous-variable simulations for illustration but does not implement the full infinite-dimensional categorical structure. The distinction between the algebraic/categorical modules (finite-dimensional, exact) and the dynamical simulation modules (continuous, numerical) is maintained throughout.
+\end{remark}
+
+\subsection{Key Computational Results}
+
+The code verifies:
+\begin{itemize}[itemsep=4pt]
+\item The Kochen--Specker obstruction for the Peres--Mermin magic square.
+\item CHSH inequality violations for the singlet state with optimal measurement angles.
+\item The non-factorizability of the representable presheaf for entangled states.
+\item The non-trivial extension deficit for bipartite entangled systems.
+\item The empirical adequacy of the Bohmian completion (via numerical simulation).
+\end{itemize}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have analyzed the hidden variable debates in quantum mechanics through the lens of the Yoneda Constraint on Observer Knowledge. The central insight is that ``hidden variables'' are not hidden by contingent practical limitations but by the categorical structure of embedded observation: the Yoneda lemma guarantees that an observer's knowledge is complete \emph{from its position} while being generically incomplete \emph{as knowledge of the total reality}.
+
+The main results are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=2em,itemsep=6pt]
+
+\item \textbf{Hidden variables as structural inaccessibility} (\cref{prop:structural-hiddenness}): Features of $\R$ outside the representable presheaf are structurally, not merely practically, inaccessible.
+
+\item \textbf{HV theories as functorial completions} (\cref{def:functorial-completion}): Hidden variable theories correspond to extensions of the measurement category, classified by their categorical properties.
+
+\item \textbf{Unified no-go theorems} (\cref{sec:nogo}): Von Neumann, Kochen--Specker, Bell, PBR, and Free Will theorems arise as presheaf obstructions prohibiting different types of functorial completions.
+
+\item \textbf{Contextuality as cohomological obstruction} (\cref{sec:contextuality}): Quantum contextuality is quantified by the \v{C}ech cohomology of the empirical model presheaf, bounded by the extension deficit.
+
+\item \textbf{Bohmian mechanics as Kan extension} (\cref{sec:bohm}): Bohm's pilot-wave theory is a specific functorial completion whose non-locality is a necessary consequence of bridging the extension deficit.
+
+\item \textbf{Structural undecidability} (\cref{thm:undecidability}): The hidden variable question is undecidable from within the quantum framework, an instance of the Emergence Incompleteness Theorem.
+
+\item \textbf{EPR resolution} (\cref{prop:epr-resolution}): The EPR paradox dissolves when one recognizes that embedded observer knowledge is inherently perspectival (representable presheaves from specific positions) rather than global (single comprehensive description).
+
+\end{enumerate}
+
+The Yoneda Constraint framework transforms the hidden variable debate from a metaphysical dispute about the nature of reality into a mathematical question about the categorical structure of measurement. The answer it provides is nuanced: hidden variables are neither proven nor disproven, but shown to be \emph{structurally inaccessible}---a consequence of the fundamental perspectivalism of embedded observation that the Yoneda lemma makes precise.
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the YonedaAI Research Collective for support and for the development of the categorical framework upon which this analysis is built.
+
+\paragraph{AI-assisted research disclosure.} Portions of this manuscript were developed through extended collaborative workflows with AI language models (Claude, Anthropic). The AI assisted with literature review, LaTeX typesetting, proof drafting, categorical analysis, and Haskell implementation. All mathematical content, physical arguments, and editorial decisions were directed and verified by the human author.
+
+%% ============================================================
+\appendix
+%% ============================================================
+
+\section{Detailed Proof of Theorem~\ref{thm:bell-cat}}\label{app:bell-proof}
+
+\begin{proof}
+We provide a complete proof of the Bell obstruction in categorical language.
+
+Let $\Sys_A \cup \Sys_B$ be in entangled state $\rho$ with $\rho_A = \Tr_B(\rho)$. Suppose a local deterministic completion $\catMeas^+$ exists with:
+\begin{itemize}[nosep]
+\item Objects $(\Sys_i, \sigma_i, \lambda_i)$ for $i \in \{A, B\}$.
+\item Factorization: $\yo^{(\Sys_A \cup \Sys_B, \rho, \lambda)} = \yo^{(\Sys_A, \rho_A, \lambda_A)} \times \yo^{(\Sys_B, \rho_B, \lambda_B)}$.
+\item Determinism: for each $\lambda_i$ and measurement direction $\mathbf{a}$, the outcome $A(\mathbf{a}, \lambda_A) \in \{-1, +1\}$ is definite.
+\end{itemize}
+
+The correlation for measurement directions $\mathbf{a}, \mathbf{b}$ is:
+\[
+E(\mathbf{a}, \mathbf{b}) = \int_\Lambda A(\mathbf{a}, \lambda_A) B(\mathbf{b}, \lambda_B) \, d\mu(\lambda)
+\]
+
+For the CHSH combination with settings $\mathbf{a}, \mathbf{a}', \mathbf{b}, \mathbf{b}'$:
+\begin{align}
+&|E(\mathbf{a},\mathbf{b}) - E(\mathbf{a},\mathbf{b}')| + |E(\mathbf{a}',\mathbf{b}) + E(\mathbf{a}',\mathbf{b}')| \\
+&= \left|\int A(\mathbf{a},\lambda_A)[B(\mathbf{b},\lambda_B) - B(\mathbf{b}',\lambda_B)] d\mu\right| + \left|\int A(\mathbf{a}',\lambda_A)[B(\mathbf{b},\lambda_B) + B(\mathbf{b}',\lambda_B)] d\mu\right| \\
+&\leq \int |B(\mathbf{b},\lambda_B) - B(\mathbf{b}',\lambda_B)| d\mu + \int |B(\mathbf{b},\lambda_B) + B(\mathbf{b}',\lambda_B)| d\mu
+\end{align}
+
+Since $B \in \{-1, +1\}$, either $B(\mathbf{b}) = B(\mathbf{b}')$ (giving $|B-B'| = 0, |B+B'| = 2$) or $B(\mathbf{b}) = -B(\mathbf{b}')$ (giving $|B-B'| = 2, |B+B'| = 0$). In either case the integrand is $\leq 2$, yielding $|\langle\text{CHSH}\rangle| \leq 2$.
+
+For the singlet state with optimal angles ($\mathbf{a} - \mathbf{b} = \pi/8$), quantum mechanics predicts:
+\[
+|\langle\text{CHSH}\rangle_{\QM}| = 2\sqrt{2} > 2
+\]
+contradicting the local deterministic bound. Hence no such completion exists.
+\end{proof}
+
+\section{The Peres--Mermin Magic Square}\label{app:peres-mermin}
+
+The Peres--Mermin magic square provides a particularly elegant proof of the Kochen--Specker theorem in dimension 4. Consider the $3 \times 3$ array of operators on $\mathbb{C}^4 = \mathbb{C}^2 \otimes \mathbb{C}^2$:
+
+\[
+\begin{array}{ccc}
+\sigma_x \otimes \mathbf{1} & \mathbf{1} \otimes \sigma_x & \sigma_x \otimes \sigma_x \\
+\mathbf{1} \otimes \sigma_y & \sigma_y \otimes \mathbf{1} & \sigma_y \otimes \sigma_y \\
+\sigma_x \otimes \sigma_y & \sigma_y \otimes \sigma_x & \sigma_z \otimes \sigma_z
+\end{array}
+\]
+
+Each row and column consists of commuting operators whose product is $+\mathbf{1}$, except the last column whose product is $-\mathbf{1}$. If a non-contextual value assignment $v$ existed, the product of all values in each row would be $+1$ and in each column would be $+1$ (except the last, which would be $-1$). But the product of all 9 values computed row-by-row gives $(+1)^3 = +1$, while computed column-by-column gives $(+1)^2(-1) = -1$. This contradiction proves no non-contextual assignment exists.
+
+In presheaf language, each row and column defines a context (commuting set). The local sections (value assignments within each context) are individually consistent, but they cannot be glued into a global section. The \v{C}ech 1-cocycle is:
+\[
+c_{ij} = v|_{C_i \cap C_j}^{(i)} - v|_{C_i \cap C_j}^{(j)}
+\]
+which is non-trivial, witnessing the cohomological obstruction.
+
+\section{Comparison Table: Interpretations and Functorial Properties}\label{app:comparison}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lccccl@{}}
+\toprule
+\textbf{Interpretation} & \textbf{Det.} & \textbf{Local} & \textbf{Context.} & \textbf{$\psi$-ontic} & \textbf{Yoneda Status} \\
+\midrule
+Copenhagen & No & Yes & N/A & Unclear & No completion; $\yo^{(\Sys,\sigma)}$ is complete \\
+Many-Worlds & No & Yes & No & Yes & $\catMeas$ is total; branches in $\catMeas_Q$ \\
+Bohmian & Yes & No & Yes & Yes & Specific Kan ext.\ via guidance eq. \\
+QBism & No & Yes & N/A & No & Subjective presheaf; no ext.\ needed \\
+Relational QM & No & Yes & Yes & Unclear & $\yo^{(\Sys,\sigma)}$ \emph{is} the relational state \\
+Collapse & No & Yes & No & Yes & Decoherence functor as $\pi$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{yoneda_constraint_v1}
+M. Long and The YonedaAI Collaboration, ``The Significance of the Yoneda Constraint on Observer Knowledge to Foundational Physics: From Quantum to Classical,'' GrokRxiv:2026.02 (2026).
+
+\bibitem{yoneda_constraint_v2}
+M. Long and The YonedaAI Collaboration, ``A Yoneda-Lemma Perspective on Embedded Observers: Relational Constraints from Quantum Measurement to Classical Phase Space,'' GrokRxiv:2026.02 (2026).
+
+\bibitem{embedded_observer_v1}
+M. Long and The YonedaAI Collaboration, ``The Embedded Observer Constraint: On the Structural Bounds of Scientific Measurement,'' GrokRxiv:2026.02 (2026).
+
+\bibitem{embedded_observer_v2}
+M. Long and The YonedaAI Collaboration, ``The Embedded Observer Constraint: On the Structural Bounds of Scientific Measurement (Revised),'' GrokRxiv:2026.02 (2026).
+
+\bibitem{measurement_paradox}
+M. Long and The YonedaAI Collaboration, ``The Measurement Paradox in Emergent Spacetime Physics: Structural Limits on Observational Access to Pre-Geometric Ontology,'' GrokRxiv:2026 (2026).
+
+\bibitem{mbp_godel}
+M. Long and The YonedaAI Collaboration, ``G\"odel Meets Spacetime: Incompleteness Theorems and the Measurement Boundary Problem,'' GrokRxiv:2026 (2026).
+
+\bibitem{srip_unified}
+M. Long and The YonedaAI Collaboration, ``The Self-Reference Incompleteness Principle: A Unified Framework from G\"odel to Lawvere,'' GrokRxiv:2026.02 (2026).
+
+\bibitem{epr1935}
+A. Einstein, B. Podolsky, and N. Rosen, ``Can quantum-mechanical description of physical reality be considered complete?'' \emph{Phys. Rev.} \textbf{47}, 777--780 (1935).
+
+\bibitem{bohr1935}
+N. Bohr, ``Can quantum-mechanical description of physical reality be considered complete?'' \emph{Phys. Rev.} \textbf{48}, 696--702 (1935).
+
+\bibitem{vonneumann1932}
+J. von Neumann, \emph{Mathematische Grundlagen der Quantenmechanik}, Springer, 1932. English translation: \emph{Mathematical Foundations of Quantum Mechanics}, Princeton University Press, 1955.
+
+\bibitem{bohm1952a}
+D. Bohm, ``A suggested interpretation of the quantum theory in terms of `hidden' variables. I,'' \emph{Phys. Rev.} \textbf{85}, 166--179 (1952).
+
+\bibitem{bohm1952b}
+D. Bohm, ``A suggested interpretation of the quantum theory in terms of `hidden' variables. II,'' \emph{Phys. Rev.} \textbf{85}, 180--193 (1952).
+
+\bibitem{bell1964}
+J. S. Bell, ``On the Einstein Podolsky Rosen paradox,'' \emph{Physics Physique Fizika} \textbf{1}, 195--200 (1964).
+
+\bibitem{bell1966}
+J. S. Bell, ``On the problem of hidden variables in quantum mechanics,'' \emph{Rev. Mod. Phys.} \textbf{38}, 447--452 (1966).
+
+\bibitem{kochen1967}
+S. Kochen and E. P. Specker, ``The problem of hidden variables in quantum mechanics,'' \emph{J. Math. Mech.} \textbf{17}, 59--87 (1967).
+
+\bibitem{chsh1969}
+J. F. Clauser, M. A. Horne, A. Shimony, and R. A. Holt, ``Proposed experiment to test local hidden-variable theories,'' \emph{Phys. Rev. Lett.} \textbf{23}, 880--884 (1969).
+
+\bibitem{tsirelson1980}
+B. S. Tsirelson, ``Quantum generalizations of Bell's inequality,'' \emph{Lett. Math. Phys.} \textbf{4}, 93--100 (1980).
+
+\bibitem{pbr2012}
+M. F. Pusey, J. Barrett, and T. Rudolph, ``On the reality of the quantum state,'' \emph{Nature Physics} \textbf{8}, 475--478 (2012). arXiv:1111.3328.
+
+\bibitem{conwaykochen2006}
+J. Conway and S. Kochen, ``The free will theorem,'' \emph{Found. Phys.} \textbf{36}, 1441--1473 (2006). arXiv:quant-ph/0604079.
+
+\bibitem{abramsky2011}
+S. Abramsky and A. Brandenburger, ``The sheaf-theoretic structure of non-locality and contextuality,'' \emph{New J. Phys.} \textbf{13}, 113036 (2011). arXiv:1102.0264.
+
+\bibitem{hardy1993}
+L. Hardy, ``Nonlocality for two particles without inequalities for almost all entangled states,'' \emph{Phys. Rev. Lett.} \textbf{71}, 1665--1668 (1993).
+
+\bibitem{durr1992}
+D. D\"urr, S. Goldstein, and N. Zangh\`i, ``Quantum equilibrium and the origin of absolute uncertainty,'' \emph{J. Stat. Phys.} \textbf{67}, 843--907 (1992). arXiv:quant-ph/0308039.
+
+\bibitem{kelly1982}
+G. M. Kelly, \emph{Basic Concepts of Enriched Category Theory}, London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge, 1982. Reprinted in \emph{Repr.\ Theory Appl.\ Categ.} \textbf{10}, 1--136 (2005).
+
+\bibitem{maclane1998}
+S. Mac Lane, \emph{Categories for the Working Mathematician}, 2nd ed., Springer, 1998.
+
+\bibitem{riehl2017}
+E. Riehl, \emph{Category Theory in Context}, Dover, 2017.
+
+\bibitem{rovelli1996}
+C. Rovelli, ``Relational quantum mechanics,'' \emph{Int. J. Theor. Phys.} \textbf{35}, 1637--1678 (1996). arXiv:quant-ph/9609002.
+
+\bibitem{butterfield1998}
+J. Butterfield and C. J. Isham, ``A topos perspective on the Kochen--Specker theorem: I,'' \emph{Int. J. Theor. Phys.} \textbf{37}, 2669--2733 (1998). arXiv:quant-ph/9803055.
+
+\bibitem{wallace2012}
+D. Wallace, \emph{The Emergent Multiverse}, Oxford University Press, 2012.
+
+\bibitem{heunen2019}
+C. Heunen and J. Vicary, \emph{Categories for Quantum Theory: An Introduction}, Oxford University Press, 2019.
+
+\end{thebibliography}
+
+\end{document}

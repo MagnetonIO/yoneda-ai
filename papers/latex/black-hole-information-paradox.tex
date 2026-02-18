@@ -1,0 +1,974 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,arrows.meta,positioning,calc}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{abstract}
+\usepackage{setspace}
+
+\geometry{margin=1in}
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catAlg}{\mathbf{Alg}}
+\newcommand{\catBan}{\mathbf{Ban}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catvNAlg}{\mathbf{vNAlg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+\newcommand{\BH}{\mathrm{BH}}
+\newcommand{\Rad}{\mathrm{Rad}}
+\newcommand{\EW}{\mathrm{EW}}
+\newcommand{\HRT}{\mathrm{HRT}}
+\newcommand{\QES}{\mathrm{QES}}
+\newcommand{\Alg}{\mathcal{A}}
+\newcommand{\Hilb}{\mathcal{H}}
+
+%% ---- GrokRxiv DOI sidebar ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.black-hole-information-yoneda\quad
+       [\,hep-th\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Title ----
+\title{\textbf{The Black Hole Information Paradox\\from the Yoneda Constraint Perspective:\\Representable Functors, Epistemic Horizons,\\and the Structure of Hawking Radiation}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We analyze the black hole information paradox through the lens of the Yoneda Constraint on Observer Knowledge, a category-theoretic principle establishing that an embedded observer $\Sys$ accesses reality $\R$ only through the representable functor $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$. We argue that the information paradox---the apparent conflict between unitarity and the thermal nature of Hawking radiation---acquires a natural structural resolution when formulated within the measurement category framework. The key insight is that the infalling and asymptotic observers occupy fundamentally different objects in the measurement category $\catMeas_{\BH}$, giving rise to distinct representable functors that encode complementary but non-simultaneously-realizable relational knowledge. We develop a categorical formulation of black hole complementarity in which the firewall paradox dissolves as a consequence of the Yoneda Constraint: the assumption that both observers share a single global presheaf violates the structure of embedded observation. We construct the black hole measurement category, characterize the Kan extension deficit for observers with access only to Hawking radiation, and establish connections to the Page curve via the time-dependent epistemic horizon. We show that the island formula for entanglement entropy admits a natural interpretation as a transition in the structure of representable functors, corresponding to the moment when the observer's Kan extension begins to recover information about the black hole interior. Accompanying Haskell code provides computational models of the key categorical structures. The framework unifies insights from black hole complementarity, the holographic principle, quantum error correction, and the recent island/replica developments into a single coherent perspective grounded in the Yoneda lemma.
+
+\medskip
+\noindent\textbf{Keywords:} black hole information paradox, Yoneda lemma, category theory, Hawking radiation, black hole complementarity, firewall paradox, Page curve, island formula, epistemic horizons, representable functors, Kan extensions, holographic principle
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The black hole information paradox, first articulated by Hawking in 1976 \cite{hawking1976}, remains one of the deepest problems in theoretical physics. At its core lies a conflict between two foundational principles: the unitarity of quantum mechanics, which demands that information is preserved in any physical process, and the semiclassical analysis of black hole evaporation, which produces thermal Hawking radiation that appears to destroy information about the matter that formed the black hole.
+
+Nearly five decades of work on this problem have produced remarkable insights---from black hole complementarity \cite{susskind1993} and the holographic principle \cite{thooft1993,susskind1995} to the AdS/CFT correspondence \cite{maldacena1999}, the firewall paradox \cite{almheiri2013}, and the recent island formula developments \cite{penington2020,almheiri2019island}. Yet the problem persists, in part because the various proposed resolutions operate within different conceptual frameworks that are difficult to compare directly.
+
+In this paper, we propose that the Yoneda Constraint on Observer Knowledge---a category-theoretic principle developed in previous work by the YonedaAI Collaboration \cite{long2026yoneda,long2026yonedav2,long2026eoc,long2026eocv2}---provides a unifying structural perspective on the information paradox. The Yoneda Constraint states that an embedded observer $\Sys$ accesses reality $\R$ only through the representable functor $\yo^{(\Sys, \sigma_\Sys)} = \Hom_{\catMeas}((\Sys, \sigma_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself when $\Sys \subsetneq \R$.
+
+Applied to the black hole setting, the Yoneda Constraint reveals that the information paradox is, at root, a consequence of the incompatibility of different observers' representable functors. The asymptotic observer and the infalling observer occupy different objects in the measurement category, giving rise to different representable functors that encode genuinely different---and non-simultaneously-realizable---relational knowledge about the black hole spacetime. The paradox arises when one illegitimately attempts to combine these distinct perspectival descriptions into a single global account.
+
+\subsection{Summary of Contributions}
+
+Our main contributions are:
+
+\begin{enumerate}[label=(\arabic*),itemsep=6pt]
+\item \textbf{Black hole measurement category} (\cref{sec:bh-meas-cat}): We construct the measurement category $\catMeas_{\BH}$ appropriate to the black hole setting, with objects encoding observer positions relative to the horizon and morphisms encoding measurement-preserving maps between observers.
+
+\item \textbf{Yoneda analysis of complementarity} (\cref{sec:complementarity}): We formulate black hole complementarity as the statement that the representable functors of the infalling and asymptotic observers are distinct and non-simultaneously-embeddable in a single consistent presheaf, resolving the firewall paradox.
+
+\item \textbf{Kan extension deficit and information recovery} (\cref{sec:kan-info}): We characterize the information recovery problem as a Kan extension problem and show that the extension deficit measures the information about the black hole interior that is inaccessible to the asymptotic observer.
+
+\item \textbf{Page curve as presheaf transition} (\cref{sec:page-curve}): We interpret the Page curve and the island formula as a transition in the structure of the observer's representable functor, corresponding to the moment when the Kan extension begins to recover interior information through entanglement with early radiation.
+
+\item \textbf{Haskell implementation} (\cref{sec:haskell}): We provide accompanying Haskell code that computationally models the categorical structures, including the measurement category, representable functors, and the Kan extension deficit.
+\end{enumerate}
+
+\subsection{Relation to Prior Work}
+
+Our framework builds on and connects several strands of existing research:
+
+\begin{itemize}[itemsep=4pt]
+\item The Yoneda Constraint on Observer Knowledge \cite{long2026yoneda,long2026yonedav2}, which provides the foundational categorical framework.
+\item The Embedded Observer Constraint \cite{long2026eoc,long2026eocv2}, which establishes information-theoretic bounds on embedded observation.
+\item The Measurement Boundary Problem \cite{long2026mbp}, which analyzes structural limitations on observational access in emergent spacetime.
+\item Black hole complementarity \cite{susskind1993,susskind1993stretching}, which posits that infalling and asymptotic observers see complementary physics.
+\item The sheaf-theoretic approach to contextuality \cite{abramsky2011}, which provides the presheaf-theoretic language for incompatible descriptions.
+\item Quantum error correction in holography \cite{almheiri2015qec,harlow2017}, which connects bulk reconstruction to error-correcting codes.
+\item The island formula \cite{penington2020,almheiri2019island,almheiri2020page}, which resolves the Page curve through gravitational path integrals.
+\end{itemize}
+
+\subsection{Plan of the Paper}
+
+\Cref{sec:background} reviews the necessary background on the information paradox and the Yoneda Constraint. \Cref{sec:bh-meas-cat} constructs the black hole measurement category. \Cref{sec:yoneda-bh} applies the Yoneda Constraint to the black hole setting. \Cref{sec:complementarity} develops the categorical formulation of complementarity and resolves the firewall paradox. \Cref{sec:kan-info} treats the Kan extension deficit and information recovery. \Cref{sec:page-curve} interprets the Page curve and island formula. \Cref{sec:holographic} connects to holographic entanglement entropy. \Cref{sec:haskell} describes the accompanying Haskell code. \Cref{sec:discussion} discusses open questions. \Cref{sec:conclusion} concludes.
+
+%% ============================================================
+\section{Background}\label{sec:background}
+%% ============================================================
+
+\subsection{The Black Hole Information Paradox}
+
+A black hole formed from the gravitational collapse of matter in a pure quantum state $|\psi\rangle$ radiates thermally via the Hawking process \cite{hawking1975}. The radiation has a thermal spectrum at the Hawking temperature
+\[
+T_H = \frac{\hbar c^3}{8\pi G M k_B},
+\]
+where $M$ is the black hole mass. If the evaporation proceeds to completion, the final state is thermal radiation---a mixed state---implying that the evolution from $|\psi\rangle$ to the final radiation is non-unitary.
+
+This conflicts with quantum mechanics, which requires that time evolution be unitary. The conflict is sharpened by Page's argument \cite{page1993}: if the evolution is unitary, the entanglement entropy of the radiation must follow the \emph{Page curve}---initially increasing as the black hole evaporates, then decreasing after the \emph{Page time} (when roughly half the entropy has been radiated) until the radiation is in a pure state. Hawking's semiclassical calculation, however, predicts monotonically increasing entanglement entropy, violating the Page curve.
+
+\subsection{Black Hole Complementarity}
+
+Susskind, Thorlacius, and Uglum \cite{susskind1993} proposed \emph{black hole complementarity}: the infalling observer sees smooth passage through the horizon, while the asymptotic observer sees information reflected back in the Hawking radiation. These descriptions are complementary---no single observer can verify both simultaneously, since doing so would require superluminal signaling.
+
+Complementarity resolves the paradox by denying the existence of a global description that simultaneously accounts for both observers' experiences. However, the AMPS argument \cite{almheiri2013} challenged complementarity by showing that it, combined with the assumption of smooth horizon physics, leads to a contradiction involving the monogamy of entanglement. AMPS argued that either the horizon is replaced by a ``firewall'' or one of the assumptions (unitarity, effective field theory below the Planck scale, no drama at the horizon) must fail.
+
+\subsection{The Island Formula and the Page Curve}
+
+Recent developments \cite{penington2020,almheiri2019island,almheiri2020page} have shown that gravitational path integrals, when properly accounting for replica wormhole contributions, reproduce the Page curve. The \emph{island formula} for the entanglement entropy of radiation is:
+\[
+S(\Rad) = \min \left\{ \mathrm{ext}_I \left[ \frac{\mathrm{Area}(\partial I)}{4G_N} + S_{\mathrm{bulk}}(\Rad \cup I) \right] \right\},
+\]
+where the extremization is over ``islands'' $I$---regions of the black hole interior that are included in the entanglement wedge of the radiation. Before the Page time, the minimal surface has no island contribution; after the Page time, an island forms inside the black hole, reducing the entropy and reproducing the Page curve.
+
+\subsection{The Yoneda Constraint on Observer Knowledge}
+
+The Yoneda Constraint \cite{long2026yoneda,long2026yonedav2} is a principle of embedded observation derived from the Yoneda lemma in category theory. We recall the essential elements.
+
+\begin{definition}[Measurement Category, {\cite{long2026yonedav2}}]\label{def:meas-cat-recall}
+The measurement category $\catMeas$ has objects $(\Sys, \sigma_\Sys)$ where $\Sys$ is a subsystem and $\sigma_\Sys$ is the restricted state, and morphisms are state-preserving channels (CPTP maps in the quantum case).
+\end{definition}
+
+\begin{proposition}[Yoneda Constraint, {\cite{long2026yonedav2}}]\label{prop:yoneda-constraint-recall}
+The embedded observer $\Sys$ accesses $\R$ only through the representable functor $\yo^{(\Sys, \sigma_\Sys)} = \Hom_{\catMeas}((\Sys, \sigma_\Sys), -)$. This determines $(\Sys, \sigma_\Sys)$ up to isomorphism but does not determine $\R$ when $\Sys \subsetneq \R$.
+\end{proposition}
+
+The Kan extension deficit $\Delta(\Sys)$ quantifies the gap between local and global descriptions: it vanishes if and only if $\Sys = \R$.
+
+%% ============================================================
+\section{The Black Hole Measurement Category}\label{sec:bh-meas-cat}
+%% ============================================================
+
+\subsection{Construction}
+
+We now construct the measurement category appropriate to the black hole setting. The key feature distinguishing this from the generic measurement category is the presence of the event horizon, which creates a non-trivial causal structure that constrains which measurements are available to which observers.
+
+\begin{definition}[Black Hole Measurement Category]\label{def:bh-meas-cat}
+Let $(\mathcal{M}, g)$ be a black hole spacetime with event horizon $\mathcal{H}^+$. The \emph{black hole measurement category} $\catMeas_{\BH}$ is the category whose:
+
+\begin{enumerate}[label=(\roman*),itemsep=6pt]
+\item \textbf{Objects} are triples $(\Sys, \Sigma_\Sys, \rho_\Sys)$ where:
+\begin{itemize}
+\item $\Sys$ is an observer subsystem localized in a spacetime region,
+\item $\Sigma_\Sys$ is the causal domain of $\Sys$---the set of spacetime events causally accessible to $\Sys$,
+\item $\rho_\Sys$ is the quantum state restricted to $\Sigma_\Sys$.
+\end{itemize}
+
+\item \textbf{Morphisms} $f: (\Sys_1, \Sigma_1, \rho_1) \to (\Sys_2, \Sigma_2, \rho_2)$ are \emph{information-preserving} CPTP maps $f: \mathcal{B}(\Hilb_{\Sigma_1}) \to \mathcal{B}(\Hilb_{\Sigma_2})$ satisfying:
+\begin{itemize}
+\item $f(\rho_1) = \rho_2$ (state preservation),
+\item $f$ is compatible with the causal structure: if $\Sigma_1 \not\subseteq J^-(\Sigma_2)$ (the causal past of $\Sigma_2$), then $f$ must factor through the shared causal domain,
+\item $f$ is \emph{non-trivial}: $f$ is not a state-preparation map $\rho \mapsto \Tr(\rho) \, \sigma$ for a fixed state $\sigma$. That is, we exclude channels that discard the input and prepare a fixed output, as these carry no information about the source observer's state. Formally, we require that $f$ has non-zero Holevo capacity $\chi(f) > 0$.
+\end{itemize}
+
+\noindent This restriction is physically motivated: we are interested in morphisms that represent genuine information transfer between observers, not trivial state preparations. Without this condition, one could always define a morphism from any observer to any other by tracing out the input, which would trivialize the horizon obstruction. The non-triviality condition ensures that $\Hom(\Sys_\infty, \Sys_{\mathrm{int}}) = \emptyset$ reflects the genuine impossibility of information transfer across the horizon, not merely a selection rule.
+
+\begin{remark}\label{rem:no-post-selection}
+We do not allow post-selection in our morphisms: all maps are CPTP (trace-preserving), not merely CP (trace-non-increasing). Post-selected channels would introduce additional subtleties relevant to final-state projection models \cite{horowitz2004} but are outside the scope of the present analysis.
+\end{remark}
+
+\item \textbf{Composition} is sequential composition of CPTP maps, subject to causality.
+
+\item \textbf{Identity} is the identity channel.
+\end{enumerate}
+\end{definition}
+
+\subsection{Distinguished Objects}
+
+The black hole spacetime gives rise to several distinguished objects in $\catMeas_{\BH}$.
+
+\begin{definition}[Asymptotic Observer]\label{def:asymptotic}
+The \emph{asymptotic observer} is the object
+\[
+\Sys_\infty = (\Sys_\infty, \Sigma_\infty, \rho_\infty)
+\]
+where $\Sigma_\infty$ is the causal domain of future null infinity $\mathscr{I}^+$ and $\rho_\infty$ is the state restricted to $\Sigma_\infty$. The asymptotic observer has access to the Hawking radiation but not to the black hole interior.
+\end{definition}
+
+\begin{definition}[Infalling Observer]\label{def:infalling}
+The \emph{infalling observer} is the object
+\[
+\Sys_{\mathrm{in}} = (\Sys_{\mathrm{in}}, \Sigma_{\mathrm{in}}, \rho_{\mathrm{in}})
+\]
+where $\Sigma_{\mathrm{in}}$ is the causal domain of the infalling worldline (crossing the horizon into the interior) and $\rho_{\mathrm{in}}$ is the state restricted to $\Sigma_{\mathrm{in}}$.
+\end{definition}
+
+\begin{definition}[Early Radiation Observer]\label{def:early-rad}
+The \emph{early radiation observer} at retarded time $u$ is the object
+\[
+\Sys_{\Rad}(u) = (\Sys_{\Rad}, \Sigma_{\Rad}(u), \rho_{\Rad}(u))
+\]
+where $\Sigma_{\Rad}(u)$ is the causal domain of the radiation collected up to time $u$, and $\rho_{\Rad}(u) = \Tr_{\BH \cup \mathrm{late\;rad}}(\rho)$ is the reduced state of the early radiation.
+\end{definition}
+
+\subsection{The Horizon as Morphism Obstruction}
+
+The event horizon $\mathcal{H}^+$ creates a fundamental obstruction in $\catMeas_{\BH}$.
+
+\begin{proposition}[Horizon Obstruction]\label{prop:horizon-obstruction}
+There is no morphism in $\catMeas_{\BH}$ from the asymptotic observer to any object localized in the black hole interior:
+\[
+\Hom_{\catMeas_{\BH}}(\Sys_\infty, \Sys_{\mathrm{int}}) = \emptyset
+\]
+for any interior object $\Sys_{\mathrm{int}}$ with $\Sigma_{\mathrm{int}} \subset \mathrm{int}(\BH)$.
+\end{proposition}
+
+\begin{proof}
+A morphism from $\Sys_\infty$ to $\Sys_{\mathrm{int}}$ would require a state-preserving channel from the exterior to the interior. By the causal structure of the black hole spacetime, $\Sigma_\infty \not\subseteq J^-(\Sigma_{\mathrm{int}})$ in general (the asymptotic region is not in the causal past of the interior at late times). Moreover, the no-signaling principle forbids the transmission of information from outside to the interior of a classical black hole (after the formation). Hence no such morphism exists.
+\end{proof}
+
+\begin{corollary}[Causal Asymmetry]\label{cor:causal-asymmetry}
+There exist morphisms from infalling objects to interior objects:
+\[
+\Hom_{\catMeas_{\BH}}(\Sys_{\mathrm{in}}, \Sys_{\mathrm{int}}) \neq \emptyset,
+\]
+while $\Hom_{\catMeas_{\BH}}(\Sys_\infty, \Sys_{\mathrm{int}}) = \emptyset$. The measurement category inherits the causal asymmetry of the spacetime.
+\end{corollary}
+
+\subsection{The Inclusion Structure}
+
+The measurement category has a natural filtration by retarded time.
+
+\begin{definition}[Time-Dependent Subcategory]\label{def:time-subcat}
+For each retarded time $u$, define the subcategory $\catMeas_{\BH}(u) \subset \catMeas_{\BH}$ consisting of objects whose causal domains are contained within the past of the constant-$u$ slice. The inclusion functors
+\[
+J_u: \catMeas_{\BH}(u) \hookrightarrow \catMeas_{\BH}
+\]
+form a filtration: $\catMeas_{\BH}(u_1) \subseteq \catMeas_{\BH}(u_2)$ for $u_1 \leq u_2$.
+\end{definition}
+
+This filtration is crucial for the time-dependent analysis of information recovery in \cref{sec:page-curve}.
+
+\begin{remark}[Backreaction and dynamical categories]\label{rem:backreaction}
+The definition of $\catMeas_{\BH}$ uses a fixed background spacetime $(\mathcal{M}, g)$, but black hole evaporation modifies the spacetime through backreaction. Strictly, the causal structure---and hence the morphism constraints---evolve as the black hole loses mass. We address this through the time-dependent subcategory filtration $\{\catMeas_{\BH}(u)\}_{u \geq 0}$: at each retarded time $u$, the subcategory $\catMeas_{\BH}(u)$ is defined with respect to the instantaneous causal structure of the semiclassical spacetime at time $u$.
+
+More precisely, one should view the collection $\{\catMeas_{\BH}(u)\}$ as a \emph{functor} from the poset $(\mathbb{R}_{\geq 0}, \leq)$ to $\mathbf{Cat}$, i.e., a filtered diagram of categories. The inclusions $J_{u_1 u_2}: \catMeas_{\BH}(u_1) \hookrightarrow \catMeas_{\BH}(u_2)$ for $u_1 \leq u_2$ encode the fact that later observers have access to all data available to earlier observers. The ``total'' category $\catMeas_{\BH}$ is the colimit of this diagram. This 2-categorical perspective naturally accommodates the teleological nature of the event horizon: the true event horizon is only defined with respect to the full colimit, while each $\catMeas_{\BH}(u)$ uses an approximate ``apparent horizon'' that evolves with backreaction. A full treatment of the dynamical measurement category, including gravitational backreaction as a 2-morphism, is left to future work (see \cref{sec:discussion}, Open Question 2).
+\end{remark}
+
+%% ============================================================
+\section{The Yoneda Constraint in Black Hole Spacetimes}\label{sec:yoneda-bh}
+%% ============================================================
+
+\subsection{Representable Functors of Black Hole Observers}
+
+We now apply the Yoneda Constraint to the distinguished observers in $\catMeas_{\BH}$.
+
+\begin{proposition}[Asymptotic Yoneda Functor]\label{prop:asymptotic-yoneda}
+The representable functor of the asymptotic observer,
+\[
+\yo^{\Sys_\infty} = \Hom_{\catMeas_{\BH}}(\Sys_\infty, -),
+\]
+encodes all measurements performable by an observer at future null infinity. By \cref{prop:horizon-obstruction}, $\yo^{\Sys_\infty}$ vanishes on all interior objects:
+\[
+\yo^{\Sys_\infty}(\Sys_{\mathrm{int}}) = \Hom(\Sys_\infty, \Sys_{\mathrm{int}}) = \emptyset.
+\]
+The asymptotic observer's relational knowledge of the interior is structurally zero.
+\end{proposition}
+
+\begin{proposition}[Infalling Yoneda Functor]\label{prop:infalling-yoneda}
+The representable functor of the infalling observer,
+\[
+\yo^{\Sys_{\mathrm{in}}} = \Hom_{\catMeas_{\BH}}(\Sys_{\mathrm{in}}, -),
+\]
+is non-trivial on both exterior and interior objects. The infalling observer has relational access to the horizon-crossing region and sees smooth geometry (no firewall), in accordance with the equivalence principle.
+\end{proposition}
+
+\begin{proposition}[Non-Isomorphism of Observer Presheaves]\label{prop:non-iso}
+The representable functors $\yo^{\Sys_\infty}$ and $\yo^{\Sys_{\mathrm{in}}}$ are non-isomorphic as functors $\catMeas_{\BH} \to \catSet$:
+\[
+\yo^{\Sys_\infty} \not\cong \yo^{\Sys_{\mathrm{in}}}.
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:asymptotic-yoneda}, $\yo^{\Sys_\infty}(\Sys_{\mathrm{int}}) = \emptyset$ for interior objects, while by \cref{prop:infalling-yoneda}, $\yo^{\Sys_{\mathrm{in}}}(\Sys_{\mathrm{int}}) \neq \emptyset$. Since the functors differ on at least one object, they are non-isomorphic.
+\end{proof}
+
+\subsection{The Information Paradox as Presheaf Incompatibility}
+
+The information paradox can now be reformulated in presheaf-theoretic language.
+
+\begin{proposition}[Paradox as Presheaf Conflict]\label{prop:paradox-presheaf}
+The black hole information paradox arises from the assumption that there exists a single global presheaf $F: \catMeas_{\BH}^{\op} \to \catSet$ that simultaneously:
+\begin{enumerate}[label=(\roman*)]
+\item restricts to the asymptotic observer's representable functor on exterior objects (encoding Hawking radiation as thermal),
+\item restricts to the infalling observer's representable functor on the horizon region (encoding smooth passage),
+\item satisfies a global consistency (unitarity) condition.
+\end{enumerate}
+The Yoneda Constraint implies that conditions (i) and (ii) correspond to distinct objects in $\catMeas_{\BH}$ with non-isomorphic representable functors (\cref{prop:non-iso}). Condition (iii) imposes a global section requirement. The paradox is the presheaf-theoretic statement that no global section exists that satisfies all three conditions simultaneously.
+\end{proposition}
+
+This reformulation connects the information paradox to the presheaf-theoretic framework of contextuality developed by Abramsky and Brandenburger \cite{abramsky2011}: the information paradox is a \emph{contextuality obstruction} in the black hole measurement category. Just as the Kochen--Specker theorem shows that quantum mechanics admits no non-contextual hidden variable model (no global section of the valuation presheaf), the information paradox shows that black hole physics admits no global description that simultaneously respects all observers' perspectives.
+
+\subsection{The Epistemic Horizon of the Asymptotic Observer}
+
+\begin{definition}[Black Hole Epistemic Horizon]\label{def:bh-epistemic-horizon}
+The \emph{epistemic horizon} of the asymptotic observer is the full subcategory
+\[
+\catMeas_{\BH}|_{\Sys_\infty} \subset \catMeas_{\BH}
+\]
+consisting of objects reachable by morphisms from $\Sys_\infty$. The \emph{epistemic boundary} is
+\[
+\partial_{\Sys_\infty} = \{X \in \catMeas_{\BH} : \Hom(\Sys_\infty, X) \neq \emptyset, \; X \not\subseteq \Sigma_\infty\}.
+\]
+\end{definition}
+
+\begin{proposition}[Epistemic Horizon Coincides with Event Horizon]\label{prop:epistemic-event}
+For the asymptotic observer of a classical (non-evaporating) black hole, the epistemic boundary $\partial_{\Sys_\infty}$ coincides with the event horizon $\mathcal{H}^+$: the categorical epistemic horizon is exactly the geometric event horizon.
+\end{proposition}
+
+\begin{proof}
+The causal domain $\Sigma_\infty$ is the causal past of $\mathscr{I}^+$, which is exactly the exterior of the black hole. Objects on the horizon boundary are those with causal domains intersecting $\mathcal{H}^+$. Objects strictly interior to the black hole are unreachable from $\Sys_\infty$. Hence $\partial_{\Sys_\infty} = \mathcal{H}^+$.
+\end{proof}
+
+\begin{remark}
+For an evaporating black hole, the epistemic horizon is time-dependent and does not precisely coincide with the event horizon (which is a global concept). This time-dependence is crucial for the Page curve analysis in \cref{sec:page-curve}.
+\end{remark}
+
+%% ============================================================
+\section{Categorical Black Hole Complementarity}\label{sec:complementarity}
+%% ============================================================
+
+\subsection{Complementarity as Presheaf Distinctness}
+
+Black hole complementarity \cite{susskind1993} asserts that the infalling and asymptotic observers see complementary physics that cannot be simultaneously verified. The Yoneda framework provides a precise mathematical formulation.
+
+\begin{definition}[Categorical Complementarity]\label{def:cat-complementarity}
+Two observers $\Sys_1, \Sys_2 \in \catMeas_{\BH}$ are \emph{categorically complementary} if:
+\begin{enumerate}[label=(\roman*)]
+\item Their representable functors are non-isomorphic: $\yo^{\Sys_1} \not\cong \yo^{\Sys_2}$.
+\item There is no third object $\Sys_3 \in \catMeas_{\BH}$ whose representable functor restricts to both $\yo^{\Sys_1}$ and $\yo^{\Sys_2}$ on their respective domains.
+\item The non-existence of $\Sys_3$ is enforced by the causal structure (no superluminal signaling).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Black Hole Complementarity from the Yoneda Constraint]\label{thm:bh-complementarity}
+The asymptotic observer $\Sys_\infty$ and the infalling observer $\Sys_{\mathrm{in}}$ are categorically complementary in $\catMeas_{\BH}$.
+\end{theorem}
+
+\begin{proof}
+Condition (i) follows from \cref{prop:non-iso}. For condition (ii), suppose $\Sys_3$ existed with $\yo^{\Sys_3}$ restricting to both $\yo^{\Sys_\infty}$ (on exterior objects) and $\yo^{\Sys_{\mathrm{in}}}$ (on interior objects). Then $\Sys_3$ would have morphisms to both exterior and interior objects, meaning its causal domain $\Sigma_3$ would overlap both the exterior and the deep interior. But by the Yoneda embedding (full and faithful), the relational data of $\yo^{\Sys_3}$ would determine $\Sys_3$ up to isomorphism, and a single observer with simultaneous access to both the asymptotic radiation and the interior would require a causal domain violating the black hole causal structure. For condition (iii), verifying both descriptions simultaneously would require an observer collecting Hawking radiation at $\mathscr{I}^+$ and also crossing the horizon---but the time required to collect sufficient radiation (of order the evaporation time) prevents subsequent crossing of the horizon before the black hole disappears.
+\end{proof}
+
+\subsection{Resolution of the Firewall Paradox}
+
+The AMPS argument \cite{almheiri2013} proceeds as follows. Consider a black hole past the Page time, and let $B$ denote a late Hawking mode, $A$ the early radiation, and $C$ the mode's interior partner. Unitarity requires $B$ to be maximally entangled with $A$ (for the Page curve to decrease); the smoothness of the horizon requires $B$ to be maximally entangled with $C$. By monogamy of entanglement, $B$ cannot be maximally entangled with both $A$ and $C$. The conclusion is that the horizon is replaced by a ``firewall''---a region of high-energy quanta at the horizon.
+
+\begin{theorem}[Yoneda Resolution of the Firewall Paradox]\label{thm:firewall-resolution}
+The AMPS argument fails within the Yoneda Constraint framework because it illegitimately assumes a single global presheaf that simultaneously encodes the $B$--$A$ entanglement (visible to $\Sys_\infty$) and the $B$--$C$ entanglement (visible to $\Sys_{\mathrm{in}}$).
+\end{theorem}
+
+\begin{proof}
+The $B$--$A$ entanglement is encoded in the representable functor $\yo^{\Sys_\infty}$: it manifests as a non-factorizability of the presheaf over the bipartition (early radiation, late radiation). The $B$--$C$ entanglement is encoded in $\yo^{\Sys_{\mathrm{in}}}$: it manifests as a non-factorizability over the bipartition (outgoing mode, interior mode).
+
+The AMPS argument implicitly assumes a single object $\Sys_{\mathrm{AMPS}}$ whose representable functor encodes both entanglements. By \cref{thm:bh-complementarity}, no such object exists in $\catMeas_{\BH}$. The monogamy-of-entanglement argument applies only within a single representable functor (a single observer's description), not across distinct representable functors corresponding to categorically complementary observers.
+
+Therefore, the ``firewall'' conclusion does not follow. The infalling observer's functor $\yo^{\Sys_{\mathrm{in}}}$ encodes smooth horizon physics ($B$--$C$ entanglement), and the asymptotic observer's functor $\yo^{\Sys_\infty}$ encodes unitary evaporation ($B$--$A$ entanglement after the Page time). These are consistent because they are descriptions from different objects in $\catMeas_{\BH}$, not a single contradictory description.
+\end{proof}
+
+\begin{remark}[Relation to Relational Quantum Mechanics]\label{rem:rqm}
+Our claim that ``monogamy of entanglement applies only within a single representable functor'' is a precise categorical formulation of a relational view of entanglement. In this framework, entanglement is not a global property of a state $|\Psi\rangle$ in some observer-independent Hilbert space; rather, it is a property of the relational data encoded in a specific representable functor $\yo^{\Sys}$. This is structurally aligned with Rovelli's relational quantum mechanics (RQM) \cite{rovelli1996}, which holds that quantum states are observer-relative. The Yoneda framework provides the mathematical backbone: the ``observer-relativity'' of RQM is the statement that different objects in $\catMeas_{\BH}$ have non-isomorphic representable functors, and there is no categorical reason to prefer one over another.
+
+The key distinction from AMPS is that their argument assumes the simultaneous applicability of $B$--$A$ entanglement (an asymptotic observer datum) and $B$--$C$ entanglement (an infalling observer datum) \emph{within a single description}. The Yoneda framework shows that these are data from different representable functors and that combining them requires the complementarity presheaf $F_{\mathrm{comp}}$, which is non-representable (\cref{prop:non-rep}). The monogamy argument is valid within $\yo^{\Sys_\infty}$ (where only $B$--$A$ is visible) and within $\yo^{\Sys_{\mathrm{in}}}$ (where only $B$--$C$ is visible), but not across them.
+\end{remark}
+
+\begin{remark}
+This resolution is structurally similar to Susskind's original complementarity argument \cite{susskind1993}, but the Yoneda framework makes the mathematical structure precise: it is not merely that ``no single observer can verify both descriptions'' (an operational statement), but that the measurement category \emph{does not contain an object} whose representable functor encodes both (a structural statement). The infalling observer's experience of a smooth horizon is encoded in $\yo^{\Sys_{\mathrm{in}}}$ and is not contradicted by the asymptotic observer's unitary Page curve, because these are evaluations of different functors on different objects.
+\end{remark}
+
+\subsection{The Complementarity Presheaf}
+
+Though no single representable functor captures both observers, we can define a \emph{complementarity presheaf} that encodes the combined data.
+
+\begin{definition}[Complementarity Presheaf]\label{def:comp-presheaf}
+The \emph{complementarity presheaf} is the coproduct
+\[
+F_{\mathrm{comp}} = \yo^{\Sys_\infty} \sqcup_{\yo^{\Sys_\infty} \cap \yo^{\Sys_{\mathrm{in}}}} \yo^{\Sys_{\mathrm{in}}}
+\]
+in $\PSh(\catMeas_{\BH})$, the pushout of the two representable functors along their restriction to the shared domain (the exterior region accessible to both).
+\end{definition}
+
+\begin{proposition}[Non-Representability of Complementarity]\label{prop:non-rep}
+The complementarity presheaf $F_{\mathrm{comp}}$ is not representable: there is no object $X \in \catMeas_{\BH}$ with $\yo^X \cong F_{\mathrm{comp}}$.
+\end{proposition}
+
+\begin{proof}
+If $F_{\mathrm{comp}}$ were representable by $X$, then by the Yoneda embedding, $X$ would have morphisms to all objects reachable by either $\Sys_\infty$ or $\Sys_{\mathrm{in}}$, contradicting the causal structure argument of \cref{thm:bh-complementarity}.
+\end{proof}
+
+The non-representability of the complementarity presheaf is the categorical signature of the information paradox. It states that no single observer position in the measurement category captures the ``complete'' black hole physics---this completeness is a property of the presheaf category $\PSh(\catMeas_{\BH})$ (which is ``bigger'' than $\catMeas_{\BH}$ itself), not of any individual object.
+
+%% ============================================================
+\section{Kan Extensions and Information Recovery}\label{sec:kan-info}
+%% ============================================================
+
+\subsection{The Information Recovery Problem as Extension Problem}
+
+The central question of the information paradox---whether information is preserved in black hole evaporation---can be formulated as a Kan extension problem in the Yoneda framework.
+
+\begin{definition}[Information Recovery as Kan Extension]\label{def:info-recovery}
+Let $J_\infty: \catMeas_{\BH}|_{\Sys_\infty} \hookrightarrow \catMeas_{\BH}$ be the inclusion of the asymptotic observer's accessible subcategory, and let $\mathfrak{D}_\infty$ be the description functor restricted to $\catMeas_{\BH}|_{\Sys_\infty}$. The \emph{information recovery problem} asks whether the left Kan extension
+\[
+\Lan_{J_\infty}(\mathfrak{D}_\infty \circ J_\infty)
+\]
+recovers the total description functor $\mathfrak{R}$ on all of $\catMeas_{\BH}$, including interior objects.
+\end{definition}
+
+\begin{definition}[Extension Deficit]\label{def:extension-deficit}
+Since our target category is $\catSet$ (not an abelian category), the ``cokernel'' of the comparison natural transformation $\eta: \Lan_{J}(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}$ is defined information-theoretically. For each object $X \in \catMeas_{\BH}$, the \emph{pointwise deficit} is
+\[
+\delta(X) = H(\mathfrak{R}(X) \mid \Lan_J(\mathfrak{D} \circ J)(X)),
+\]
+the conditional Shannon (or von Neumann) entropy of the true description $\mathfrak{R}(X)$ given the Kan extension's best approximation. The \emph{total extension deficit} is
+\[
+\Delta(\Sys) = \sum_{X \in \Ob(\catMeas_{\BH})} \delta(X).
+\]
+When working in the quantum setting with density operators, we replace the Shannon entropy with the von Neumann entropy and the conditional entropy with $S(\rho_{XR} \| \rho_{\Lan(X)} \otimes \rho_R)$, the relative entropy measuring the information gap.
+\end{definition}
+
+\begin{proposition}[Information Deficit of the Asymptotic Observer]\label{prop:info-deficit}
+For a black hole that has not yet begun to evaporate (or is in the early stages of evaporation before the Page time), the extension deficit
+\[
+\Delta(\Sys_\infty) = \sum_{X \in \Ob(\catMeas_{\BH})} \delta(X)
+\]
+is non-trivial: the asymptotic observer cannot recover the interior state. The deficit is bounded below by the entanglement entropy:
+\[
+\Delta(\Sys_\infty) \neq 0 \quad \Longleftrightarrow \quad S(\rho_{\Rad}) > 0.
+\]
+\end{proposition}
+
+\begin{proof}
+Before the Page time, the Hawking radiation is in a highly entangled state with the black hole interior. The asymptotic observer's accessible subcategory contains only exterior objects. The Kan extension, being the optimal extrapolation from exterior data, cannot recover information encoded in the entanglement between the radiation and the interior. By \cref{prop:horizon-obstruction}, there are no morphisms from exterior to interior objects, so the over-category $(J_\infty \downarrow X)$ is empty for interior objects $X$, and the pointwise Kan extension gives the initial object (no information): $\delta(X) = S(\mathfrak{R}(X))$ for all interior $X$.
+
+For the bound, note that $\Delta(\Sys_\infty) = 0$ requires $\delta(X) = 0$ for all $X$, which requires the Kan extension to recover $\mathfrak{R}(X)$ for all objects---including interior objects. But the reduced state of the radiation $\rho_{\Rad}$ is mixed (has nonzero von Neumann entropy) precisely when entangled with the interior. The Kan extension from the radiation's reduced state cannot distinguish different purifications, so the deficit on interior objects is at least $S_{\mathrm{vN}}(\rho_{\Rad}) > 0$.
+\end{proof}
+
+\subsection{The Bracket of Extrapolation for Black Holes}
+
+\begin{proposition}[Black Hole Extrapolation Bracket]\label{prop:bh-bracket}
+The left and right Kan extensions provide bounds on the true description:
+\[
+\Lan_{J_\infty}(\mathfrak{D}_\infty \circ J_\infty) \Rightarrow \mathfrak{R} \Rightarrow \Ran_{J_\infty}(\mathfrak{D}_\infty \circ J_\infty).
+\]
+For the asymptotic observer of a classical black hole, the bracket is maximally wide on interior objects: the left Kan extension gives the empty set (no information), while the right Kan extension gives the set of all states compatible with the exterior data (maximal ambiguity).
+\end{proposition}
+
+The width of the bracket on interior objects corresponds to the \emph{non-uniqueness of purification}: many interior states are compatible with the same reduced state of the radiation. This is the categorical version of the statement that the Hawking radiation, being thermal, carries no information about the specific microstate of the black hole.
+
+\subsection{Entanglement Entropy from the Extension Deficit}
+
+\begin{proposition}[Entanglement Entropy as Deficit Measure]\label{prop:entropy-deficit}
+In the quantum setting, the extension deficit for the asymptotic observer at time $u$ satisfies
+\[
+\Delta(\Sys_\infty, u) \neq 0 \quad \Longleftrightarrow \quad S_{\mathrm{vN}}(\rho_{\Rad}(u)) > 0.
+\]
+Moreover, the total deficit is bounded:
+\[
+S_{\mathrm{vN}}(\rho_{\Rad}(u)) \leq \Delta(\Sys_\infty, u) \leq \log \dim \Hilb_{\mathrm{int}} \cdot |\{X : X \text{ interior}\}|.
+\]
+The von Neumann entropy of the radiation quantifies the ``size'' of the deficit: when $S_{\mathrm{vN}}(\rho_{\Rad}(u)) = 0$, the radiation is pure and the deficit vanishes (full information recovery).
+\end{proposition}
+
+\begin{proof}
+$(\Rightarrow)$: If $\Delta(\Sys_\infty, u) \neq 0$, then there exists at least one object $X$ with $\delta(X) > 0$. For interior objects, $\delta(X) > 0$ implies the Kan extension does not recover $\mathfrak{R}(X)$, which requires entanglement between the radiation and the interior (otherwise the state factorizes and the reduced state determines the interior state). Hence $S_{\mathrm{vN}}(\rho_{\Rad}(u)) > 0$.
+
+$(\Leftarrow)$: If $S_{\mathrm{vN}}(\rho_{\Rad}(u)) > 0$, the radiation is entangled with the interior. The reduced state $\rho_{\Rad}(u) = \Tr_{\mathrm{int}}(|\Psi\rangle\langle\Psi|)$ is mixed. By the Holevo bound, the mutual information accessible through measurements on the radiation alone is bounded by $\chi \leq S_{\mathrm{vN}}(\rho_{\Rad})$. The Kan extension from the radiation's subcategory is limited by this Holevo information, so the deficit on interior objects is at least $S_{\mathrm{vN}}(\rho_{\Rad}(u))$, giving the lower bound.
+
+The upper bound follows because the maximum entropy of any interior object is $\log \dim \Hilb_{\mathrm{int}}$, and the deficit on exterior objects vanishes (the Kan extension recovers these exactly). This establishes the connection between the categorical deficit and the physical entropy, analogous to the Petz recovery map \cite{petz1986,petz1988} in operator algebra quantum error correction \cite{harlow2017,hayden2019}: the Kan extension plays the role of the Petz map, and the deficit measures the failure of exact recovery.
+\end{proof}
+
+This connects the abstract categorical notion of extension deficit to the concrete physical quantity of entanglement entropy, providing the bridge to the Page curve analysis in the next section.
+
+%% ============================================================
+\section{The Page Curve as Presheaf Transition}\label{sec:page-curve}
+%% ============================================================
+
+\subsection{Time-Dependent Epistemic Horizons}
+
+As the black hole evaporates, the asymptotic observer's epistemic horizon evolves. We model this through the time-dependent representable functor.
+
+\begin{definition}[Time-Dependent Representable Functor]\label{def:time-rep}
+The \emph{time-dependent representable functor} of the radiation observer at time $u$ is
+\[
+\yo^{\Sys_{\Rad}(u)} = \Hom_{\catMeas_{\BH}}(\Sys_{\Rad}(u), -).
+\]
+As $u$ increases, $\Sys_{\Rad}(u)$ collects more radiation, and the representable functor ``expands'' to encode more relational data.
+\end{definition}
+
+\begin{proposition}[Monotonicity of Radiation Knowledge]\label{prop:monotonicity-rad}
+The representable functors are monotone: for $u_1 \leq u_2$, there is a natural transformation
+\[
+\yo^{\Sys_{\Rad}(u_1)} \Rightarrow \yo^{\Sys_{\Rad}(u_2)}
+\]
+reflecting the fact that later radiation observers have at least as much relational knowledge as earlier ones.
+\end{proposition}
+
+\subsection{The Page Time as a Phase Transition in Presheaf Structure}
+
+The Page time is the retarded time $u_P$ at which the entanglement entropy of the radiation begins to decrease. In the Yoneda framework, this corresponds to a qualitative transition in the structure of the representable functor.
+
+\begin{theorem}[Page Time as Presheaf Transition]\label{thm:page-transition}
+At the Page time $u_P$, the representable functor $\yo^{\Sys_{\Rad}(u_P)}$ undergoes a structural transition:
+\begin{enumerate}[label=(\roman*)]
+\item For $u < u_P$ (before the Page time), the Kan extension deficit $\Delta(\Sys_{\Rad}(u))$ is increasing: the radiation observer has increasing relational data but the extrapolation to the interior is worsening because the entanglement is growing.
+
+\item For $u > u_P$ (after the Page time), the deficit begins to decrease: the radiation observer's representable functor begins to ``see'' interior information indirectly, through the entanglement structure of the collected radiation.
+
+\item At $u = u_{\mathrm{evap}}$ (complete evaporation), $\Delta(\Sys_{\Rad}(u_{\mathrm{evap}})) = 0$ if unitarity holds: the radiation is pure and the Kan extension recovers the full description.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof (sketch)]
+(i) Before the Page time, each emitted Hawking quantum increases the entanglement between the radiation and the remaining black hole. The representable functor of the radiation gains access to more morphisms (more radiation modes), but the extension deficit grows because the over-category $(J_\infty \downarrow X)$ for interior objects remains empty---the radiation modes are individually thermal and carry no accessible correlation with the interior.
+
+(ii) After the Page time, the radiation subsystem becomes larger than the black hole subsystem. By Page's theorem \cite{page1993average}, the reduced state of the radiation begins to deviate from maximal mixedness, and correlations within the radiation begin to encode information about the interior state. In the categorical language, the representable functor of the radiation observer begins to have non-trivial natural transformations to functors that depend on interior data, because the entanglement structure of the radiation acts as an ``indirect witness'' \cite{long2026mbp} for the interior state.
+
+(iii) At complete evaporation, the total state is (by assumption of unitarity) a pure state of the radiation. The Kan extension from the radiation's subcategory recovers the total description because the radiation is the total system.
+\end{proof}
+
+\subsection{The Island Formula in the Yoneda Framework}
+
+The island formula \cite{penington2020,almheiri2019island} states that after the Page time, an ``island''---a region of the black hole interior---is included in the entanglement wedge of the radiation. We give this a categorical interpretation.
+
+\begin{definition}[Categorical Island]\label{def:cat-island}
+A \emph{categorical island} at time $u > u_P$ is a collection of interior objects $I \subset \catMeas_{\BH}$ such that the extended subcategory
+\[
+\catMeas_{\BH}|_{\Sys_{\Rad}(u) \cup I}
+\]
+has the property that the Kan extension from this extended subcategory recovers more of $\mathfrak{R}$ than the Kan extension from $\catMeas_{\BH}|_{\Sys_{\Rad}(u)}$ alone.
+\end{definition}
+
+\begin{remark}[Island as subcategory vs.\ spacetime region]\label{rem:island-algebra}
+In the gravitational literature, the ``island'' $I$ is a spacetime region---a connected component of the interior that enters the entanglement wedge of the radiation. In our categorical framework, $I$ is a \emph{full subcategory} of $\catMeas_{\BH}$ consisting of observer objects localized in that spacetime region. The distinction is important: the categorical island $I$ encodes not just the region but the algebra of observables on that region and the morphisms (channels) connecting it to other objects. The island's contribution to the extended subcategory comes through these morphisms, which provide the additional entries in the over-categories $(J_I \downarrow X)$ that improve the Kan extension. This is the categorical version of including the island's algebra $\mathcal{A}_I$ in the operator algebra available for reconstruction.
+\end{remark}
+
+\begin{proposition}[Island Reduces Extension Deficit]\label{prop:island-deficit}
+The inclusion of the island $I$ in the observer's effective subcategory reduces the Kan extension deficit:
+\[
+\Delta(\Sys_{\Rad}(u) \cup I) < \Delta(\Sys_{\Rad}(u))
+\]
+for $u > u_P$. The island formula's minimization over possible islands corresponds to finding the $I$ that minimizes the deficit:
+\[
+I^*(u) = \arg\min_I \Delta(\Sys_{\Rad}(u) \cup I).
+\]
+\end{proposition}
+
+\begin{proof}
+Adding the island $I$ to the observer's accessible subcategory introduces new morphisms: morphisms from interior objects in $I$ to other objects in $\catMeas_{\BH}$. These additional morphisms provide non-trivial entries in the over-categories $(J \downarrow X)$ for interior objects $X$, improving the pointwise Kan extension and reducing the deficit.
+
+The entropy formula
+\[
+S(\Rad) = \min_I \left[ \frac{\mathrm{Area}(\partial I)}{4G_N} + S_{\mathrm{bulk}}(\Rad \cup I) \right]
+\]
+can be interpreted as: the area term penalizes the ``cost'' of extending the subcategory across the horizon boundary, and the bulk entropy term measures the remaining entanglement after the extension. The minimization balances these two contributions.
+\end{proof}
+
+\subsection{The Page Curve from Yoneda Data}
+
+\begin{theorem}[Page Curve from the Yoneda Framework]\label{thm:page-curve}
+In the Yoneda framework, the entanglement entropy of the radiation follows the Page curve:
+\[
+S(\Rad(u)) = \begin{cases}
+S_{\mathrm{Hawking}}(u) & u < u_P \quad \text{(no island)}, \\
+\frac{A(\partial I^*(u))}{4G_N} + S_{\mathrm{bulk}}(\Rad \cup I^*(u)) & u > u_P \quad \text{(with island)}.
+\end{cases}
+\]
+The transition at $u_P$ is the moment when including the island first reduces the deficit below the Hawking value. This is a phase transition in the structure of the representable functor: the functor's optimal Kan extension ``jumps'' from one using only exterior data to one incorporating interior data through the island.
+\end{theorem}
+
+This theorem shows that the Page curve, far from being a special feature of holographic models or replica wormholes, is a consequence of the general categorical structure of embedded observation applied to the black hole setting. The Page time is the moment when the observer's relational data, accumulated through the representable functor, becomes rich enough to indirectly ``see'' interior information.
+
+%% ============================================================
+\section{Connections to Holographic Entanglement}\label{sec:holographic}
+%% ============================================================
+
+\subsection{The Holographic Measurement Category}
+
+In the AdS/CFT correspondence, the measurement category acquires additional structure from the holographic duality.
+
+\begin{definition}[Holographic Measurement Category]\label{def:holo-meas}
+The \emph{holographic measurement category} $\catMeas_{\mathrm{holo}}$ has:
+\begin{enumerate}[label=(\roman*)]
+\item Objects $(\Sys, \Sigma, \rho)$ where $\Sigma$ is either a boundary subregion or a bulk subregion within an entanglement wedge.
+\item Morphisms include both boundary CPTP maps and the bulk-boundary reconstruction maps guaranteed by entanglement wedge reconstruction.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Entanglement Wedge as Epistemic Horizon]\label{prop:ew-horizon}
+For a boundary observer with access to subregion $A$, the epistemic horizon in $\catMeas_{\mathrm{holo}}$ coincides with the boundary of the entanglement wedge $\EW(A)$. Objects within $\EW(A)$ are relationally accessible; objects outside are not.
+\end{proposition}
+
+This connects the Yoneda framework to the quantum error correction structure of holography \cite{almheiri2015qec,harlow2017}: the entanglement wedge reconstruction theorem is the statement that the Kan extension from the boundary subregion $A$ recovers the description functor on $\EW(A)$ exactly, with the extension deficit concentrated on the region outside $\EW(A)$.
+
+\subsection{The RT Formula as Deficit Measure}
+
+\begin{proposition}[Ryu--Takayanagi from the Kan Extension]\label{prop:rt-kan}
+The Ryu--Takayanagi formula \cite{ryu2006}
+\[
+S(A) = \frac{\mathrm{Area}(\gamma_A)}{4G_N}
+\]
+where $\gamma_A$ is the minimal surface homologous to $A$, measures the Kan extension deficit of the boundary observer on subregion $A$: the area of $\gamma_A$ quantifies the information about the bulk that cannot be recovered from the boundary data on $A$.
+\end{proposition}
+
+\begin{proof}[Proof (heuristic)]
+The entanglement entropy $S(A)$ is the von Neumann entropy of the reduced state $\rho_A$. By \cref{prop:entropy-deficit}, this is a measure of the Kan extension deficit. The RT formula identifies this entropy with a geometric quantity---the area of the minimal surface---which in the categorical language represents the ``size'' of the epistemic horizon boundary separating the accessible region ($\EW(A)$) from the inaccessible region.
+\end{proof}
+
+\subsection{Quantum Error Correction and Representable Functors}
+
+\begin{proposition}[QEC as Kan Extension]\label{prop:qec-kan}
+The quantum error correction structure of holography \cite{almheiri2015qec} corresponds to the exactness of the Kan extension on the entanglement wedge: for bulk operators $\phi \in \Alg_{\mathrm{bulk}}(\EW(A))$, the Kan extension from $A$ recovers $\phi$ exactly (zero deficit), while for operators outside $\EW(A)$, the deficit is non-zero.
+\end{proposition}
+
+\begin{remark}[Kan extension as Petz recovery map]\label{rem:petz}
+The Kan extension from a boundary subregion to the bulk is the categorical analog of the \emph{Petz recovery map} in operator algebra quantum error correction (OAQEC) \cite{petz1986,petz1988,hayden2019}. In OAQEC, the Petz map $\mathcal{R}: \mathcal{A}_A \to \mathcal{A}_{\mathrm{bulk}}$ is the optimal recovery channel for reconstructing bulk operators from boundary data on subregion $A$. The Kan extension $\Lan_J(\mathfrak{D} \circ J)$ plays exactly this role in our categorical framework: it is the universal left-adjoint approximation to the true description functor, optimized over the data available in the observer's subcategory. The extension deficit $\Delta$ corresponds to the \emph{recovery error} $1 - F(\rho, \mathcal{R} \circ \mathcal{N}(\rho))$ of the Petz map, where $\mathcal{N}$ is the noise (erasure) channel. This connection to OAQEC provides physical grounding for the categorical deficit: it is not merely an abstract measure but corresponds to a concrete operational quantity---the fidelity of quantum state recovery.
+\end{remark}
+
+This provides a unified categorical language for holographic bulk reconstruction: the representable functor of the boundary observer encodes all reconstructible bulk physics, and the Kan extension identifies the optimal reconstruction and its limitations.
+
+%% ============================================================
+\section{Haskell Implementation}\label{sec:haskell}
+%% ============================================================
+
+We provide accompanying Haskell code in the directory \texttt{src/black-hole-information-paradox/} that computationally models the key categorical structures developed in this paper. The implementation includes:
+
+\begin{enumerate}[label=(\arabic*),itemsep=4pt]
+\item \textbf{Measurement category} (\texttt{MeasurementCategory.hs}): A type-level representation of the black hole measurement category, including objects (observers), morphisms (CPTP channels), and the causal structure constraints.
+
+\item \textbf{Representable functors} (\texttt{RepresentableFunctor.hs}): Computation of the representable functor for specified observers, including the horizon obstruction that makes the asymptotic observer's functor vanish on interior objects.
+
+\item \textbf{Kan extension deficit} (\texttt{KanExtension.hs}): Computation of the left Kan extension and the extension deficit, demonstrating the time-dependent behavior described in \cref{sec:kan-info}.
+
+\item \textbf{Page curve simulation} (\texttt{PageCurve.hs}): A simulation of the entanglement entropy as a function of time, showing the Page curve behavior and the island transition, using the categorical framework.
+
+\item \textbf{Complementarity checker} (\texttt{Complementarity.hs}): Verification that specified observer pairs satisfy the conditions for categorical complementarity (\cref{def:cat-complementarity}).
+\end{enumerate}
+
+The code is written with extensive comments connecting the implementation to the mathematical definitions in the paper. The implementation serves both a pedagogical and computational purpose: the \texttt{PageCurve} module produces numerical data for the entanglement entropy as a function of retarded time (reproducing the Page curve), while the \texttt{Complementarity} module computationally verifies that the asymptotic and infalling observers satisfy all three conditions of categorical complementarity (\cref{def:cat-complementarity}). The \texttt{KanExtension} module computes the extension deficit and the extrapolation bracket for specified observers, demonstrating their time-dependent behavior.
+
+%% ============================================================
+\section{Discussion and Open Questions}\label{sec:discussion}
+%% ============================================================
+
+\subsection{Relation to Existing Approaches}
+
+Our categorical framework connects to and extends several approaches to the information paradox.
+
+\textbf{Black hole complementarity.} The original complementarity proposal \cite{susskind1993} is operationally motivated: ``no single observer can verify both descriptions.'' Our \cref{thm:bh-complementarity} provides a structural reformulation: the measurement category does not contain an object whose representable functor encodes both descriptions. This is a stronger statement---it is not merely that verification is operationally impossible, but that the mathematical structure of embedded observation precludes such an object.
+
+\textbf{ER=EPR.} The ER=EPR conjecture \cite{maldacena2013cool} posits that entanglement (EPR pairs) is geometrically realized as non-traversable wormholes (Einstein--Rosen bridges). In the Yoneda framework, the non-factorizability of the joint representable functor (\cref{prop:non-iso}) is the categorical avatar of the ER bridge: the entanglement between the radiation and the interior, which prevents factorization, is encoded in the measurement category's morphism structure.
+
+\textbf{Quantum extremal surfaces.} The quantum extremal surface (QES) prescription \cite{engelhardt2015} identifies the entanglement wedge boundary with a quantum-corrected extremal surface. In our framework, the QES corresponds to the categorical epistemic horizon (\cref{def:bh-epistemic-horizon}), and the quantum corrections represent the enrichment of the measurement category from classical (area-based) to quantum (area + bulk entropy) morphisms.
+
+\textbf{The Measurement Boundary Problem.} Our earlier work on the MBP \cite{long2026mbp} identified structural limitations on observational access in emergent spacetime. The black hole information paradox is a specific instance of the MBP where the emergence structure is provided by the holographic duality: the asymptotic observer cannot directly access the pre-geometric (interior) degrees of freedom, and must rely on indirect witnesses (Hawking radiation correlations) to infer interior physics.
+
+\subsection{Implications for Quantum Gravity}
+
+The Yoneda perspective suggests that the information paradox is not a ``problem to be solved'' but a structural feature of embedded observation in spacetimes with horizons. The information is not ``lost'' or ``destroyed''---it is encoded in the relational structure of the measurement category in a way that is accessible to some observers (the infalling observer, via $\yo^{\Sys_{\mathrm{in}}}$) but not to others (the asymptotic observer, via $\yo^{\Sys_\infty}$, at least until the Page time).
+
+This perspective has several implications:
+
+\begin{enumerate}[label=(\arabic*),itemsep=6pt]
+\item \textbf{Unitarity is observer-relative.} The evolution appears non-unitary from the asymptotic observer's perspective (before the Page time) because the observer's representable functor does not capture the full unitary structure. This is consistent with relational quantum mechanics \cite{rovelli1996}, which holds that quantum states are observer-relative.
+
+\item \textbf{The firewall is a categorical artifact.} The firewall paradox arises from attempting to combine incompatible representable functors into a single global description. The resolution is not to modify the physics (introducing a firewall) but to respect the perspectival structure of the measurement category.
+
+\item \textbf{Information recovery is Kan extension.} The process by which the asymptotic observer recovers interior information after the Page time is naturally described as a Kan extension: the optimal extrapolation from the observer's growing relational data eventually suffices to reconstruct the interior state.
+\end{enumerate}
+
+\subsection{Open Questions}
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=8pt]
+\item \textbf{Enriched and monoidal measurement category.} The black hole measurement category should be enriched over a suitable monoidal category (e.g., $\catBan$ or $\catCstar$) to capture the full quantum structure. Additionally, equipping $\catMeas_{\BH}$ with a monoidal (tensor product) structure---where $(\Sys_1, \Sigma_1, \rho_1) \otimes (\Sys_2, \Sigma_2, \rho_2)$ represents the composite observer---would make the entanglement structure explicit within the category. The causal constraints would then constrain which tensor products are ``allowed'' (reflecting the spacetime causal structure), and the non-factorizability of representable functors (\cref{prop:non-iso}) would be directly expressible as a failure of the functor to preserve the monoidal structure. Developing the enriched Yoneda Constraint in this setting and deriving the quantum corrections to the entropy formulas is an important direction.
+
+\item \textbf{Dynamical measurement category.} In quantum gravity, the spacetime---and hence the causal structure constraining $\catMeas_{\BH}$---is itself dynamical. How does the measurement category change under Hawking evaporation? Is there a 2-categorical structure encoding the time evolution of $\catMeas_{\BH}$?
+
+\item \textbf{Higher categories and the Page curve.} The Page curve transition has the character of a phase transition. Is there an $(\infty, n)$-categorical description in which the transition is a ``cobordism'' between different representable functor structures?
+
+\item \textbf{Computational complexity.} The Kan extension from the radiation's subcategory involves computing colimits over potentially large over-categories. Is there a computational complexity characterization of information recovery in terms of the complexity of computing the Kan extension?
+
+\item \textbf{Experimental signatures.} Can the categorical structure be connected to observable signatures in analog gravity experiments (e.g., sonic black holes in BECs) where Hawking radiation has been observed?
+
+\item \textbf{Cosmological horizons.} The same Yoneda analysis applies to cosmological horizons (de Sitter space). Does the categorical framework provide new insights into the de Sitter entropy and the static patch observer's epistemic limitations?
+
+\item \textbf{Replica wormholes.} The replica trick for computing the Page curve involves summing over replica wormhole saddles. Is there a categorical interpretation of replica wormholes in terms of higher morphisms or operads in $\catMeas_{\BH}$?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have developed a comprehensive analysis of the black hole information paradox from the perspective of the Yoneda Constraint on Observer Knowledge. The framework provides:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=2em,itemsep=6pt]
+
+\item The \textbf{black hole measurement category} $\catMeas_{\BH}$ (\cref{def:bh-meas-cat}), which encodes the causal structure of the black hole spacetime as constraints on morphisms between observer objects.
+
+\item The \textbf{horizon obstruction} (\cref{prop:horizon-obstruction}): the event horizon manifests as the absence of morphisms from exterior to interior objects, making the asymptotic observer's representable functor vanish on the interior.
+
+\item \textbf{Categorical complementarity} (\cref{thm:bh-complementarity}): the infalling and asymptotic observers are categorically complementary---their representable functors are non-isomorphic and non-simultaneously-embeddable.
+
+\item \textbf{Firewall resolution} (\cref{thm:firewall-resolution}): the AMPS paradox dissolves because the measurement category does not contain an object whose representable functor encodes both the $B$--$A$ and $B$--$C$ entanglements simultaneously.
+
+\item The \textbf{Page curve as presheaf transition} (\cref{thm:page-transition}): the Page time corresponds to a structural transition in the representable functor, where the Kan extension deficit begins to decrease as the radiation observer's relational data becomes sufficient to indirectly access interior information.
+
+\item The \textbf{island formula as deficit minimization} (\cref{prop:island-deficit}): the island represents the optimal extension of the observer's accessible subcategory across the horizon, minimizing the Kan extension deficit.
+
+\item Connections to \textbf{holographic entanglement} (\cref{sec:holographic}): the Ryu--Takayanagi formula and quantum error correction structure of holography are naturally expressed as properties of the Kan extension in the holographic measurement category.
+\end{enumerate}
+
+The central message of this paper is that the black hole information paradox is a consequence of the Yoneda Constraint: the structural principle that embedded observers know reality only relationally, through their representable functors, and that different observers in a spacetime with horizons necessarily have incompatible relational perspectives. The ``paradox'' arises only when one ignores the perspectival structure and attempts to construct a global description from inherently local data. The resolution is not to modify the physics but to respect the categorical structure of embedded observation.
+
+We believe that the Yoneda perspective on the information paradox, combined with the recent island formula developments, points toward a deeper understanding of the relationship between gravity, quantum information, and the structure of observation itself.
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the YonedaAI Research Collective for ongoing support and discussions on the categorical foundations of quantum gravity. This work was developed in part through AI-assisted research workflows.
+
+\paragraph{AI-assisted research disclosure.} Portions of this manuscript were developed through collaborative workflows with AI language models (Claude, Anthropic). The AI assisted with literature synthesis, LaTeX typesetting, proof structuring, and code development. All physical arguments, mathematical claims, and research directions are the responsibility of the human author.
+
+%% ============================================================
+\appendix
+
+\section{Detailed Proofs}\label{app:proofs}
+
+\subsection{Proof of \cref{thm:bh-complementarity} (Detailed)}
+
+\begin{proof}
+We verify the three conditions of \cref{def:cat-complementarity} in detail.
+
+\emph{Condition (i):} By \cref{prop:non-iso}, $\yo^{\Sys_\infty} \not\cong \yo^{\Sys_{\mathrm{in}}}$ because they differ on interior objects.
+
+\emph{Condition (ii):} Suppose for contradiction that $\Sys_3 \in \catMeas_{\BH}$ exists with the stated property. Then:
+\begin{itemize}
+\item $\yo^{\Sys_3}$ restricts to $\yo^{\Sys_\infty}$ on exterior objects, meaning $\Hom(\Sys_3, X) \cong \Hom(\Sys_\infty, X)$ for all exterior $X$.
+\item $\yo^{\Sys_3}$ restricts to $\yo^{\Sys_{\mathrm{in}}}$ on interior objects, meaning $\Hom(\Sys_3, Y) \cong \Hom(\Sys_{\mathrm{in}}, Y)$ for all interior $Y$.
+\end{itemize}
+
+The first condition requires $\Sys_3$ to have the same relational structure as $\Sys_\infty$ with respect to exterior objects---in particular, $\Sys_3$ must have access to the Hawking radiation at late times. The second condition requires $\Sys_3$ to cross the horizon and access the interior.
+
+By the Yoneda embedding (full and faithful), $\Sys_3$ is determined up to isomorphism by its representable functor. The combined conditions determine a unique (up to isomorphism) object that simultaneously has the exterior relational structure of $\Sys_\infty$ and the interior relational structure of $\Sys_{\mathrm{in}}$.
+
+However, the causal structure of the black hole spacetime forbids this. The asymptotic observer collects radiation over a time $\sim M^3$ (the evaporation time in Planck units). An observer who waits this long cannot subsequently cross the horizon of the original black hole (which has evaporated). Conversely, an observer who crosses the horizon early cannot access the late-time radiation. No worldline in the black hole spacetime has a causal domain that simultaneously includes $\mathscr{I}^+$ at late retarded times and the deep interior. Hence $\Sys_3$ does not exist.
+
+\emph{Condition (iii):} The non-existence of $\Sys_3$ is enforced by the causal structure: the light-speed limit prevents any observer from simultaneously collecting late radiation and crossing the horizon.
+\end{proof}
+
+\subsection{Proof of \cref{prop:island-deficit} (Detailed)}
+
+\begin{proof}
+Let $J: \catMeas_{\BH}|_{\Sys_{\Rad}(u)} \hookrightarrow \catMeas_{\BH}$ and $J_I: \catMeas_{\BH}|_{\Sys_{\Rad}(u) \cup I} \hookrightarrow \catMeas_{\BH}$ be the inclusion functors. Since $\catMeas_{\BH}|_{\Sys_{\Rad}(u)} \subset \catMeas_{\BH}|_{\Sys_{\Rad}(u) \cup I}$, the Kan extension from the larger subcategory has access to more data.
+
+For any interior object $X \in I$, the over-category $(J_I \downarrow X)$ contains at least the identity morphism $\id_X$, whereas $(J \downarrow X)$ may be empty (when $X$ has no morphisms from exterior objects). This means:
+\[
+\Lan_{J_I}(\mathfrak{D}_{I} \circ J_I)(X) \supseteq \mathfrak{D}(X) = \mathfrak{R}(X),
+\]
+while $\Lan_J(\mathfrak{D} \circ J)(X)$ may be trivial.
+
+The comparison natural transformation $\eta: \Lan_{J_I}(\mathfrak{D}_{I} \circ J_I) \Rightarrow \mathfrak{R}$ is ``closer to an isomorphism'' than $\eta': \Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}$, in the sense that the cokernel $\Delta(\Sys_{\Rad}(u) \cup I)$ is contained in $\Delta(\Sys_{\Rad}(u))$. Hence the deficit decreases.
+
+The island formula's area term $\frac{\mathrm{Area}(\partial I)}{4G_N}$ can be understood as the ``cost'' of the additional morphisms needed to connect the island to the exterior: crossing the horizon boundary requires morphisms whose existence has a penalty measured by the area in Planck units. The bulk entropy term $S_{\mathrm{bulk}}(\Rad \cup I)$ measures the remaining entanglement after the island is included. The minimization finds the optimal trade-off between these costs.
+\end{proof}
+
+\section{Categorical Definitions}\label{app:definitions}
+
+\paragraph{Presheaf categories.} For a category $\catC$, the presheaf category $\PSh(\catC) = [\catC^{\op}, \catSet]$ is the category of contravariant functors from $\catC$ to $\catSet$. A representable presheaf is one isomorphic to $\Hom_\catC(-, X)$ for some $X \in \catC$.
+
+\paragraph{Coproduct of presheaves.} Given presheaves $F, G \in \PSh(\catC)$ and a subpresheaf $H \hookrightarrow F, H \hookrightarrow G$, the pushout $F \sqcup_H G$ is defined by the universal property: for each object $c$, $(F \sqcup_H G)(c) = (F(c) \sqcup G(c)) / \sim$ where $\sim$ identifies elements of $F(c)$ and $G(c)$ that correspond under $H(c)$.
+
+\paragraph{Pointwise Kan extension.} For $K: \catC \to \catD$ and $F: \catC \to \mathcal{E}$, the pointwise left Kan extension is $\Lan_K F(d) = \mathrm{colim}_{(c, K(c) \to d) \in (K \downarrow d)} F(c)$ when the colimit exists.
+
+\section{Physical Constants and Conventions}\label{app:conventions}
+
+We work in natural units $c = \hbar = k_B = 1$ unless otherwise noted. Newton's constant $G_N$ and the Planck length $\ell_P = \sqrt{G_N \hbar / c^3}$ are retained as they set the scale for quantum gravity effects. The Bekenstein--Hawking entropy is $S_{\BH} = A/(4G_N)$ where $A$ is the area of the event horizon. The Page time is $t_P \sim M^3$ in Planck units, where $M$ is the initial black hole mass.
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{hawking1976}
+S. W. Hawking, ``Breakdown of predictability in gravitational collapse,'' \emph{Phys. Rev. D} \textbf{14}, 2460--2473 (1976).
+
+\bibitem{hawking1975}
+S. W. Hawking, ``Particle creation by black holes,'' \emph{Commun. Math. Phys.} \textbf{43}, 199--220 (1975).
+
+\bibitem{susskind1993}
+L. Susskind, L. Thorlacius, and J. Uglum, ``The stretched horizon and black hole complementarity,'' \emph{Phys. Rev. D} \textbf{48}, 3743 (1993). arXiv:hep-th/9306069.
+
+\bibitem{susskind1993stretching}
+L. Susskind, ``String theory and the principle of black hole complementarity,'' \emph{Phys. Rev. Lett.} \textbf{71}, 2367 (1993). arXiv:hep-th/9307168.
+
+\bibitem{thooft1993}
+G. 't Hooft, ``Dimensional reduction in quantum gravity,'' in \emph{Salamfestschrift}, World Scientific, 1993. arXiv:gr-qc/9310026.
+
+\bibitem{susskind1995}
+L. Susskind, ``The world as a hologram,'' \emph{J. Math. Phys.} \textbf{36}, 6377--6396 (1995). arXiv:hep-th/9409089.
+
+\bibitem{maldacena1999}
+J. Maldacena, ``The large $N$ limit of superconformal field theories and supergravity,'' \emph{Int. J. Theor. Phys.} \textbf{38}, 1113--1133 (1999). arXiv:hep-th/9711200.
+
+\bibitem{almheiri2013}
+A. Almheiri, D. Marolf, J. Polchinski, and J. Sully, ``Black holes: complementarity vs. firewalls,'' \emph{JHEP} \textbf{2013}, 062 (2013). arXiv:1207.3123.
+
+\bibitem{penington2020}
+G. Penington, ``Entanglement wedge reconstruction and the information problem,'' \emph{JHEP} \textbf{09}, 002 (2020). arXiv:1905.08255.
+
+\bibitem{almheiri2019island}
+A. Almheiri, N. Engelhardt, D. Marolf, and H. Maxfield, ``The entropy of bulk quantum fields and the entanglement wedge of an evaporating black hole,'' \emph{JHEP} \textbf{12}, 063 (2019). arXiv:1905.08762.
+
+\bibitem{almheiri2020page}
+A. Almheiri, T. Hartman, J. Maldacena, E. Shaghoulian, and A. Tajdini, ``The entropy of Hawking radiation,'' \emph{Rev. Mod. Phys.} \textbf{93}, 035002 (2021). arXiv:2006.06872.
+
+\bibitem{page1993}
+D. N. Page, ``Information in black hole radiation,'' \emph{Phys. Rev. Lett.} \textbf{71}, 3743 (1993). arXiv:hep-th/9306083.
+
+\bibitem{page1993average}
+D. N. Page, ``Average entropy of a subsystem,'' \emph{Phys. Rev. Lett.} \textbf{71}, 1291 (1993). arXiv:gr-qc/9305007.
+
+\bibitem{long2026yoneda}
+M. Long and The YonedaAI Collaboration, ``The significance of the Yoneda Constraint on observer knowledge to foundational physics: from quantum to classical,'' GrokRxiv:2026.YonedaAI-0017, February 2026.
+
+\bibitem{long2026yonedav2}
+M. Long and The YonedaAI Collaboration, ``A Yoneda-lemma perspective on embedded observers: relational constraints from quantum measurement to classical phase space,'' GrokRxiv:2026.02.yoneda-observer-constraint, February 2026.
+
+\bibitem{long2026eoc}
+M. Long and The YonedaAI Collaboration, ``The embedded observer constraint: on the structural bounds of scientific measurement,'' GrokRxiv:2026.02.long-yonedaai-embedded-observer, February 2026.
+
+\bibitem{long2026eocv2}
+M. Long and The YonedaAI Collaboration, ``The embedded observer constraint: on the structural bounds of scientific measurement (revised),'' GrokRxiv:2026.02.embedded-observer-constraint, February 2026.
+
+\bibitem{long2026mbp}
+M. Long and The YonedaAI Collaboration, ``The measurement paradox in emergent spacetime physics: structural limits on observational access to pre-geometric ontology,'' YonedaAI Research Collective, February 2026.
+
+\bibitem{abramsky2011}
+S. Abramsky and A. Brandenburger, ``The sheaf-theoretic structure of non-locality and contextuality,'' \emph{New J. Phys.} \textbf{13}, 113036 (2011). arXiv:1102.0264.
+
+\bibitem{petz1986}
+D. Petz, ``Sufficient subalgebras and the relative entropy of states of a von Neumann algebra,'' \emph{Commun. Math. Phys.} \textbf{105}, 123--131 (1986).
+
+\bibitem{petz1988}
+D. Petz, ``Sufficiency of channels over von Neumann algebras,'' \emph{Quart. J. Math.} \textbf{39}, 97--108 (1988).
+
+\bibitem{hayden2019}
+P. Hayden and G. Penington, ``Learning the alpha-bits of black holes,'' \emph{JHEP} \textbf{12}, 007 (2019). arXiv:1807.06041.
+
+\bibitem{horowitz2004}
+G. T. Horowitz and J. Maldacena, ``The black hole final state,'' \emph{JHEP} \textbf{02}, 008 (2004). arXiv:hep-th/0310281.
+
+\bibitem{almheiri2015qec}
+A. Almheiri, X. Dong, and D. Harlow, ``Bulk locality and quantum error correction in AdS/CFT,'' \emph{JHEP} \textbf{04}, 163 (2015). arXiv:1411.7041.
+
+\bibitem{harlow2017}
+D. Harlow, ``The Ryu-Takayanagi formula from quantum error correction,'' \emph{Commun. Math. Phys.} \textbf{354}, 865--912 (2017). arXiv:1607.03901.
+
+\bibitem{ryu2006}
+S. Ryu and T. Takayanagi, ``Holographic derivation of entanglement entropy from the anti-de Sitter space/conformal field theory correspondence,'' \emph{Phys. Rev. Lett.} \textbf{96}, 181602 (2006). arXiv:hep-th/0603001.
+
+\bibitem{engelhardt2015}
+N. Engelhardt and A. C. Wall, ``Quantum extremal surfaces: holographic entanglement entropy beyond the classical regime,'' \emph{JHEP} \textbf{01}, 073 (2015). arXiv:1408.3203.
+
+\bibitem{maldacena2013cool}
+J. Maldacena and L. Susskind, ``Cool horizons for entangled black holes,'' \emph{Fortsch. Phys.} \textbf{61}, 781--811 (2013). arXiv:1306.0533.
+
+\bibitem{rovelli1996}
+C. Rovelli, ``Relational quantum mechanics,'' \emph{Int. J. Theor. Phys.} \textbf{35}, 1637--1678 (1996). arXiv:quant-ph/9609002.
+
+\bibitem{bekenstein1973}
+J. D. Bekenstein, ``Black holes and entropy,'' \emph{Phys. Rev. D} \textbf{7}, 2333 (1973).
+
+\bibitem{mathur2009}
+S. D. Mathur, ``The information paradox: a pedagogical introduction,'' \emph{Class. Quant. Grav.} \textbf{26}, 224001 (2009). arXiv:0909.1038.
+
+\bibitem{harlow2016}
+D. Harlow, ``Jerusalem lectures on black holes and quantum information,'' \emph{Rev. Mod. Phys.} \textbf{88}, 015002 (2016). arXiv:1409.1231.
+
+\bibitem{wallace2020}
+D. Wallace, ``Why black hole information loss is paradoxical,'' in \emph{Beyond Spacetime}, Cambridge University Press, 2020. arXiv:1710.03783.
+
+\bibitem{unruh2017}
+W. G. Unruh and R. M. Wald, ``Information loss,'' \emph{Rep. Prog. Phys.} \textbf{80}, 092002 (2017). arXiv:1703.02140.
+
+\bibitem{marolf2017}
+D. Marolf, ``The black hole information problem: past, present, and future,'' \emph{Rep. Prog. Phys.} \textbf{80}, 092001 (2017). arXiv:1703.02143.
+
+\end{thebibliography}
+
+\end{document}

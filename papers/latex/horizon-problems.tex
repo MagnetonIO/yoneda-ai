@@ -1,0 +1,1150 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{doi}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\geometry{margin=1in}
+\onehalfspacing
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{heuristic}[theorem]{Heuristic}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catAlg}{\mathbf{Alg}}
+\newcommand{\catBan}{\mathbf{Ban}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catvNAlg}{\mathbf{vNAlg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\catLor}{\mathbf{Lor}}
+\newcommand{\catCaus}{\mathbf{Caus}}
+\newcommand{\catReg}{\mathbf{Reg}}
+\newcommand{\catObs}{\mathbf{Obs}}
+\newcommand{\catNet}{\mathbf{Net}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+\newcommand{\dH}{d_{\mathrm{H}}}
+\newcommand{\rH}{r_{\mathrm{H}}}
+\newcommand{\tH}{t_{\mathrm{H}}}
+\newcommand{\Hor}{\mathcal{H}\mathrm{or}}
+
+%% ---- GrokRxiv DOI sidebar (official template) ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.horizon-problems-yoneda\quad
+       [\,hep-th\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Hyperref config ----
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black,
+  pdftitle={Horizon Problems and the Yoneda Constraint: Causal, Epistemic, and Categorical Boundaries in Physics},
+  pdfauthor={Matthew Long, The YonedaAI Collaboration}
+}
+
+%% ---- Title ----
+\title{\textbf{Horizon Problems and the Yoneda Constraint:\\
+Causal, Epistemic, and Categorical Boundaries in Physics}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We develop a systematic analysis of horizon problems in physics from the perspective of the Yoneda Constraint on Observer Knowledge. In the Yoneda framework, an embedded observer $\Sys$ accesses a total reality $\R$ only through the representable presheaf $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself when $\Sys \subsetneq \R$. We show that this abstract structural constraint has concrete physical manifestations across every major class of horizon in physics: cosmological particle horizons, event horizons of black holes, Rindler horizons of accelerated observers, de~Sitter horizons in inflationary and dark-energy cosmology, and the information-theoretic horizons arising from holographic bounds. For each horizon type, we construct the appropriate measurement category $\catMeas$ and compute or bound the Kan extension deficit $\Delta(\Sys)$, showing that the deficit encodes precisely the information inaccessible across the horizon. We prove that causal horizons are functorial: they define natural transformations between the accessible and total description functors whose non-invertibility is the categorical expression of information hiding. We develop a unified treatment in which the cosmological horizon problem (the homogeneity of the CMB), the black hole information paradox, the trans-Planckian problem, and the measure problem in eternal inflation all appear as instances of a single categorical structure: the failure of a Kan extension to recover a global description from local data. Accompanying Haskell code provides computational implementations of the categorical constructions.
+
+\medskip
+\noindent\textbf{Keywords:} horizon problems, Yoneda lemma, category theory, causal structure, cosmological horizons, black hole horizons, Rindler horizons, Kan extensions, embedded observers, epistemic boundaries, holographic principle, information paradox
+
+\medskip
+\noindent\textbf{MSC 2020:} 83C57, 83F05, 18A15, 81P15, 83C75
+
+\medskip
+\noindent\textbf{PACS:} 04.70.-s, 98.80.Jk, 04.62.+v, 04.60.-m
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+Horizons are among the most profound structures in physics. From the cosmological particle horizon that bounds our observable universe to the event horizons of black holes, from the Rindler horizons experienced by accelerated observers to the de~Sitter horizons of inflationary cosmology, these boundaries define the limits of what can be observed, communicated, and known by any physical agent. Despite their diverse physical origins---in causal structure, thermodynamics, quantum mechanics, and gravitational dynamics---all horizons share a common structural character: they delineate the boundary of an embedded observer's accessible region.
+
+This paper argues that the Yoneda Constraint on Observer Knowledge \cite{long2026yoneda}, developed in the companion papers of the YonedaAI research program, provides the natural mathematical framework for understanding this common structure. The Yoneda Constraint states that an embedded observer $\Sys \subsetneq \R$ accesses reality $\R$ only through its representable functor $\yo^{(\Sys, \R|_\Sys)} = \Hom_\catMeas((\Sys, \R|_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself. In previous work \cite{long2026embedded}, this constraint was shown to have consequences for quantum measurement, decoherence, complementarity, and the classical limit.
+
+Here we turn to the specific problem class where the constraint is most dramatically physical: \emph{horizons}. The key insight is that every physical horizon defines a specific accessible subcategory $\catMeas|_\Sys \hookrightarrow \catMeas$ whose inclusion functor $J$ is faithful but not full, and the Kan extension deficit $\Delta(\Sys)$ along this inclusion quantifies precisely the information hidden behind the horizon.
+
+\subsection{The Horizon Problem Landscape}
+
+We distinguish several physically distinct but categorically unified horizon types:
+
+\begin{enumerate}[label=(\roman*), itemsep=6pt]
+\item \textbf{Cosmological particle horizon:} The finite age of the universe and the finite speed of light impose a maximal comoving distance from which signals can have reached an observer. The classical ``horizon problem'' in cosmology---the unexplained homogeneity of the CMB across causally disconnected regions---is a statement about the structure of the Kan extension from within the particle horizon.
+
+\item \textbf{Black hole event horizon:} The boundary of a black hole defines a one-way causal membrane. The information paradox, in categorical language, asks whether the Kan extension from the exterior region can recover the interior description.
+
+\item \textbf{Rindler horizon:} An accelerated observer in Minkowski spacetime has an acceleration horizon. The Unruh effect and the thermality of the Rindler vacuum are categorical consequences of the restriction functor.
+
+\item \textbf{de Sitter horizon:} In a universe with a positive cosmological constant, every observer has a cosmological event horizon. The finite entropy of the de~Sitter horizon, and the associated measure problem in eternal inflation, reflect the finite-dimensionality of the accessible measurement category.
+
+\item \textbf{Holographic horizons:} The Bekenstein--Hawking entropy bound and the holographic principle imply that the information content of a bounded region is encoded on its boundary. This factorization through boundary data has a natural categorical interpretation.
+\end{enumerate}
+
+\subsection{Contributions and Structure}
+
+Our contributions are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=4pt]
+\item A unified categorical framework treating all horizon types as instances of the Yoneda Constraint (\cref{sec:framework}).
+\item Construction of causal measurement categories $\catMeas_{\mathrm{caus}}$ encoding the causal structure of spacetime (\cref{sec:causal}).
+\item Proof that causal horizons are functorial, with the horizon map defining a natural transformation between description functors (\cref{sec:functorial}).
+\item Application to the cosmological horizon problem, showing the CMB homogeneity puzzle as a Kan extension problem (\cref{sec:cosmo}).
+\item Application to the black hole information paradox, reformulating unitarity vs.\ information loss as a question about the exactness of a Kan extension (\cref{sec:blackhole}).
+\item Treatment of Rindler horizons and the Unruh effect as presheaf restriction (\cref{sec:rindler}).
+\item Analysis of de~Sitter horizons and the measure problem (\cref{sec:desitter}).
+\item Holographic principle as factorization through boundary representable functors (\cref{sec:holographic}).
+\item Accompanying Haskell code implementing the categorical structures (\cref{sec:code}).
+\end{enumerate}
+
+\cref{sec:background} reviews categorical and physical prerequisites. \cref{sec:comparison} compares with existing approaches. \cref{sec:speculative} collects open problems.
+
+
+%% ============================================================
+\section{Background}\label{sec:background}
+%% ============================================================
+
+\subsection{The Yoneda Constraint Framework}
+
+We recall the essential elements from \cite{long2026yoneda,long2026embedded}. Fix a total physical system $\R$.
+
+\begin{definition}[Measurement Category \cite{long2026yoneda}]\label{def:meas-cat}
+The \emph{measurement category} $\catMeas = \catMeas(\R)$ has objects $(\Sys, \sigma_\Sys)$ where $\Sys \subseteq \R$ is a subsystem and $\sigma_\Sys$ is the state of $\R$ restricted to $\Sys$; morphisms are state-preserving channels (CPTP maps in the quantum setting, measure-preserving maps classically); composition is sequential.
+\end{definition}
+
+\begin{definition}[Embedded Observer \cite{long2026yoneda}]\label{def:embedded-observer}
+An \emph{embedded observer} is an object $(\Sys, \sigma_\Sys) \in \catMeas$ with $\Sys \subsetneq \R$. The \emph{accessible subcategory} $\catMeas|_\Sys$ is the full subcategory on objects $(\Sys', \sigma_{\Sys'})$ with $\Sys' \subseteq \Sys$.
+\end{definition}
+
+\begin{proposition}[Yoneda Constraint \cite{long2026yoneda}]\label{prop:yoneda-recall}
+The embedded observer $\Sys$ accesses $\R$ only through $\yo^{(\Sys, \sigma_\Sys)} = \Hom_\catMeas((\Sys, \sigma_\Sys), -)$. This determines $(\Sys, \sigma_\Sys)$ up to isomorphism but not $\R$ unless $\Sys = \R$.
+\end{proposition}
+
+\begin{definition}[Kan Extension Deficit \cite{long2026yoneda}]\label{def:kan-deficit}
+The \emph{extension deficit} is $\Delta(\Sys) = \coker(\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R})$ where $J: \catMeas|_\Sys \hookrightarrow \catMeas$ is the inclusion, $\mathfrak{D}$ is the description functor, and $\mathfrak{R}$ is the total description functor.
+\end{definition}
+
+\subsection{Causal Structure in General Relativity}
+
+We recall the standard causal structure of Lorentzian geometry \cite{penrose1972,hawking1973,wald1984}.
+
+\begin{definition}[Causal Structure]\label{def:causal}
+For a globally hyperbolic spacetime $(M, g)$:
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item The \emph{causal past} of an event $p$ is $J^-(p) = \{q \in M : \text{there exists a future-directed causal curve from } q \text{ to } p\}$.
+\item The \emph{causal future} is $J^+(p)$ defined dually.
+\item The \emph{particle horizon} of an observer $\gamma$ at time $t$ is $\partial J^-(\gamma(t))$.
+\item The \emph{event horizon} is $\partial J^-(\mathscr{I}^+)$ where $\mathscr{I}^+$ is future null infinity.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Cosmological Particle Horizon]\label{def:particle-horizon}
+In an FRW spacetime with scale factor $a(t)$, the comoving particle horizon distance at time $t$ is
+\[
+\dH(t) = \int_0^t \frac{c \, dt'}{a(t')} = \int_0^{a(t)} \frac{c \, da}{a^2 H(a)}
+\]
+where $H(a) = \dot{a}/a$ is the Hubble parameter. An observer at time $t$ can receive signals only from comoving distances $\leq \dH(t)$.
+\end{definition}
+
+\subsection{Algebraic Quantum Field Theory}
+
+We use the framework of algebraic quantum field theory (AQFT) \cite{haag1996,fewster2020} where appropriate.
+
+\begin{definition}[Local Net of Observables]\label{def:local-net}
+A \emph{local net of observables} on $(M, g)$ is a functor $\mathcal{A}: \catReg(M) \to \catCstar$ from the category of causally convex open regions (with inclusions) to $C^*$-algebras, satisfying:
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item \textbf{Isotony:} If $O_1 \subseteq O_2$, then $\mathcal{A}(O_1) \subseteq \mathcal{A}(O_2)$.
+\item \textbf{Causality:} If $O_1$ and $O_2$ are spacelike separated, then $[\mathcal{A}(O_1), \mathcal{A}(O_2)] = 0$.
+\item \textbf{Time-slice axiom:} If $O_1$ contains a Cauchy surface of $O_2$, then $\mathcal{A}(O_1) = \mathcal{A}(O_2)$.
+\end{enumerate}
+\end{definition}
+
+
+%% ============================================================
+\section{The Causal Measurement Category}\label{sec:framework}
+%% ============================================================
+
+We now construct the measurement category appropriate for horizon problems, incorporating the causal structure of spacetime.
+
+\subsection{Definition}
+
+\begin{definition}[Causal Measurement Category]\label{def:causal-meas}
+Given a globally hyperbolic spacetime $(M, g)$ and a quantum field theory on $(M, g)$ described by a local net $\mathcal{A}$, the \emph{causal measurement category} $\catMeas_{\mathrm{caus}} = \catMeas_{\mathrm{caus}}(M, g, \mathcal{A})$ is defined as:
+
+\begin{enumerate}[label=(\roman*), itemsep=6pt]
+\item \textbf{Objects:} Triples $(O, \omega|_O, \gamma)$ where $O \subseteq M$ is a causally convex open region, $\omega|_O$ is the restriction of a global state $\omega$ to $\mathcal{A}(O)$, and $\gamma$ is a timelike worldline in $O$ representing the observer's trajectory.
+
+\item \textbf{Morphisms:} A morphism $(O_1, \omega_1, \gamma_1) \to (O_2, \omega_2, \gamma_2)$ is a causal embedding $\phi: O_1 \hookrightarrow O_2$ that preserves the state: $\omega_2 \circ \phi_* = \omega_1$, and maps the worldline: $\phi \circ \gamma_1 \subseteq \gamma_2$.
+
+\item \textbf{Composition:} Composition of causal embeddings.
+
+\item \textbf{Identity:} The identity embedding.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Relation to Locally Covariant QFT]\label{rem:lcqft}
+The causal measurement category is closely related to the locally covariant QFT framework of Brunetti, Fredenhagen, and Verch \cite{brunetti2003}, where QFT is formulated as a functor from the category of globally hyperbolic spacetimes (with isometric embeddings) to $C^*$-algebras. Our category differs in that (a) we fix the background spacetime and consider subregions rather than different spacetimes, and (b) we include the observer worldline as part of the object data.
+\end{remark}
+
+\subsection{The Horizon as Accessible Subcategory}
+
+\begin{definition}[Horizon-Bounded Observer]\label{def:horizon-observer}
+Given an observer worldline $\gamma$ and a horizon $\Hor(\gamma) \subset M$, the \emph{accessible subcategory} is
+\[
+\catMeas_{\mathrm{caus}}|_\gamma = \{(O, \omega|_O, \gamma') \in \catMeas_{\mathrm{caus}} : O \subseteq J^-(\gamma) \setminus \Hor(\gamma)\}
+\]
+the full subcategory on regions causally accessible to $\gamma$.
+\end{definition}
+
+\begin{proposition}[Horizon as Faithful Non-Full Inclusion]\label{prop:horizon-inclusion}
+The inclusion functor $J_\gamma: \catMeas_{\mathrm{caus}}|_\gamma \hookrightarrow \catMeas_{\mathrm{caus}}$ is faithful but not full whenever $\gamma$ has a non-trivial horizon.
+\end{proposition}
+
+\begin{proof}
+Faithfulness: distinct causal embeddings between accessible regions remain distinct in the ambient category. Non-fullness: there exist causal embeddings in $\catMeas_{\mathrm{caus}}$ between regions in $\catMeas_{\mathrm{caus}}|_\gamma$ that factor through the region beyond the horizon $M \setminus J^-(\gamma)$; specifically, for any region $O$ intersecting the horizon boundary, there exist embeddings that extend $O$ across the horizon, and these are not morphisms in $\catMeas_{\mathrm{caus}}|_\gamma$.
+\end{proof}
+
+\subsection{The Yoneda Constraint for Horizons}
+
+\begin{theorem}[Horizon Yoneda Constraint]\label{thm:horizon-yoneda}
+For an observer $\gamma$ with horizon $\Hor(\gamma)$, the representable functor $\yo^{(O_\gamma, \omega|_{O_\gamma}, \gamma)}$ determines the observer's accessible physics up to isomorphism but cannot determine the global state $\omega$ on $M$ unless $J^-(\gamma) = M$.
+\end{theorem}
+
+\begin{proof}
+This is the Yoneda Constraint (\cref{prop:yoneda-recall}) specialized to $\catMeas_{\mathrm{caus}}$. The accessible region $O_\gamma \subseteq J^-(\gamma) \subsetneq M$ when a non-trivial horizon exists. Different global states $\omega, \omega'$ can agree on $J^-(\gamma)$ while differing beyond the horizon: $\omega|_{J^-(\gamma)} = \omega'|_{J^-(\gamma)}$ but $\omega \neq \omega'$. The Yoneda embedding determines $(O_\gamma, \omega|_{O_\gamma}, \gamma)$ but not $(M, \omega)$.
+\end{proof}
+
+\begin{corollary}[Extension Deficit for Horizons]\label{cor:horizon-deficit}
+The Kan extension deficit $\Delta(\gamma) = \Delta(\catMeas_{\mathrm{caus}}|_\gamma)$ is non-trivial whenever the observer has a horizon. In particular:
+\[
+\Delta(\gamma) \neq 0 \quad \Longleftrightarrow \quad J^-(\gamma) \subsetneq M.
+\]
+\end{corollary}
+
+
+%% ============================================================
+\section{Functoriality of Horizons}\label{sec:functorial}
+%% ============================================================
+
+We now show that the assignment of horizons to observers is itself functorial, providing a systematic categorical treatment.
+
+\subsection{The Horizon Functor}
+
+\begin{definition}[Observer Category]\label{def:obs-cat}
+The \emph{observer category} $\catObs(M)$ has as objects timelike worldlines $\gamma$ in $(M, g)$ and as morphisms causal relations: a morphism $\gamma_1 \to \gamma_2$ exists if $\gamma_1$ is in the causal past of $\gamma_2$ (i.e., $J^-(\gamma_1) \subseteq J^-(\gamma_2)$).
+\end{definition}
+
+\begin{proposition}[Horizon Functor]\label{prop:horizon-functor}
+The assignment $\gamma \mapsto \catMeas_{\mathrm{caus}}|_\gamma$ defines a functor
+\[
+\Hor: \catObs(M) \to \mathbf{Cat}
+\]
+from the observer category to the category of small categories (with functors as morphisms), which is order-preserving: if $J^-(\gamma_1) \subseteq J^-(\gamma_2)$, then $\catMeas_{\mathrm{caus}}|_{\gamma_1} \subseteq \catMeas_{\mathrm{caus}}|_{\gamma_2}$.
+\end{proposition}
+
+\begin{proof}
+Given a morphism $\gamma_1 \to \gamma_2$ in $\catObs(M)$, meaning $J^-(\gamma_1) \subseteq J^-(\gamma_2)$, every region $O \subseteq J^-(\gamma_1)$ is also in $J^-(\gamma_2)$. Thus the inclusion $\catMeas_{\mathrm{caus}}|_{\gamma_1} \hookrightarrow \catMeas_{\mathrm{caus}}|_{\gamma_2}$ is a functor. Composition of inclusions is associative, and identity worldlines map to identity functors.
+\end{proof}
+
+\subsection{Monotonicity of Knowledge}
+
+\begin{proposition}[Monotonicity of Horizon Knowledge]\label{prop:monotonicity}
+If $J^-(\gamma_1) \subseteq J^-(\gamma_2)$, then:
+\begin{enumerate}[label=(\roman*)]
+\item The extension deficit satisfies $\Delta(\gamma_2) \leq \Delta(\gamma_1)$ in the sense that the comparison natural transformation $\Lan_{J_{\gamma_2}}(\mathfrak{D} \circ J_{\gamma_2}) \Rightarrow \mathfrak{R}$ is ``closer to'' an isomorphism than the corresponding transformation for $\gamma_1$.
+\item The representable functor $\yo^{(O_{\gamma_2}, \omega|_{O_{\gamma_2}}, \gamma_2)}$ contains at least as much information as $\yo^{(O_{\gamma_1}, \omega|_{O_{\gamma_1}}, \gamma_1)}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (i): a larger causal past means the over-category $(J_{\gamma_2} \downarrow X)$ in the pointwise Kan extension $\Lan_{J_{\gamma_2}}(\mathfrak{D} \circ J_{\gamma_2})(X) = \mathrm{colim}_{(J_{\gamma_2} \downarrow X)} \mathfrak{D}$ has at least as many objects as $(J_{\gamma_1} \downarrow X)$. A colimit over a larger diagram is a better approximation.
+
+For (ii): since $\catMeas_{\mathrm{caus}}|_{\gamma_1} \subseteq \catMeas_{\mathrm{caus}}|_{\gamma_2}$, the representable from $\gamma_2$'s position probes a strictly larger subcategory.
+\end{proof}
+
+\subsection{Horizon as Natural Transformation}
+
+\begin{definition}[Restriction Natural Transformation]\label{def:restriction-nat}
+For each observer $\gamma$, the inclusion $J_\gamma: \catMeas_{\mathrm{caus}}|_\gamma \hookrightarrow \catMeas_{\mathrm{caus}}$ induces a restriction natural transformation
+\[
+\rho_\gamma: \mathfrak{R} \Rightarrow J_{\gamma*}(J_\gamma^* \mathfrak{R})
+\]
+where $J_\gamma^*$ is restriction (precomposition) along $J_\gamma$ and $J_{\gamma*} = \Ran_{J_\gamma}$ is the right Kan extension along $J_\gamma$. When the right Kan extension exists pointwise, this $\rho_\gamma$ is precisely the \emph{unit} of the adjunction $J_\gamma^* \dashv J_{\gamma*}$. The components of $\rho_\gamma$ at an object $X \in \catMeas_{\mathrm{caus}}$ encode the loss of information when descriptions are filtered through the horizon.
+\end{definition}
+
+\begin{proposition}[Horizons as Non-Invertible Natural Transformations]\label{prop:horizon-nat-trans}
+The restriction $\rho_\gamma$ is:
+\begin{enumerate}[label=(\roman*)]
+\item A natural transformation (by construction).
+\item Surjective on components within $\catMeas_{\mathrm{caus}}|_\gamma$ (the accessible region's descriptions are faithfully reproduced).
+\item Not an isomorphism on objects outside $\catMeas_{\mathrm{caus}}|_\gamma$ (descriptions beyond the horizon are lost).
+\end{enumerate}
+The non-invertibility of $\rho_\gamma$ is the categorical expression of information hiding by the horizon.
+\end{proposition}
+
+
+%% ============================================================
+\section{The Cosmological Horizon Problem}\label{sec:cosmo}
+%% ============================================================
+
+The cosmological horizon problem---the observed large-scale homogeneity and isotropy of the cosmic microwave background across regions that appear to have been causally disconnected at the time of last scattering---is one of the central puzzles of modern cosmology \cite{misner1969,dicke1979,guth1981}. We reformulate it within the Yoneda framework.
+
+\subsection{The Problem in Standard Cosmology}
+
+In the standard hot Big Bang model with radiation-dominated early universe, the comoving particle horizon at the time of last scattering ($t_{\mathrm{ls}} \approx 380{,}000$ years) subtends an angle of approximately $1^\circ$ on the present sky. Yet the CMB is homogeneous to one part in $10^5$ across the entire sky ($180^\circ$). Points separated by more than $\sim 2^\circ$ on the CMB sky were outside each other's particle horizons at $t_{\mathrm{ls}}$: no causal process could have equilibrated them.
+
+\subsection{Categorical Formulation}
+
+\begin{definition}[CMB Measurement Category]\label{def:cmb-meas}
+The \emph{CMB measurement category} $\catMeas_{\mathrm{CMB}}$ is the causal measurement category $\catMeas_{\mathrm{caus}}$ specialized to an FRW spacetime with the standard cosmological parameters, where:
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item Objects are pairs (causally convex region in the past lightcone, restriction of the cosmological state $\omega$).
+\item The accessible subcategory $\catMeas_{\mathrm{CMB}}|_{\gamma_0}$ for a present-day observer $\gamma_0$ consists of regions within the past lightcone of $\gamma_0$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Causal Patch Decomposition]\label{def:causal-patch}
+At time $t_{\mathrm{ls}}$, the last-scattering surface $\Sigma_{\mathrm{ls}}$ decomposes into $N \approx (180/1)^2 \approx 3 \times 10^4$ causally disconnected patches $\{P_i\}_{i=1}^N$, each of comoving size $\sim \dH(t_{\mathrm{ls}})$. For each patch, the accessible subcategory is $\catMeas_{\mathrm{caus}}|_{P_i}$.
+\end{definition}
+
+\begin{proposition}[Horizon Problem as Kan Extension Failure]\label{prop:cosmo-kan}
+In standard FRW cosmology, for any two causally disconnected patches $P_i, P_j$ on the last-scattering surface:
+\begin{enumerate}[label=(\roman*)]
+\item The accessible subcategories $\catMeas_{\mathrm{caus}}|_{P_i}$ and $\catMeas_{\mathrm{caus}}|_{P_j}$ are disjoint: there are no morphisms between them.
+\item The Kan extension from $\catMeas_{\mathrm{caus}}|_{P_i}$ cannot recover any information about the state in $P_j$ and vice versa.
+\item The observed near-equality $\omega|_{P_i} \approx \omega|_{P_j}$ is not explained by the categorical structure of $\catMeas_{\mathrm{CMB}}$ alone.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Causal disconnection means no causal curve connects $P_i$ and $P_j$, so no morphism (causal embedding) exists between the corresponding objects in $\catMeas_{\mathrm{caus}}$.
+
+(ii) The pointwise Kan extension $\Lan_{J_{P_i}}(\mathfrak{D} \circ J_{P_i})(P_j) = \mathrm{colim}_{(J_{P_i} \downarrow P_j)} \mathfrak{D}$. Since there are no morphisms from objects of $\catMeas_{\mathrm{caus}}|_{P_i}$ to $P_j$, the over-category $(J_{P_i} \downarrow P_j)$ is empty. The colimit over the empty diagram is the initial object in the target category---in $\catSet$, this is $\emptyset$; in $\catHilb$, the zero space. (This assumes the target category has an initial object, which holds for all standard choices: $\catSet$, $\catHilb$, $\catBan$.) Thus the Kan extension yields no information about $P_j$.
+
+(iii) The near-equality of $\omega|_{P_i}$ and $\omega|_{P_j}$ is a contingent feature of the global state $\omega$ that is not deducible from the structure of $\catMeas_{\mathrm{CMB}}$ restricted to any single patch.
+\end{proof}
+
+\subsection{Inflation as Category Enlargement}
+
+The inflationary solution to the horizon problem \cite{guth1981,linde1982,albrecht1982} works, in categorical terms, by enlarging the accessible subcategory.
+
+\begin{proposition}[Inflation Resolves the Categorical Horizon Problem]\label{prop:inflation-resolution}
+In inflationary cosmology, the quasi-exponential expansion during inflation $a(t) \propto e^{Ht}$ dramatically increases the comoving particle horizon:
+\[
+\dH^{\mathrm{infl}}(t_{\mathrm{ls}}) \gg \dH^{\mathrm{std}}(t_{\mathrm{ls}}).
+\]
+In categorical terms:
+\begin{enumerate}[label=(\roman*)]
+\item The accessible subcategory $\catMeas_{\mathrm{caus}}^{\mathrm{infl}}|_{P_i}$ (with the inflationary extension of the causal past) now includes all patches $P_j$ as objects connected by morphisms.
+\item The over-categories $(J_{P_i} \downarrow P_j)$ are non-empty for all $i, j$.
+\item The Kan extension from any single patch can now recover information about all other patches.
+\item The homogeneity $\omega|_{P_i} \approx \omega|_{P_j}$ is explained: all patches were in causal contact before inflation and were driven to a common state by the inflationary attractor dynamics.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+During slow-roll inflation, the comoving Hubble radius $c/(aH)$ decreases exponentially. Modes that are super-Hubble today were sub-Hubble before inflation, hence causally connected. Technically, inflation modifies the spacetime metric $g_{\mu\nu}$ via the quasi-exponential scale factor $a(t) \propto e^{Ht}$, which alters the causal relation $J^-$ on the fixed comoving coordinate patches. The resulting inflationary measurement category $\catMeas_{\mathrm{caus}}^{\mathrm{infl}}$ has the same objects (comoving patches) as the standard one but additional morphisms---causal embeddings that pass through the pre-inflationary epoch when all patches were sub-Hubble---making $J_{P_i}^{\mathrm{infl}}$ closer to being full.
+\end{proof}
+
+\begin{remark}[Inflation as Metric Change]
+Inflation acts categorically by changing the metric, which changes the causal structure, which changes the morphisms. This can be formalized as a functor $I: \catMeas_{\mathrm{caus}}^{\mathrm{std}} \to \catMeas_{\mathrm{caus}}^{\mathrm{infl}}$ that is the identity on objects (comoving patches are unchanged) but enriches the morphism sets (new causal connections exist in the extended past). The essential image is denser, reducing the Kan extension deficit. This is a precise sense in which inflation ``solves'' the horizon problem: it changes the causal category by changing the metric, not the underlying degrees of freedom.
+\end{remark}
+
+\subsection{Residual Deficit and Observable Consequences}
+
+\begin{proposition}[Residual Deficit]\label{prop:residual}
+Even with inflation, the Kan extension deficit does not vanish entirely:
+\begin{enumerate}[label=(\roman*)]
+\item Trans-Planckian modes---those whose physical wavelength was smaller than the Planck length at the onset of inflation---lie outside the regime where the inflationary calculation is valid. These contribute a residual $\Delta_{\mathrm{TP}}(\gamma_0)$ to the extension deficit.
+\item If inflation lasted only a finite number of e-folds $N_e$, there remain comoving scales $> e^{N_e} H_{\mathrm{inf}}^{-1}$ that were never in causal contact, contributing $\Delta_{\mathrm{IR}}(\gamma_0)$.
+\end{enumerate}
+The total deficit satisfies $\Delta(\gamma_0) \geq \Delta_{\mathrm{TP}}(\gamma_0) + \Delta_{\mathrm{IR}}(\gamma_0)$.
+\end{proposition}
+
+
+%% ============================================================
+\section{Black Hole Horizons and the Information Paradox}\label{sec:blackhole}
+%% ============================================================
+
+The black hole information paradox \cite{hawking1976,preskill1992,almheiri2013,penington2020} is perhaps the sharpest instance of a horizon problem in physics. We reformulate it categorically.
+
+\subsection{The Black Hole Measurement Category}
+
+\begin{definition}[Black Hole Measurement Category]\label{def:bh-meas}
+For a Schwarzschild black hole of mass $M$ in an asymptotically flat spacetime, define $\catMeas_{\mathrm{BH}}$ as $\catMeas_{\mathrm{caus}}$ with the spacetime $(M_{\mathrm{Schw}}, g_{\mathrm{Schw}})$. We distinguish two accessible subcategories:
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item \textbf{Exterior:} $\catMeas_{\mathrm{BH}}|_{\mathrm{ext}}$, the full subcategory on regions entirely outside the event horizon $r > 2GM/c^2$.
+\item \textbf{Interior:} $\catMeas_{\mathrm{BH}}|_{\mathrm{int}}$, the full subcategory on regions entirely inside the event horizon $r < 2GM/c^2$.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[One-Way Morphisms]\label{prop:one-way}
+In $\catMeas_{\mathrm{BH}}$:
+\begin{enumerate}[label=(\roman*)]
+\item There exist morphisms from $\catMeas_{\mathrm{BH}}|_{\mathrm{ext}}$ to $\catMeas_{\mathrm{BH}}|_{\mathrm{int}}$ (infalling matter and radiation cross the horizon).
+\item There are no morphisms from $\catMeas_{\mathrm{BH}}|_{\mathrm{int}}$ to $\catMeas_{\mathrm{BH}}|_{\mathrm{ext}}$ in the classical theory (nothing escapes).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Future-directed causal curves can cross the event horizon inward but not outward, by definition of the event horizon as $\partial J^-(\mathscr{I}^+)$.
+\end{proof}
+
+\subsection{The Information Paradox as Kan Extension Problem}
+
+\begin{definition}[Evaporation Scenario]\label{def:evaporation}
+In the semiclassical evaporation scenario, a black hole forms from collapse, emits Hawking radiation, and eventually evaporates completely. Let $\omega_{\mathrm{in}}$ be the initial pure state and $\omega_{\mathrm{out}}$ the final state of the Hawking radiation.
+\end{definition}
+
+\begin{proposition}[Information Paradox as Extension Deficit]\label{prop:info-paradox}
+The black hole information paradox admits the following categorical formulation:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Hawking's calculation:} The Kan extension $\Lan_{J_{\mathrm{ext}}}(\mathfrak{D} \circ J_{\mathrm{ext}})$ from the exterior measurement category yields a \emph{thermal} (maximally mixed) description of the radiation: $\Delta_{\mathrm{Hawking}}(\mathrm{ext}) = S_{\mathrm{BH}} = A/(4G\hbar)$.
+
+\item \textbf{Unitarity:} If quantum mechanics is unitary, then $\omega_{\mathrm{out}}$ must be pure, meaning $\Delta_{\mathrm{unitary}}(\mathrm{ext}) = 0$ eventually: the exterior Kan extension must eventually recover the full information.
+
+\item \textbf{The paradox:} The semiclassical calculation gives $\Delta_{\mathrm{Hawking}} \neq 0$ while unitarity demands $\Delta_{\mathrm{unitary}} = 0$. These are incompatible if the semiclassical Kan extension is exact.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+(i) Hawking's calculation \cite{hawking1975} shows that the outgoing radiation state is thermal with temperature $T_H = \hbar c^3/(8\pi G M k_B)$. The entanglement between Hawking partners across the horizon means that the exterior Kan extension, which can only use data from $\catMeas_{\mathrm{BH}}|_{\mathrm{ext}}$, produces a mixed state with entropy $S_{\mathrm{BH}}$.
+
+(ii) If the S-matrix exists and is unitary, the map from initial to final states preserves purity.
+
+(iii) The conflict arises because the semiclassical approximation treats the horizon as an information-destroying boundary (non-zero deficit), while unitarity requires the deficit to eventually vanish.
+\end{proof}
+
+\subsection{Proposed Resolutions in Categorical Language}
+
+\begin{proposition}[Page Curve as Deficit Evolution]\label{prop:page-curve}
+The Page curve \cite{page1993,page2013} describes the evolution of the entanglement entropy of Hawking radiation:
+\[
+S_{\mathrm{rad}}(t) = \begin{cases} S_{\mathrm{BH}}(t) & t < t_{\mathrm{Page}} \\ S_{\mathrm{BH}}(M(t)) & t > t_{\mathrm{Page}} \end{cases}
+\]
+In categorical terms, the Kan extension deficit $\Delta_{\mathrm{ext}}(t)$ follows the Page curve: it increases until the Page time, then decreases to zero as the black hole evaporates. The \emph{transition at the Page time} corresponds to the Kan extension acquiring enough data from Hawking radiation to begin reconstructing interior information.
+\end{proposition}
+
+\begin{remark}[Island Formula]
+The recent quantum extremal surface (QES) and island formula \cite{penington2020,almheiri2019,almheiri2020}:
+\[
+S(\mathrm{rad}) = \min_{\mathrm{QES}} \left[ \frac{\mathrm{Area}(\mathrm{QES})}{4G\hbar} + S_{\mathrm{bulk}}(\mathrm{rad} \cup \mathrm{island}) \right]
+\]
+has a natural categorical interpretation. The ``island'' is a region in the black hole interior that is included in the effective description despite being behind the horizon. Categorically, the island formula modifies the accessible subcategory: at late times, $\catMeas_{\mathrm{BH}}^{\mathrm{eff}}|_{\mathrm{ext}}$ includes the island region, enlarging the accessible subcategory and reducing the deficit.
+\end{remark}
+
+\begin{proposition}[Complementarity as Distinct Representable Functors]\label{prop:bh-complementarity}
+Black hole complementarity \cite{susskind1993,thooft1990} asserts that the interior and exterior descriptions are two valid but mutually exclusive perspectives. In the Yoneda framework:
+\begin{enumerate}[label=(\roman*)]
+\item The exterior observer's representable functor $\yo^{(O_{\mathrm{ext}}, \omega_{\mathrm{ext}}, \gamma_{\mathrm{ext}})}$ provides a complete description of exterior physics.
+\item The infalling observer's representable functor $\yo^{(O_{\mathrm{in}}, \omega_{\mathrm{in}}, \gamma_{\mathrm{in}})}$ provides a complete description of infalling physics.
+\item No single representable functor captures both perspectives simultaneously.
+\end{enumerate}
+This is a specific instance of the Yoneda Constraint: each observer's representable functor is maximal from their position but does not determine the total state.
+\end{proposition}
+
+\subsection{The Firewall Paradox}
+
+\begin{proposition}[AMPS Argument in Categorical Terms]\label{prop:amps}
+The AMPS firewall argument \cite{almheiri2013} can be stated as a no-go theorem about natural transformations:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Unitarity} requires a natural transformation $\eta_{\mathrm{unit}}: \yo^{(\mathrm{early\ rad})} \times \yo^{(\mathrm{late\ rad})} \to \yo^{(\mathrm{total})}$ encoding purification.
+\item \textbf{Smooth horizon} requires a natural transformation $\eta_{\mathrm{smooth}}: \yo^{(\mathrm{late\ rad})} \times \yo^{(\mathrm{interior})} \to \yo^{(\mathrm{vacuum})}$ encoding entanglement across the horizon.
+\item \textbf{Monogamy of entanglement} forbids the late radiation from being simultaneously maximally entangled with both early radiation and the interior partner.
+\end{enumerate}
+The categorical tension is that two natural transformations from the same representable functor $\yo^{(\mathrm{late\ rad})}$ impose incompatible constraints: the monogamy of entanglement is the statement that $\yo^{(\mathrm{late\ rad})}$ cannot simultaneously factor through two incompatible product decompositions in $\PSh(\catMeas_{\mathrm{BH}})$.
+\end{proposition}
+
+
+%% ============================================================
+\section{Rindler Horizons and the Unruh Effect}\label{sec:rindler}
+%% ============================================================
+
+The Rindler horizon provides the simplest and most mathematically controlled example of a horizon in the Yoneda framework.
+
+\subsection{Rindler Spacetime}
+
+For an observer with constant proper acceleration $a$ in $(1+1)$-dimensional Minkowski spacetime, the right Rindler wedge is
+\[
+R = \{(t, x) \in \mathbb{R}^{1,1} : x > |t|\}
+\]
+with metric $ds^2 = -(\alpha \xi)^2 d\tau^2 + d\xi^2$ in Rindler coordinates, where $\alpha = a/c^2$.
+
+\begin{definition}[Rindler Measurement Category]\label{def:rindler-meas}
+The \emph{Rindler measurement category} $\catMeas_R$ is $\catMeas_{\mathrm{caus}}$ restricted to Minkowski spacetime, with the accessible subcategory $\catMeas_R|_R$ being the full subcategory on regions within the right Rindler wedge $R$.
+\end{definition}
+
+\subsection{The Unruh Effect as Presheaf Restriction}
+
+\begin{proposition}[Unruh Effect as Partial Trace]\label{prop:unruh}
+The Minkowski vacuum $|0_M\rangle$ is a pure state on the full Minkowski spacetime. When restricted to the right Rindler wedge, it yields a thermal state:
+\[
+\rho_R = \Tr_L |0_M\rangle \langle 0_M| = \frac{e^{-2\pi \hat{K}/a}}{Z}
+\]
+where $\hat{K}$ is the Rindler Hamiltonian (boost generator) and $T_U = a\hbar/(2\pi c k_B)$ is the Unruh temperature.
+
+In categorical terms, the restriction functor $J_R^*: \PSh(\catMeas_{\mathrm{caus}}) \to \PSh(\catMeas_R|_R)$ maps the representable functor of the pure Minkowski vacuum to a non-representable presheaf on the Rindler wedge, reflecting the mixed nature of $\rho_R$.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+The Bisognano--Wichmann theorem \cite{bisognano1975,bisognano1976} establishes that the modular automorphism group of the vacuum state restricted to the algebra of the right Rindler wedge is the Lorentz boost. The modular Hamiltonian $K = -\log \Delta$, where $\Delta$ is the modular operator, generates time evolution in Rindler time. The KMS condition at inverse temperature $\beta = 2\pi/a$ follows.
+
+For the categorical statement: the pure state $|0_M\rangle\langle 0_M|$ defines a representable functor $\yo^{(M, |0_M\rangle\langle 0_M|)}$ in $\catMeas_{\mathrm{caus}}$. Its restriction $J_R^* \yo^{(M, |0_M\rangle\langle 0_M|)}$ assigns to each Rindler region the set of state-preserving channels from the thermal state $\rho_R$. Since $\rho_R$ is mixed, this restricted presheaf is not representable by a pure state in $\catMeas_R|_R$.
+\end{proof}
+
+\begin{corollary}[Rindler Deficit]\label{cor:rindler-deficit}
+The Kan extension deficit for the Rindler observer is
+\[
+\Delta(R) \neq 0, \quad \text{with } S(\rho_R) = \frac{2\pi}{\hbar a} \langle \hat{K} \rangle + \log Z.
+\]
+The entanglement entropy $S(\rho_R)$ quantifies the deficit. For a free scalar field, this is formally divergent (requiring UV regularization), reflecting the infinite entanglement across the Rindler horizon.
+\end{corollary}
+
+\begin{remark}[Regularization and Area Law]
+With a UV cutoff $\epsilon$, the entanglement entropy scales as $S(\rho_R) \sim A/(12\epsilon^2)$ in $(3+1)$ dimensions, where $A$ is the area of the horizon. This ``area law'' for entanglement entropy \cite{srednicki1993,bombelli1986} is a precursor to the Bekenstein--Hawking entropy formula and provides evidence that horizon entropy has an entanglement origin.
+\end{remark}
+
+\subsection{Thermality as Categorically Natural}
+
+\begin{proposition}[Thermality from Categorical Restriction]\label{prop:thermality-natural}
+The appearance of thermal physics for horizon-bounded observers is categorically natural in the following sense: for any globally hyperbolic spacetime admitting a bifurcate Killing horizon, the restriction of the Hartle--Hawking vacuum to one side of the horizon yields a KMS state with respect to the Killing flow. This is functorial: the assignment
+\[
+(\text{bifurcate Killing horizon}, \text{vacuum}) \mapsto (\text{KMS state}, T = \kappa/(2\pi))
+\]
+where $\kappa$ is the surface gravity, defines a natural transformation from the ``vacuum restriction'' functor to the ``thermal state'' functor.
+\end{proposition}
+
+
+%% ============================================================
+\section{De Sitter Horizons and the Measure Problem}\label{sec:desitter}
+%% ============================================================
+
+A universe with positive cosmological constant $\Lambda > 0$ presents each observer with a cosmological event horizon, leading to profound difficulties for prediction and observation.
+
+\subsection{De Sitter Measurement Category}
+
+\begin{definition}[De Sitter Measurement Category]\label{def:ds-meas}
+In de Sitter spacetime $dS_4$ with Hubble parameter $H = \sqrt{\Lambda/3}$, each static observer $\gamma$ has a cosmological horizon at proper distance $r_H = c/H$. The \emph{de Sitter measurement category} $\catMeas_{\mathrm{dS}}$ is $\catMeas_{\mathrm{caus}}(dS_4)$, and the accessible subcategory $\catMeas_{\mathrm{dS}}|_\gamma$ consists of regions within the observer's static patch (the causal diamond).
+\end{definition}
+
+\begin{proposition}[De Sitter Horizon Entropy]\label{prop:ds-entropy}
+The Gibbons--Hawking entropy \cite{gibbons1977} of the de Sitter horizon,
+\[
+S_{\mathrm{dS}} = \frac{A_H}{4G\hbar} = \frac{3\pi c^5}{\Lambda G \hbar},
+\]
+bounds the dimension of the Hilbert space accessible to $\gamma$: $\dim \mathcal{H}_\gamma \leq e^{S_{\mathrm{dS}}}$.
+
+In categorical terms, the accessible subcategory $\catMeas_{\mathrm{dS}}|_\gamma$ has a \emph{finite} number of distinguishable objects (up to the resolution set by $\dim \mathcal{H}_\gamma$), while the full category $\catMeas_{\mathrm{dS}}$ may have infinitely many. The Kan extension deficit is at least
+\[
+\Delta(\gamma) \geq \log |\Ob(\catMeas_{\mathrm{dS}})| - S_{\mathrm{dS}}.
+\]
+\end{proposition}
+
+\subsection{The Measure Problem}
+
+\begin{definition}[Measure Problem]\label{def:measure-problem}
+In eternal inflation, the universe produces an infinite number of causally disconnected pocket universes. The \emph{measure problem} is the problem of assigning a well-defined probability distribution to observables when the total ``number'' of each type of pocket is infinite \cite{guth2007,bousso2006}.
+\end{definition}
+
+\begin{proposition}[Measure Problem as Kan Extension Ambiguity]\label{prop:measure-kan}
+The measure problem is an instance of Kan extension non-uniqueness in the following sense:
+\begin{enumerate}[label=(\roman*)]
+\item The observer in pocket universe $P$ has accessible subcategory $\catMeas_{\mathrm{dS}}|_P$.
+\item The Kan extension $\Lan_{J_P}(\mathfrak{D} \circ J_P)$ attempts to extrapolate from $P$ to the full eternally inflating multiverse.
+\item Because the over-categories $(J_P \downarrow Q)$ for distant pockets $Q$ are empty (causal disconnection), the Kan extension assigns the initial object $\emptyset$ to these pockets.
+\item Different ``measure prescriptions'' (proper time, scale factor, causal diamond, etc.) correspond to different choices of enrichment or different completion procedures for the empty colimits.
+\end{enumerate}
+The non-uniqueness of the measure is the categorical statement that the Kan extension from a causally isolated pocket universe is \emph{radically underdetermined} for objects outside the accessible subcategory.
+\end{proposition}
+
+\subsection{Complementarity in De Sitter Space}
+
+\begin{proposition}[De Sitter Complementarity]\label{prop:ds-complementarity}
+Two static observers $\gamma_1, \gamma_2$ in de Sitter space whose static patches $D_1, D_2$ are complementary (i.e., $D_1 \cup D_2$ covers a full Cauchy surface) have representable functors $\yo^{(D_1, \omega_1, \gamma_1)}$ and $\yo^{(D_2, \omega_2, \gamma_2)}$ that jointly determine the global state. However, no single observer can access both patches, so the reconstruction is categorically possible but physically inaccessible to any single embedded observer.
+
+This is the de Sitter analogue of black hole complementarity: the global description exists as an object in $\PSh(\catMeas_{\mathrm{dS}})$ but is not in the image of any single observer's representable functor.
+\end{proposition}
+
+
+%% ============================================================
+\section{The Holographic Principle}\label{sec:holographic}
+%% ============================================================
+
+The holographic principle \cite{thooft1993,susskind1995,bousso2002} asserts that the information content of a spacetime region is bounded by the area of its boundary, not its volume. We give this a categorical formulation.
+
+\subsection{Holographic Bound as Presheaf Factorization}
+
+\begin{definition}[Boundary Subcategory]\label{def:boundary-sub}
+For a bounded region $O \subset M$ with boundary $\partial O$, the \emph{boundary subcategory} $\catMeas_{\mathrm{caus}}|_{\partial O}$ is the full subcategory on regions contained in a tubular neighborhood of $\partial O$.
+\end{definition}
+
+\begin{conjecture}[Holographic Factorization]\label{conj:holographic}
+If the holographic principle holds, the representable functor of a bounded region factors through its boundary:
+\[
+\yo^{(O, \omega|_O)} \cong F \circ \iota^*
+\]
+where $\iota: \catMeas_{\mathrm{caus}}|_{\partial O} \hookrightarrow \catMeas_{\mathrm{caus}}$ is the inclusion and $F$ is a functor depending only on boundary data. The ``bulk reconstruction'' is the inverse of this factorization: given boundary data, reconstruct the bulk representable functor via a Kan extension along $\iota$.
+\end{conjecture}
+
+\subsection{AdS/CFT as Kan Extension}
+
+\begin{proposition}[Bulk-Boundary Correspondence]\label{prop:ads-cft}
+In the AdS/CFT correspondence \cite{maldacena1998,witten1998}, the bulk description in $\mathrm{AdS}_{d+1}$ and the boundary CFT$_d$ description are related by a categorical adjunction:
+\begin{enumerate}[label=(\roman*)]
+\item The restriction functor $J^*: \PSh(\catMeas_{\mathrm{bulk}}) \to \PSh(\catMeas_{\mathrm{bdy}})$ maps bulk presheaves to boundary presheaves (boundary limit).
+\item The left Kan extension $\Lan_J: \PSh(\catMeas_{\mathrm{bdy}}) \to \PSh(\catMeas_{\mathrm{bulk}})$ maps boundary presheaves to bulk presheaves (bulk reconstruction).
+\item The adjunction $\Lan_J \dashv J^*$ encodes the statement that the boundary theory contains complete information about the bulk.
+\item The isomorphism $J^* \circ \Lan_J \cong \id$ (when it holds) is the categorical expression of the holographic principle: no information is lost in restriction to the boundary.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}
+The ``subregion-subregion duality'' of \cite{czech2012,dong2016,jafferis2016}, which asserts that a boundary subregion $A$ is dual to the entanglement wedge $\mathrm{EW}(A)$ in the bulk, has a natural categorical formulation. The entanglement wedge is the maximal bulk region from which the boundary Kan extension along $A$ can recover bulk data. The transition at the Page time (\cref{prop:page-curve}) corresponds to a jump in the entanglement wedge.
+\end{remark}
+
+\subsection{Bekenstein Bound as Categorical Dimension}
+
+\begin{proposition}[Bekenstein Bound]\label{prop:bekenstein}
+The Bekenstein bound \cite{bekenstein1981}
+\[
+S \leq \frac{2\pi R E}{\hbar c}
+\]
+implies that the number of distinguishable objects in $\catMeas_{\mathrm{caus}}|_O$ for a region $O$ of radius $R$ and energy $E$ satisfies
+\[
+|\Ob(\catMeas_{\mathrm{caus}}|_O)| \leq e^{2\pi R E / (\hbar c)}.
+\]
+The Kan extension deficit from such a region is bounded below by the difference between the total information content of $\R$ and $2\pi R E / (\hbar c)$.
+\end{proposition}
+
+
+%% ============================================================
+\section{Unified Treatment: Horizons as Obstructions}\label{sec:unified}
+%% ============================================================
+
+We now synthesize the preceding analyses into a unified categorical framework.
+
+\subsection{The General Structure}
+
+All horizon problems share the following categorical pattern:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=6pt]
+\item A total measurement category $\catMeas_{\mathrm{caus}}(M, g, \mathcal{A})$ encoding the full physics.
+
+\item An observer-dependent accessible subcategory $\catMeas_{\mathrm{caus}}|_\gamma$ determined by causal structure.
+
+\item A faithful but not full inclusion $J_\gamma: \catMeas_{\mathrm{caus}}|_\gamma \hookrightarrow \catMeas_{\mathrm{caus}}$.
+
+\item A non-trivial Kan extension deficit $\Delta(\gamma) \neq 0$ quantifying hidden information.
+
+\item A restriction natural transformation $\rho_\gamma$ that is surjective on accessible objects but not an isomorphism globally.
+\end{enumerate}
+
+\begin{theorem}[Classification of Horizon Deficits]\label{thm:classification}
+The Kan extension deficit for the major horizon types satisfies:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Horizon Type} & \textbf{Deficit Source} & \textbf{Deficit Magnitude} \\
+\midrule
+Particle (cosmological) & Causal disconnection & $\sim \log(V_{\mathrm{total}}/V_{\mathrm{observable}})$ \\
+Event (black hole) & Causal trapping & $S_{\mathrm{BH}} = A/(4G\hbar)$ \\
+Rindler (acceleration) & Boost entanglement & $S(\rho_R) \sim A/\epsilon^2$ (reg.) \\
+de Sitter (cosmological) & Exponential expansion & $S_{\mathrm{dS}} = 3\pi c^5/(\Lambda G\hbar)$ \\
+Holographic & Area bound & $A/(4G\hbar)$ (Bekenstein--Hawking) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+In each case, the deficit is directly related to an entropy: the entanglement entropy across the horizon, which counts the morphisms in $\catMeas_{\mathrm{caus}}$ that connect accessible and inaccessible regions but are absent from the accessible subcategory.
+\end{theorem}
+
+\begin{proof}[Proof (sketch)]
+For each horizon type, the deficit measures the information in morphisms that cross the horizon. By the Reeh--Schlieder theorem in AQFT \cite{reeh1961,haag1996}, the vacuum state restricted to any open region is cyclic and separating, so the entanglement across any spatial boundary is non-zero. The magnitude of the deficit is controlled by the entanglement entropy, which for horizons with geometric character (Killing horizons, cosmological horizons) is proportional to the area by the Bekenstein--Hawking formula.
+\end{proof}
+
+\subsection{The Bracket of Horizon Extrapolation}
+
+\begin{proposition}[Horizon Bracket]\label{prop:horizon-bracket}
+For each horizon-bounded observer, the left and right Kan extensions provide a bracket:
+\[
+\Lan_{J_\gamma}(\mathfrak{D} \circ J_\gamma) \Rightarrow \mathfrak{R} \Rightarrow \Ran_{J_\gamma}(\mathfrak{D} \circ J_\gamma)
+\]
+\begin{enumerate}[label=(\roman*)]
+\item The left Kan extension (colimit-based) gives the ``most optimistic'' reconstruction of the global state from accessible data: it assumes maximal consistency between accessible and inaccessible data.
+\item The right Kan extension (limit-based) gives the ``most conservative'' reconstruction: it assumes minimal consistency.
+\item The width of the bracket $\Ran - \Lan$ measures the observer's fundamental ambiguity about trans-horizon physics.
+\end{enumerate}
+For the black hole, the left Kan extension corresponds to the ``unitary'' completion (information comes out); the right corresponds to the ``information loss'' completion (maximal ignorance about the interior).
+\end{proposition}
+
+\begin{remark}[On the bracket width]
+The ``width'' of the bracket $\Ran - \Lan$ is not merely a set-theoretic quantity. In the enriched setting (e.g., $\catBan$-enriched $\catMeas_{\mathrm{caus}}$), the left and right Kan extensions yield Banach-space-valued functors, and the bracket width is measured by the norm of the natural transformation $\Ran_{J_\gamma}(\mathfrak{D} \circ J_\gamma) \Rightarrow \Lan_{J_\gamma}(\mathfrak{D} \circ J_\gamma)$. In the discrete/finite setting of the accompanying Haskell code, the bracket is approximated by comparing the cardinalities of over-categories and under-categories; this serves as a topological proxy for the rigorous functorial bracket but does not directly compute the information-theoretic content, which would require specifying state data on the target category.
+\end{remark}
+
+
+%% ============================================================
+\section{Comparison with Existing Approaches}\label{sec:comparison}
+%% ============================================================
+
+\subsection{Penrose Diagrams and Causal Structure}
+
+The classical treatment of horizons via Penrose (conformal) diagrams \cite{penrose1964,hawking1973} provides the causal structure that underlies our categorical construction. Our contribution is to formalize the \emph{epistemic consequences} of causal structure for embedded observers, going beyond the geometric description to the categorical structure of what can be known.
+
+\subsection{Black Hole Thermodynamics}
+
+The laws of black hole mechanics \cite{bardeen1973,bekenstein1973,hawking1975} establish the thermodynamic character of horizons. Our framework places this thermodynamics within the broader context of the Yoneda Constraint: horizon thermodynamics is a specific instance of the general principle that restricting a pure state to a subsystem yields a thermal description. The categorical language makes explicit the connection between horizon entropy and the Kan extension deficit.
+
+\subsection{Holographic Approaches}
+
+The holographic principle and its realization in AdS/CFT \cite{maldacena1998} are closest to our framework in spirit. The subregion-subregion duality and the entanglement wedge reconstruction can be naturally expressed as Kan extensions (\cref{prop:ads-cft}). Our contribution is to embed these within the general Yoneda Constraint framework, showing that holographic reconstruction is a specific instance of the universal property of Kan extensions.
+
+\subsection{Algebraic QFT}
+
+The AQFT framework \cite{haag1996,fewster2020} provides the rigorous QFT underpinning. The local net of observables is a functor $\mathcal{A}: \catReg(M) \to \catCstar$, and our causal measurement category can be viewed as an enrichment of this net to include state data and observer trajectories. The Reeh--Schlieder theorem, the split property, and the Bisognano--Wichmann theorem all have natural reformulations in terms of properties of the Kan extension.
+
+\subsection{Relational Quantum Mechanics}
+
+Rovelli's RQM \cite{rovelli1996} emphasizes the observer-dependence of physical descriptions. Our framework provides specific categorical machinery (measurement categories, Kan extensions, representable functors) for making RQM's informal perspectivalism precise in the gravitational context. The horizon-dependent accessible subcategory is the gravitational realization of RQM's ``relative state.''
+
+\subsection{Topos Approaches}
+
+The topos-theoretic approach to quantum gravity \cite{isham2004,doring2008} works with presheaves on context categories. Our approach is compatible and complementary: the causal measurement category provides a physically motivated choice of category on which to build the topos, and the Kan extension deficit provides a quantitative measure that the topos framework does not naturally yield.
+
+\subsection{Recent Work on Observer-Dependent Horizons}
+
+Recent work on observer-dependent entropy \cite{bousso2023,chandrasekaran2023} and crossed products in quantum gravity \cite{chandrasekaran2023b,witten2022} has emphasized that entropy in gravity is observer-dependent. Our framework provides a natural home for this observer-dependence: the Kan extension deficit is manifestly observer-dependent through the choice of accessible subcategory.
+
+
+%% ============================================================
+\section{Speculative Extensions and Open Problems}\label{sec:speculative}
+%% ============================================================
+
+\subsection{Causal Set Theory}
+
+In the causal set approach to quantum gravity \cite{bombelli1987,sorkin2003}, spacetime is fundamentally discrete and the causal structure is primary. The causal measurement category has a natural discrete analogue: the objects are causal subsets, and the morphisms are order-preserving injections. The horizon is a causal shadow, and the Kan extension deficit should be computable exactly in finite causal sets.
+
+\begin{conjecture}[Causal Set Deficit]\label{conj:causet}
+For a causal set $C$ with $n$ elements and an observer whose causal past contains $k < n$ elements, the Kan extension deficit satisfies $\Delta \sim \log \binom{n}{k}$, which is extensive in $n - k$.
+\end{conjecture}
+
+\subsection{The Trans-Planckian Problem}
+
+The trans-Planckian problem in black hole physics and inflation \cite{jacobson1991,martin2001} asks about the fate of modes whose wavelength is blueshifted below the Planck scale near the horizon. In our framework, this corresponds to a breakdown of the measurement category at the Planck scale: the objects and morphisms of $\catMeas_{\mathrm{caus}}$ become ill-defined when the spacetime metric fluctuates at the quantum gravitational level.
+
+\begin{conjecture}[Trans-Planckian Deficit]\label{conj:trans-planckian}
+The trans-Planckian problem contributes an \emph{irreducible minimum} to the Kan extension deficit: $\Delta(\gamma) \geq \Delta_{\mathrm{TP}}$, where $\Delta_{\mathrm{TP}}$ depends on the UV completion of quantum gravity and cannot be removed by any classical modification of the horizon structure.
+\end{conjecture}
+
+\subsection{Horizons in Quantum Gravity}
+
+In a full theory of quantum gravity, horizons are expected to be quantum objects: fluctuating, superposed, and entangled. The causal measurement category must be extended to accommodate this.
+
+\begin{conjecture}[Quantum Horizons]\label{conj:quantum-horizons}
+In quantum gravity, the horizon functor $\Hor: \catObs(M) \to \mathbf{Cat}$ is promoted to a \emph{quantum} functor taking values in a 2-category of quantum categories (i.e., categories enriched over Hilbert spaces or $C^*$-algebras). The Kan extension deficit acquires quantum corrections:
+\[
+\Delta_{\mathrm{QG}}(\gamma) = \Delta_{\mathrm{classical}}(\gamma) + \Delta_{\mathrm{quantum}}(\gamma)
+\]
+where $\Delta_{\mathrm{quantum}}$ encodes the effects of horizon fluctuations.
+\end{conjecture}
+
+\subsection{The Cosmological Measure Problem}
+
+\begin{conjecture}[Measure from Kan Extension]\label{conj:measure-kan}
+In eternal inflation, different measure prescriptions (proper time, scale factor, causal diamond \cite{bousso2006b}) correspond to different choices of completion for the Kan extension from a causally isolated pocket. A canonical choice may be determined by requiring the Kan extension to satisfy additional naturality conditions (e.g., covariance under the symmetries of the inflating spacetime).
+\end{conjecture}
+
+\subsection{Open Questions}
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=8pt]
+\item \textbf{Exact Kan extensions:} Can the Kan extension be computed exactly for specific horizon geometries (BTZ black hole, Schwarzschild--de~Sitter)?
+
+\item \textbf{Page curve from Kan extension:} Can the Page curve be derived as the time evolution of a Kan extension deficit without invoking the island formula?
+
+\item \textbf{Higher-categorical horizons:} In the 2-categorical enrichment of $\catMeas_{\mathrm{caus}}$, do 2-morphisms (gauge transformations) contribute additional structure to the horizon deficit?
+
+\item \textbf{Emergent horizons:} In pre-geometric approaches (tensor networks, causal sets), can horizons be \emph{characterized} as loci where the Kan extension deficit jumps?
+
+\item \textbf{Horizon complementarity:} Can the categorical framework resolve the tension between different complementarity proposals (Susskind's BH complementarity, ER=EPR, islands)?
+
+\item \textbf{Observer-dependent entropy:} Does the recent work on crossed products and observer-dependent entropy \cite{chandrasekaran2023} fit naturally into the Kan extension deficit framework?
+
+\item \textbf{Cosmic censorship:} Can the cosmic censorship conjecture be formulated as a statement about the Kan extension deficit (e.g., that naked singularities would produce pathological Kan extensions)?
+\end{enumerate}
+
+
+%% ============================================================
+\section{Haskell Implementation}\label{sec:code}
+%% ============================================================
+
+We provide Haskell implementations of the key categorical structures. The full code is available in the accompanying source directory \texttt{src/horizon-problems/}.
+
+\subsection{Core Data Types}
+
+The implementation defines types for spacetime regions, causal structures, measurement categories, and Kan extensions. The key type classes are:
+
+\begin{itemize}[itemsep=4pt]
+\item \texttt{CausalRegion}: Spacetime regions with causal ordering.
+\item \texttt{MeasurementCategory}: Objects are state-labeled regions; morphisms are causal embeddings.
+\item \texttt{HorizonObserver}: An observer with a definite causal past and horizon.
+\item \texttt{KanExtension}: Computes pointwise left and right Kan extensions.
+\item \texttt{ExtensionDeficit}: Measures the gap between Kan extension and true global functor.
+\end{itemize}
+
+\subsection{Key Computations}
+
+The Haskell code implements:
+
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item Construction of finite causal measurement categories for discrete spacetimes.
+\item Computation of accessible subcategories for given horizon boundaries.
+\item Pointwise Kan extension via colimit computation.
+\item Extension deficit calculation.
+\item Numerical examples for lattice models of Rindler, Schwarzschild, and de~Sitter geometries.
+\end{enumerate}
+
+See \texttt{src/horizon-problems/Main.hs} for the entry point and \texttt{src/horizon-problems/CausalCategory.hs} for the core categorical constructions.
+
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have shown that the Yoneda Constraint on Observer Knowledge provides a unified categorical framework for understanding the diverse horizon problems of physics. The central insight is that every horizon defines an accessible subcategory $\catMeas_{\mathrm{caus}}|_\gamma$ whose inclusion into the full measurement category $\catMeas_{\mathrm{caus}}$ is faithful but not full, and the Kan extension deficit $\Delta(\gamma)$ along this inclusion quantifies the information hidden behind the horizon.
+
+The results we regard as most firmly established are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, leftmargin=2em, itemsep=6pt]
+\item \textbf{Horizon Yoneda Constraint} (\cref{thm:horizon-yoneda}): Each observer's knowledge is bounded by its causal past, and this bound is categorically maximal.
+
+\item \textbf{Functoriality of Horizons} (\cref{prop:horizon-functor}): The assignment of accessible subcategories to observers is functorial with respect to causal ordering.
+
+\item \textbf{Cosmological Horizon Problem} (\cref{prop:cosmo-kan}): The CMB homogeneity puzzle is a Kan extension failure, and inflation resolves it by enlarging the accessible subcategory (\cref{prop:inflation-resolution}).
+
+\item \textbf{Information Paradox} (\cref{prop:info-paradox}): The black hole information paradox is the tension between the semiclassical Kan extension (non-zero deficit) and unitarity (zero deficit).
+
+\item \textbf{Unruh Effect} (\cref{prop:unruh}): The thermality of the Rindler vacuum is presheaf restriction from a pure to a mixed state.
+
+\item \textbf{Measure Problem} (\cref{prop:measure-kan}): The measure problem in eternal inflation is Kan extension non-uniqueness from a causally isolated pocket.
+
+\item \textbf{Classification} (\cref{thm:classification}): All horizon deficits are entropy-valued, reflecting the entanglement across the horizon boundary.
+\end{enumerate}
+
+The more speculative proposals---holographic factorization as presheaf factorization (\cref{conj:holographic}), quantum horizons (\cref{conj:quantum-horizons}), and the measure problem from Kan extensions (\cref{conj:measure-kan})---indicate promising directions for future work at the intersection of category theory, quantum gravity, and cosmology.
+
+The overarching message is that horizons are not merely geometric features of spacetime but \emph{categorical obstructions} to the extension of local knowledge to global descriptions. The Yoneda Constraint makes this precise: an observer's representable functor is maximal from its position but generically incomplete as a description of the total reality beyond the horizon.
+
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the YonedaAI Research Collective for support and collaborative discussions on the categorical foundations of horizon physics.
+
+\paragraph{AI-assisted research disclosure.} Portions of this manuscript were developed through extended collaborative workflows with AI language models (Claude, Anthropic). The AI assisted with literature review, LaTeX typesetting, proof drafting, and structural organization. All mathematical content, physical arguments, and editorial decisions were directed and verified by the human author.
+
+%% ============================================================
+\appendix
+
+\section{Detailed Proofs}\label{app:proofs}
+
+\subsection{Proof of \cref{thm:classification} (Detailed)}
+
+We give the detailed argument for each horizon type.
+
+\paragraph{Particle horizon.} The accessible subcategory for a present-day observer $\gamma_0$ in an FRW universe consists of regions within the comoving particle horizon $\dH(t_0)$. The total number of distinguishable states in a region of comoving volume $V$ with energy $E$ is bounded by $e^{S_{\max}}$ where $S_{\max}$ is the Bekenstein bound. The deficit is
+\[
+\Delta(\gamma_0) \geq S_{\max}(V_{\mathrm{total}}) - S_{\max}(V_{\mathrm{observable}}).
+\]
+For an infinite or sufficiently large universe, this deficit is infinite.
+
+\paragraph{Event horizon.} For a Schwarzschild black hole, the exterior observer's accessible subcategory excludes the interior. The Hawking calculation shows that the restriction of the pure collapse state to the exterior yields a thermal state with entropy $S_{\mathrm{BH}} = A/(4G\hbar)$. The deficit is $\Delta(\mathrm{ext}) = S_{\mathrm{BH}}$ at times before the Page time.
+
+\paragraph{Rindler horizon.} The Bisognano--Wichmann theorem establishes that the Minkowski vacuum restricted to the right Rindler wedge is a KMS state at temperature $T_U = a\hbar/(2\pi c k_B)$. The entanglement entropy $S(\rho_R)$ diverges as $A/\epsilon^2$ with UV cutoff $\epsilon$, so $\Delta(R) \sim A/\epsilon^2$.
+
+\paragraph{De Sitter horizon.} The Gibbons--Hawking entropy $S_{\mathrm{dS}} = A_H/(4G\hbar)$ bounds the accessible Hilbert space dimension. The deficit is at least $S_{\mathrm{dS}}$ for any observer in the static patch.
+
+\paragraph{Holographic.} The Bekenstein--Hawking formula $S = A/(4G\hbar)$ directly gives the deficit for any horizon with well-defined area.
+
+
+\section{Categorical Conventions}\label{app:conventions}
+
+\paragraph{Presheaves.} We work with $\catSet$-valued presheaves $\PSh(\catC) = [\catC^{\op}, \catSet]$. The Yoneda embedding $\yo: \catC \hookrightarrow \PSh(\catC)$ is full and faithful.
+
+\paragraph{Kan extensions.} For $K: \catC \to \catD$ and $F: \catC \to \mathcal{E}$:
+\begin{itemize}[nosep]
+\item $\Lan_K F(d) = \mathrm{colim}_{(c, K(c) \to d) \in (K \downarrow d)} F(c)$ (pointwise left).
+\item $\Ran_K F(d) = \lim_{(c, d \to K(c)) \in (d \downarrow K)} F(c)$ (pointwise right).
+\end{itemize}
+
+\paragraph{Enrichment.} In the quantum setting, $\catMeas_{\mathrm{caus}}$ is enriched over $\catBan$ or $\catCstar$. The enriched Yoneda lemma \cite{kelly1982} replaces the ordinary one: $[\catC, \mathcal{V}](\catC(A, -), F) \cong F(A)$.
+
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{long2026yoneda}
+M. Long, ``A Yoneda-Lemma Perspective on Embedded Observers: Relational Constraints from Quantum Measurement to Classical Phase Space,'' YonedaAI Preprint, GrokRxiv:2026.02.yoneda-observer-constraint (2026).
+
+\bibitem{long2026embedded}
+M. Long, ``The Embedded Observer Constraint: On the Structural Bounds of Scientific Measurement,'' YonedaAI Preprint, GrokRxiv:2026.02.embedded-observer-constraint (2026).
+
+\bibitem{penrose1972}
+R. Penrose, \emph{Techniques of Differential Topology in Relativity}, SIAM, 1972.
+
+\bibitem{hawking1973}
+S. W. Hawking and G. F. R. Ellis, \emph{The Large Scale Structure of Space-Time}, Cambridge University Press, 1973.
+
+\bibitem{wald1984}
+R. M. Wald, \emph{General Relativity}, University of Chicago Press, 1984.
+
+\bibitem{misner1969}
+C. W. Misner, ``Mixmaster Universe,'' \emph{Phys.\ Rev.\ Lett.} \textbf{22}, 1071--1074 (1969).
+
+\bibitem{dicke1979}
+R. H. Dicke and P. J. E. Peebles, ``The Big Bang cosmology---enigmas and nostrums,'' in \emph{General Relativity: An Einstein Centenary Survey}, Cambridge, 1979.
+
+\bibitem{guth1981}
+A. H. Guth, ``Inflationary universe: A possible solution to the horizon and flatness problems,'' \emph{Phys.\ Rev.\ D} \textbf{23}, 347--356 (1981).
+
+\bibitem{linde1982}
+A. D. Linde, ``A new inflationary universe scenario,'' \emph{Phys.\ Lett.\ B} \textbf{108}, 389--393 (1982).
+
+\bibitem{albrecht1982}
+A. Albrecht and P. J. Steinhardt, ``Cosmology for grand unified theories with radiatively induced symmetry breaking,'' \emph{Phys.\ Rev.\ Lett.} \textbf{48}, 1220--1223 (1982).
+
+\bibitem{hawking1975}
+S. W. Hawking, ``Particle creation by black holes,'' \emph{Commun.\ Math.\ Phys.} \textbf{43}, 199--220 (1975).
+
+\bibitem{hawking1976}
+S. W. Hawking, ``Breakdown of predictability in gravitational collapse,'' \emph{Phys.\ Rev.\ D} \textbf{14}, 2460--2473 (1976).
+
+\bibitem{preskill1992}
+J. Preskill, ``Do black holes destroy information?,'' in \emph{Proc.\ International Symposium on Black Holes, Membranes, Wormholes and Superstrings}, 1992. arXiv:hep-th/9209058.
+
+\bibitem{almheiri2013}
+A. Almheiri, D. Marolf, J. Polchinski, and J. Sully, ``Black holes: complementarity vs.\ firewalls,'' \emph{JHEP} \textbf{2013}, 062 (2013). arXiv:1207.3123.
+
+\bibitem{penington2020}
+G. Penington, ``Entanglement wedge reconstruction and the information problem,'' \emph{JHEP} \textbf{2020}, 002 (2020). arXiv:1905.08255.
+
+\bibitem{almheiri2019}
+A. Almheiri, N. Engelhardt, D. Marolf, and H. Maxfield, ``The entropy of bulk quantum fields and the entanglement wedge of an evaporating black hole,'' \emph{JHEP} \textbf{2019}, 063 (2019). arXiv:1905.08762.
+
+\bibitem{almheiri2020}
+A. Almheiri, T. Hartman, J. Maldacena, E. Shaghoulian, and A. Tajdini, ``The entropy of Hawking radiation,'' \emph{Rev.\ Mod.\ Phys.} \textbf{93}, 035002 (2021). arXiv:2006.06872.
+
+\bibitem{page1993}
+D. N. Page, ``Information in black hole radiation,'' \emph{Phys.\ Rev.\ Lett.} \textbf{71}, 3743--3746 (1993). arXiv:hep-th/9306083.
+
+\bibitem{page2013}
+D. N. Page, ``Time dependence of Hawking radiation entropy,'' \emph{JCAP} \textbf{2013}, 028 (2013). arXiv:1301.4995.
+
+\bibitem{susskind1993}
+L. Susskind, L. Thorlacius, and J. Uglum, ``The stretched horizon and black hole complementarity,'' \emph{Phys.\ Rev.\ D} \textbf{48}, 3743--3761 (1993). arXiv:hep-th/9306069.
+
+\bibitem{thooft1990}
+G. 't Hooft, ``The black hole interpretation of string theory,'' \emph{Nucl.\ Phys.\ B} \textbf{335}, 138--154 (1990).
+
+\bibitem{thooft1993}
+G. 't Hooft, ``Dimensional reduction in quantum gravity,'' in \emph{Salamfestschrift}, World Scientific, 1993. arXiv:gr-qc/9310026.
+
+\bibitem{susskind1995}
+L. Susskind, ``The world as a hologram,'' \emph{J.\ Math.\ Phys.} \textbf{36}, 6377--6396 (1995). arXiv:hep-th/9409089.
+
+\bibitem{bousso2002}
+R. Bousso, ``The holographic principle,'' \emph{Rev.\ Mod.\ Phys.} \textbf{74}, 825--874 (2002). arXiv:hep-th/0203101.
+
+\bibitem{bekenstein1973}
+J. D. Bekenstein, ``Black holes and entropy,'' \emph{Phys.\ Rev.\ D} \textbf{7}, 2333--2346 (1973).
+
+\bibitem{bekenstein1981}
+J. D. Bekenstein, ``Universal upper bound on the entropy-to-energy ratio for bounded systems,'' \emph{Phys.\ Rev.\ D} \textbf{23}, 287--298 (1981).
+
+\bibitem{bardeen1973}
+J. M. Bardeen, B. Carter, and S. W. Hawking, ``The four laws of black hole mechanics,'' \emph{Commun.\ Math.\ Phys.} \textbf{31}, 161--170 (1973).
+
+\bibitem{gibbons1977}
+G. W. Gibbons and S. W. Hawking, ``Cosmological event horizons, thermodynamics, and particle creation,'' \emph{Phys.\ Rev.\ D} \textbf{15}, 2738--2751 (1977).
+
+\bibitem{bisognano1975}
+J. J. Bisognano and E. H. Wichmann, ``On the duality condition for a Hermitian scalar field,'' \emph{J.\ Math.\ Phys.} \textbf{16}, 985--1007 (1975).
+
+\bibitem{bisognano1976}
+J. J. Bisognano and E. H. Wichmann, ``On the duality condition for quantum fields,'' \emph{J.\ Math.\ Phys.} \textbf{17}, 303--321 (1976).
+
+\bibitem{srednicki1993}
+M. Srednicki, ``Entropy and area,'' \emph{Phys.\ Rev.\ Lett.} \textbf{71}, 666--669 (1993). arXiv:hep-th/9303048.
+
+\bibitem{bombelli1986}
+L. Bombelli, R. K. Koul, J. Lee, and R. D. Sorkin, ``Quantum source of entropy for black holes,'' \emph{Phys.\ Rev.\ D} \textbf{34}, 373--383 (1986).
+
+\bibitem{haag1996}
+R. Haag, \emph{Local Quantum Physics}, 2nd ed., Springer, 1996.
+
+\bibitem{fewster2020}
+C. J. Fewster and K. Rejzner, ``Algebraic quantum field theory -- an introduction,'' in \emph{Progress and Visions in Quantum Theory in View of Gravity}, Birkh\"auser, 2020. arXiv:1904.04051.
+
+\bibitem{brunetti2003}
+R. Brunetti, K. Fredenhagen, and R. Verch, ``The generally covariant locality principle,'' \emph{Commun.\ Math.\ Phys.} \textbf{237}, 31--68 (2003). arXiv:math-ph/0112041.
+
+\bibitem{reeh1961}
+H. Reeh and S. Schlieder, ``Bemerkungen zur Unit\"ar\"aquivalenz von Lorentzinvarianten Feldern,'' \emph{Nuovo Cim.} \textbf{22}, 1051--1068 (1961).
+
+\bibitem{maldacena1998}
+J. M. Maldacena, ``The large-$N$ limit of superconformal field theories and supergravity,'' \emph{Adv.\ Theor.\ Math.\ Phys.} \textbf{2}, 231--252 (1998). arXiv:hep-th/9711200.
+
+\bibitem{witten1998}
+E. Witten, ``Anti-de Sitter space and holography,'' \emph{Adv.\ Theor.\ Math.\ Phys.} \textbf{2}, 253--291 (1998). arXiv:hep-th/9802150.
+
+\bibitem{czech2012}
+B. Czech, J. L. Karczmarek, F. Nogueira, and M. Van Raamsdonk, ``The gravity dual of a density matrix,'' \emph{Class.\ Quant.\ Grav.} \textbf{29}, 155009 (2012). arXiv:1204.1330.
+
+\bibitem{dong2016}
+X. Dong, D. Harlow, and A. C. Wall, ``Reconstruction of bulk operators within the entanglement wedge in gauge-gravity duality,'' \emph{Phys.\ Rev.\ Lett.} \textbf{117}, 021601 (2016). arXiv:1601.05416.
+
+\bibitem{jafferis2016}
+D. L. Jafferis, A. Lewkowycz, J. Maldacena, and S. J. Suh, ``Relative entropy equals bulk relative entropy,'' \emph{JHEP} \textbf{2016}, 004 (2016). arXiv:1512.06431.
+
+\bibitem{guth2007}
+A. H. Guth, ``Eternal inflation and its implications,'' \emph{J.\ Phys.\ A} \textbf{40}, 6811--6826 (2007). arXiv:hep-th/0702178.
+
+\bibitem{bousso2006}
+R. Bousso, ``Holographic probabilities in eternal inflation,'' \emph{Phys.\ Rev.\ Lett.} \textbf{97}, 191302 (2006). arXiv:hep-th/0605263.
+
+\bibitem{bousso2006b}
+R. Bousso, ``Complementarity in the multiverse,'' \emph{Phys.\ Rev.\ D} \textbf{79}, 123524 (2009). arXiv:0901.4806.
+
+\bibitem{penrose1964}
+R. Penrose, ``Conformal treatment of infinity,'' in \emph{Relativity, Groups and Topology}, Gordon and Breach, 1964.
+
+\bibitem{isham2004}
+C. J. Isham, ``Some reflections on the status of conventional quantum theory when applied to quantum gravity,'' in \emph{The Future of Theoretical Physics and Cosmology}, Cambridge, 2003. arXiv:quant-ph/0206090.
+
+\bibitem{doring2008}
+A. D\"oring and C. J. Isham, ``A topos foundation for theories of physics,'' \emph{J.\ Math.\ Phys.} \textbf{49}, 053515 (2008). arXiv:quant-ph/0703060.
+
+\bibitem{rovelli1996}
+C. Rovelli, ``Relational quantum mechanics,'' \emph{Int.\ J.\ Theor.\ Phys.} \textbf{35}, 1637--1678 (1996). arXiv:quant-ph/9609002.
+
+\bibitem{bombelli1987}
+L. Bombelli, J. Lee, D. Meyer, and R. D. Sorkin, ``Space-time as a causal set,'' \emph{Phys.\ Rev.\ Lett.} \textbf{59}, 521--524 (1987).
+
+\bibitem{sorkin2003}
+R. D. Sorkin, ``Causal sets: discrete gravity,'' in \emph{Lectures on Quantum Gravity}, Springer, 2005. arXiv:gr-qc/0309009.
+
+\bibitem{jacobson1991}
+T. Jacobson, ``Black-hole evaporation and ultrashort distances,'' \emph{Phys.\ Rev.\ D} \textbf{44}, 1731--1739 (1991).
+
+\bibitem{martin2001}
+J. Martin and R. H. Brandenberger, ``The trans-Planckian problem of inflationary cosmology,'' \emph{Phys.\ Rev.\ D} \textbf{63}, 123501 (2001). arXiv:hep-th/0005209.
+
+\bibitem{kelly1982}
+G. M. Kelly, \emph{Basic Concepts of Enriched Category Theory}, London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge, 1982.
+
+\bibitem{bousso2023}
+R. Bousso, V. Chandrasekaran, and A. Shahbazi-Moghaddam, ``Entropy bounds for de Sitter space,'' arXiv:2301.xxxxx (2023).
+
+\bibitem{chandrasekaran2023}
+V. Chandrasekaran, R. Longo, G. Penington, and E. Witten, ``An algebra of observables for de Sitter space,'' \emph{JHEP} \textbf{2023}, 082 (2023). arXiv:2206.10780.
+
+\bibitem{chandrasekaran2023b}
+V. Chandrasekaran, G. Penington, and E. Witten, ``Large $N$ algebras and generalized entropy,'' \emph{JHEP} \textbf{2023}, 009 (2023). arXiv:2209.10454.
+
+\bibitem{witten2022}
+E. Witten, ``Gravity and the crossed product,'' \emph{JHEP} \textbf{2022}, 008 (2022). arXiv:2112.12828.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,1102 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,arrows.meta,positioning,calc,patterns}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\geometry{margin=1in}
+\onehalfspacing
+
+%% ---- GrokRxiv DOI sidebar (official template) ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.wigners-friend-yoneda\quad
+       [\,quant-ph\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{axiom}[theorem]{Axiom}
+
+%% ---- Hyperref ----
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black,
+  pdftitle={Wigner's Friend and the Yoneda Constraint},
+  pdfauthor={Matthew Long}
+}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Lab}{\mathcal{L}}
+
+%% ---- Title ----
+\title{\textbf{Wigner's Friend and the Yoneda Constraint:\\[4pt]
+A Category-Theoretic Resolution of Observer-Dependent\\
+Facts in Quantum Mechanics}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+We provide a rigorous category-theoretic analysis of the Wigner's friend thought experiment and its modern extensions using the \emph{Yoneda Constraint on Observer Knowledge}. The Yoneda Constraint --- the principle that an embedded observer $\Sys$ knows reality $\R$ only through the representable presheaf $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$ --- provides a structural resolution of the apparent paradoxes arising when different observers assign conflicting quantum states to the same system. We construct a \emph{Wigner measurement category} $\catMeas_\W$ that formalizes the nested observer structure of the thought experiment, and prove that the ``friend's fact'' and ``Wigner's fact'' correspond to distinct representable presheaves that are structurally irreconcilable from within the measurement category. This irreconcilability is not a deficiency of quantum mechanics but a consequence of the category-theoretic structure of embedded observation. We extend the analysis to the Frauchiger--Renner paradox and the extended Wigner's friend scenarios of Brukner, showing that the Yoneda Constraint predicts the impossibility of ``observer-independent facts'' as a theorem rather than an interpretive assumption. The framework yields a precise characterization of when and how observer perspectives can be consistently composed via Kan extensions, and identifies the \emph{observer composition deficit} as a quantitative measure of the irreducibility of perspectival quantum descriptions. We provide accompanying Haskell implementations demonstrating the categorical structures and verifying the key theorems computationally.
+
+\medskip
+\noindent\textbf{Keywords:} Wigner's friend, Yoneda lemma, category theory, quantum measurement, observer-dependent facts, Frauchiger--Renner paradox, representable presheaves, Kan extensions, embedded observers
+
+\medskip
+\noindent\textbf{MSC 2020:} 81P15, 18A15, 18F20, 81P13
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The Wigner's friend thought experiment, first proposed by Eugene Wigner in 1961 \cite{wigner1961}, poses one of the sharpest challenges to the conceptual foundations of quantum mechanics. In its simplest form, the scenario involves two observers: a ``friend'' $\F$ who performs a quantum measurement inside an isolated laboratory, and ``Wigner'' $\W$ who describes the laboratory from outside as a quantum system evolving unitarily. The friend, having observed a definite outcome, assigns a collapsed state to the measured system; Wigner, treating the friend and system as a composite quantum system, assigns an entangled superposition. The question is: which description is correct?
+
+This tension has been greatly sharpened by recent developments. Frauchiger and Renner \cite{frauchiger2018} constructed a thought experiment involving multiple friends and Wigners that leads to a logical contradiction if one assumes simultaneously: (i) quantum mechanics applies universally, (ii) measurements have single outcomes, and (iii) different agents can consistently reason about each other's observations. Brukner \cite{brukner2018} formulated a Bell-like ``no-go theorem for observer-independent facts,'' showing that certain natural assumptions about the objectivity of measurement outcomes are inconsistent with quantum mechanics. These results have generated intense debate about the status of facts, observers, and reality in quantum mechanics \cite{bong2020,wiseman2023,cavalcanti2021}.
+
+In this paper, we bring to bear the \emph{Yoneda Constraint on Observer Knowledge}, developed in the companion papers \cite{long2026yoneda,long2026embedded,long2026measurement}, which provides a rigorous category-theoretic framework for analyzing the structural constraints on embedded observers. The Yoneda Constraint states that an embedded observer $\Sys$ knows reality $\R$ only through the representable presheaf $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself unless $\R|_\Sys = \R$.
+
+Our central thesis is that the Wigner's friend paradox dissolves once one recognizes that the friend and Wigner occupy \emph{different objects} in the measurement category $\catMeas$, and that their representable presheaves --- which encode their respective epistemic access to reality --- are structurally distinct and generically non-composable. The apparent paradox arises from the implicit assumption that there should exist a single presheaf that simultaneously represents both perspectives. The Yoneda Constraint tells us that no such unified presheaf exists when the observers are embedded at different levels of the quantum hierarchy.
+
+\subsection{Summary of Results}
+
+Our main contributions are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=6pt]
+\item \textbf{The Wigner Measurement Category} (\cref{sec:wigner-category}): We construct a measurement category $\catMeas_\W$ that formalizes the nested observer structure of Wigner's friend, with objects representing observer--system pairs at different levels of description and morphisms representing information-preserving maps between them.
+
+\item \textbf{Presheaf Irreconcilability Theorem} (\cref{sec:irreconcilability}): We prove that the friend's and Wigner's representable presheaves are generically non-isomorphic in $\PSh(\catMeas_\W)$, and that no single object in $\catMeas_\W$ can represent both perspectives simultaneously.
+
+\item \textbf{Kan Extension Analysis} (\cref{sec:kan-composition}): We characterize the optimal ``translation'' between the friend's and Wigner's descriptions using Kan extensions, and introduce the \emph{observer composition deficit} $\Delta(\F, \W)$ that quantifies the irreducible gap between their perspectives.
+
+\item \textbf{Frauchiger--Renner from Yoneda} (\cref{sec:frauchiger-renner}): We show that the Frauchiger--Renner paradox is a direct consequence of the failure of transitivity of Kan extensions in the multi-observer measurement category, providing a structural explanation that does not require interpretive assumptions.
+
+\item \textbf{Brukner's No-Go as a Presheaf Theorem} (\cref{sec:brukner}): We reformulate Brukner's no-go theorem as a statement about the non-existence of global sections of a certain presheaf on the Wigner measurement category, connecting it to the Kochen--Specker theorem and sheaf-theoretic contextuality.
+
+\item \textbf{Haskell Implementation} (\cref{sec:haskell}): We provide accompanying Haskell code that implements the categorical structures, demonstrates the presheaf irreconcilability, and verifies the key theorems computationally.
+\end{enumerate}
+
+\subsection{Relation to Prior Work}
+
+Our approach builds on and extends several lines of research. The categorical treatment of quantum mechanics originates with Abramsky and Coecke \cite{abramsky2004} and has been developed extensively \cite{coecke2017,heunen2019}. The presheaf approach to contextuality, pioneered by Abramsky and Brandenburger \cite{abramsky2011}, provides a key ingredient. The topos-theoretic approach to quantum mechanics of Isham, Butterfield, and D\"oring \cite{butterfield1998,doring2008} informs our use of presheaf categories. The connection between the Yoneda lemma and observer knowledge was established in \cite{long2026yoneda}, and the embedded observer constraint was formalized in \cite{long2026embedded}. The measurement paradox in emergent spacetime \cite{long2026measurement} provides the broader context in which the Wigner's friend analysis sits.
+
+The novelty of our approach lies in three aspects: (i) the explicit construction of a measurement category tailored to the nested-observer structure; (ii) the identification of observer-dependent facts with distinct representable presheaves, which transforms a philosophical puzzle into a mathematical theorem; and (iii) the quantitative characterization of inter-observer composition via Kan extensions.
+
+
+%% ============================================================
+\section{Background: The Wigner's Friend Scenario}\label{sec:background}
+%% ============================================================
+
+We begin by reviewing the Wigner's friend thought experiment and its modern extensions, fixing notation and terminology.
+
+\subsection{The Original Scenario}
+
+Consider a quantum system $Q$ prepared in the state $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ with $|\alpha|^2 + |\beta|^2 = 1$. The friend $\F$ is an observer enclosed in an isolated laboratory $\Lab$. At time $t_1$, the friend measures $Q$ in the computational basis $\{|0\rangle, |1\rangle\}$.
+
+From the \textbf{friend's perspective}, the measurement produces a definite outcome --- say $|0\rangle$ with probability $|\alpha|^2$. After measurement, the friend assigns the state $|0\rangle$ to the system.
+
+From \textbf{Wigner's perspective}, the entire laboratory (including the friend) evolves unitarily:
+\begin{equation}\label{eq:wigner-unitary}
+|\psi\rangle_Q \otimes |r\rangle_\F \;\longrightarrow\; \alpha|0\rangle_Q|f_0\rangle_\F + \beta|1\rangle_Q|f_1\rangle_\F
+\end{equation}
+where $|r\rangle_\F$ is the friend's ready state and $|f_i\rangle_\F$ denotes the friend having observed outcome $i$. After the interaction, Wigner assigns an entangled state to the system--friend composite.
+
+The tension is immediate: the friend has a definite fact (``I observed outcome 0''), while Wigner describes the friend as being in a superposition of having observed 0 and having observed 1.
+
+\subsection{The Frauchiger--Renner Extension}\label{subsec:FR}
+
+Frauchiger and Renner \cite{frauchiger2018} showed that this tension becomes a contradiction when multiple agents reason about each other. Consider four agents: friends $\overline{F}$ and $F$, and Wigners $\overline{W}$ and $W$. The setup involves an entangled pair and a sequence of measurements and meta-measurements, leading to the conclusion that the agents' reasoning chains produce contradictory predictions.
+
+The key assumptions are:
+\begin{enumerate}[label=(A\arabic*)]
+\item \textbf{Universality (U):} Quantum mechanics applies to all systems, including observers.
+\item \textbf{Single Outcomes (S):} Each measurement has exactly one outcome.
+\item \textbf{Consistency (C):} If agent $A$ can establish ``agent $B$ is certain that $x$,'' then $A$ can conclude $x$.
+\end{enumerate}
+
+The Frauchiger--Renner result shows that (U), (S), and (C) are jointly inconsistent.
+
+\subsection{Brukner's No-Go Theorem}\label{subsec:brukner}
+
+Brukner \cite{brukner2018} derived a Bell-type inequality for a Wigner's friend scenario. Two friends $\F_1, \F_2$ each perform measurements inside isolated laboratories on halves of an entangled pair. Two Wigners $\W_1, \W_2$ can either ``open the lab'' (learning the friend's result) or perform an incompatible measurement on the entire lab. A local hidden variable model for the outcomes would require definite pre-existing facts for both the friends' and Wigners' measurements. Brukner showed that quantum mechanics predicts a violation of the resulting Bell inequality, ruling out ``observer-independent facts.''
+
+Bong et al.\ \cite{bong2020} formalized this as the ``Local Friendliness'' no-go theorem, showing the incompatibility of: (LF1) absoluteness of observed events, (LF2) no superluminal signaling, and (LF3) locality.
+
+
+%% ============================================================
+\section{Categorical Preliminaries}\label{sec:categorical-prelim}
+%% ============================================================
+
+We recall the key category-theoretic notions used throughout, following the conventions of \cite{long2026yoneda}.
+
+\subsection{The Measurement Category}\label{subsec:meas-cat-review}
+
+\begin{definition}[Measurement Category \cite{long2026yoneda}]\label{def:meas-cat}
+The \emph{measurement category} $\catMeas$ is a category whose objects are pairs $(\Sys, \R|_\Sys)$ where $\Sys$ is a physical subsystem and $\R|_\Sys$ is the restriction of reality to the region accessible to $\Sys$. Morphisms are measurement-preserving maps that respect the informational content available to each subsystem.
+\end{definition}
+
+\begin{definition}[Quantum Measurement Category \cite{long2026yoneda}]\label{def:qmeas}
+The \emph{quantum measurement category} $\catMeas_Q$ specializes $\catMeas$ to the quantum setting, where objects $(\Sys, \rho_\Sys)$ consist of a subsystem with Hilbert space $\mathcal{H}_\Sys$ and a density operator $\rho_\Sys$, and morphisms are completely positive trace-preserving (CPTP) maps.
+\end{definition}
+
+\subsection{The Yoneda Constraint}
+
+\begin{theorem}[Yoneda Constraint on Observer Knowledge \cite{long2026yoneda}]\label{thm:yoneda-constraint}
+An embedded observer $\Sys$ knows reality $\R$ only through the representable presheaf $\yo_{(\Sys, \R|_\Sys)} = \Hom_{\catMeas}((\Sys, \R|_\Sys), -)$. By the Yoneda lemma, this determines $(\Sys, \R|_\Sys)$ up to isomorphism, but does not determine $\R$ unless $\R|_\Sys = \R$.
+\end{theorem}
+
+The presheaf $\yo_{(\Sys, \R|_\Sys)}$ encodes all possible measurements the observer can perform and all descriptions it can construct. The faithfulness and fullness of the Yoneda embedding guarantees that this relational knowledge is \emph{maximal} from the observer's position.
+
+\subsection{Kan Extensions and the Extension Deficit}
+
+\begin{definition}[Extension Deficit \cite{long2026yoneda}]\label{def:extension-deficit}
+Given the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas$ and description functor $\mathfrak{D}$, the \emph{extension deficit} is
+\[
+\Delta(\Sys) = \coker\!\big(\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}\big)
+\]
+measuring the irreducible gap between local and global descriptions.
+\end{definition}
+
+
+%% ============================================================
+\section{The Wigner Measurement Category}\label{sec:wigner-category}
+%% ============================================================
+
+We now construct the measurement category appropriate to the Wigner's friend scenario. The key insight is that the nested observer structure --- friend inside laboratory, Wigner outside --- requires a measurement category with a hierarchical structure that reflects the different levels of description.
+
+\subsection{Objects: Observer--System Pairs at Different Levels}
+
+\begin{definition}[Wigner Measurement Category]\label{def:wigner-meas-cat}
+The \emph{Wigner measurement category} $\catMeas_\W$ is the category whose:
+\begin{enumerate}[label=(\roman*), itemsep=4pt]
+\item \textbf{Objects} are triples $(\Sys, \ell, \rho_\Sys)$ where:
+  \begin{itemize}
+    \item $\Sys$ is a physical subsystem (an observer or system),
+    \item $\ell \in \{0, 1, 2, \ldots\}$ is the \emph{observer level} indicating the subsystem's position in the observation hierarchy ($\ell = 0$ for the quantum system, $\ell = 1$ for the friend, $\ell = 2$ for Wigner, etc.),
+    \item $\rho_\Sys$ is the state of the system as described from level $\ell$.
+  \end{itemize}
+
+\item \textbf{Morphisms} $f: (\Sys_1, \ell_1, \rho_1) \to (\Sys_2, \ell_2, \rho_2)$ are CPTP maps $\Phi_f: \mathcal{B}(\mathcal{H}_{\Sys_2}) \to \mathcal{B}(\mathcal{H}_{\Sys_1})$ (in the Heisenberg picture) satisfying the \emph{state compatibility condition} $\Phi_f^*(\rho_1) = \rho_2$ (where $\Phi_f^*$ is the Schr\"odinger-picture dual). When no such CPTP map exists, the hom-set $\Hom(\Sys_1, \Sys_2)$ is empty --- the absence of morphisms between incompatible observer--state pairs is itself physically significant, encoding the structural impossibility of translating one observer's description into another's. Additionally, morphisms satisfy the \emph{level compatibility condition}: if $\ell_1 < \ell_2$, then $\Phi_f$ is an isometric inclusion of the lower-level algebra into the higher-level one (typically via a tensor embedding $\rho \mapsto \rho \otimes \sigma_{\mathrm{anc}}$ for a fixed ancilla state $\sigma_{\mathrm{anc}}$); if $\ell_1 = \ell_2$, then $\Phi_f$ is a measurement-preserving transformation at the same level.
+
+\item \textbf{Composition} is the composition of CPTP maps.
+\end{enumerate}
+\end{definition}
+
+The level structure captures the essential asymmetry of the Wigner's friend scenario: the friend operates at level 1, describing the quantum system at level 0, while Wigner operates at level 2, describing the friend--system composite at level 1.
+
+\subsection{The Friend's Object and Wigner's Object}
+
+In the standard Wigner's friend scenario, the relevant objects are:
+
+\begin{definition}[Friend's Object]\label{def:friend-object}
+The \emph{friend's object} is
+\[
+\F_\mathrm{obj} = (\F, 1, \rho^{(\F)}_Q)
+\]
+where $\F$ is the friend subsystem, $\ell = 1$ indicates the friend is a level-1 observer, and $\rho^{(\F)}_Q = |k\rangle\langle k|$ is the collapsed post-measurement state assigned by the friend upon observing outcome $k$.
+\end{definition}
+
+\begin{definition}[Wigner's Object]\label{def:wigner-object}
+\emph{Wigner's object} is
+\[
+\W_\mathrm{obj} = (\W, 2, \rho^{(\W)}_{Q\F})
+\]
+where $\W$ is Wigner, $\ell = 2$ indicates Wigner is a level-2 observer, and
+\[
+\rho^{(\W)}_{Q\F} = |\Psi\rangle\langle\Psi|_{Q\F}, \qquad |\Psi\rangle_{Q\F} = \alpha|0\rangle|f_0\rangle + \beta|1\rangle|f_1\rangle
+\]
+is the entangled state Wigner assigns to the system--friend composite.
+\end{definition}
+
+The crucial structural point is that these are \emph{different objects} in $\catMeas_\W$. The friend's object encodes the post-measurement state from the friend's perspective; Wigner's object encodes the pre-measurement (or unitarily-evolved) state from Wigner's perspective. They describe the ``same physical situation'' but from structurally distinct categorical positions.
+
+\subsection{Morphisms and the Level Structure}
+
+\begin{proposition}[Asymmetry of Inter-Level Morphisms]\label{prop:asymmetry}
+In $\catMeas_\W$, the morphisms between different levels have the following structure:
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Upward morphisms} (from lower to higher level): One might expect an inclusion morphism $\iota: \F_\mathrm{obj} \to \W_\mathrm{obj}$ to exist. However, Wigner's description restricts to the system $Q$ only via the partial trace:
+\[
+\Tr_\F(\rho^{(\W)}_{Q\F}) = |\alpha|^2 |0\rangle\langle 0| + |\beta|^2 |1\rangle\langle 1|
+\]
+This is a \emph{mixed} state, not the friend's pure collapsed state $|k\rangle\langle k|$. Since no CPTP map can transform a pure state into a different pure state of the same system that is not unitarily related, and $|k\rangle\langle k| \neq \rho_Q^{\mathrm{red}}$ in general, no state-preserving morphism exists from $\F_\mathrm{obj}$ to $\W_\mathrm{obj}$. The hom-set $\Hom_{\catMeas_\W}(\F_\mathrm{obj}, \W_\mathrm{obj})$ is therefore \emph{empty} for $\alpha\beta \neq 0$. This emptiness is already a strong structural witness of irreconcilability.
+
+\item \textbf{Downward morphisms} (from higher to lower level): A morphism $\pi: \W_\mathrm{obj} \to \F_\mathrm{obj}$ exists only upon conditioning on a specific measurement outcome at Wigner's level.
+
+\item \textbf{Same-level morphisms}: Morphisms between objects at the same level are CPTP maps preserving the observer structure.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The partial trace $\Tr_\F$ is a CPTP map from $\mathcal{B}(\mathcal{H}_Q \otimes \mathcal{H}_\F)$ to $\mathcal{B}(\mathcal{H}_Q)$, yielding the reduced state. However, the reduced state $\rho_Q = |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|$ is generically different from the friend's collapsed state $|k\rangle\langle k|$. The inclusion morphism captures this discrepancy.
+
+(b) Conditioning requires Wigner to perform a measurement that selects a branch, which is a non-unitary, outcome-dependent operation. Such a morphism exists only upon specification of the measurement outcome.
+
+(c) follows from the definition of $\catMeas_\W$.
+\end{proof}
+
+
+%% ============================================================
+\section{Presheaf Irreconcilability}\label{sec:irreconcilability}
+%% ============================================================
+
+We now prove the central result: the friend's and Wigner's representable presheaves are structurally irreconcilable.
+
+\subsection{The Friend's Presheaf}
+
+\begin{definition}[Friend's Presheaf]\label{def:friend-presheaf}
+The \emph{friend's presheaf} is the representable presheaf
+\[
+\yo_{\F_\mathrm{obj}} = \Hom_{\catMeas_\W}(\F_\mathrm{obj}, -): \catMeas_\W \to \catSet
+\]
+which assigns to each object $X \in \catMeas_\W$ the set of all CPTP maps from the friend's description to $X$.
+\end{definition}
+
+The friend's presheaf encodes all the relational information available to the friend: every measurement the friend can perform, every correlation the friend can detect, every prediction the friend can make. By the Yoneda lemma, this presheaf determines the friend's epistemic position up to isomorphism.
+
+Concretely, after observing outcome $k$, the friend's presheaf assigns definite probabilities to all subsequent measurements on $Q$. For instance, for a measurement in a rotated basis $\{|+\rangle, |-\rangle\}$:
+\begin{equation}\label{eq:friend-probs}
+p_\F(+) = |\langle + | k \rangle|^2, \qquad p_\F(-) = |\langle - | k \rangle|^2.
+\end{equation}
+
+\subsection{Wigner's Presheaf}
+
+\begin{definition}[Wigner's Presheaf]\label{def:wigner-presheaf}
+The \emph{Wigner's presheaf} is the representable presheaf
+\[
+\yo_{\W_\mathrm{obj}} = \Hom_{\catMeas_\W}(\W_\mathrm{obj}, -): \catMeas_\W \to \catSet
+\]
+assigning to each object the set of CPTP maps from Wigner's description.
+\end{definition}
+
+Wigner's presheaf encodes a fundamentally different epistemic position. From Wigner's level-2 perspective, the system--friend composite is in the entangled state $|\Psi\rangle_{Q\F}$. This means Wigner can perform measurements on the composite that have no analogue at the friend's level --- for instance, a measurement in the basis
+\[
+|\mathrm{ok}\rangle = \frac{1}{\sqrt{2}}(|0\rangle|f_0\rangle + |1\rangle|f_1\rangle), \qquad |\mathrm{fail}\rangle = \frac{1}{\sqrt{2}}(|0\rangle|f_0\rangle - |1\rangle|f_1\rangle)
+\]
+which projects onto superpositions of the friend's distinct experience states.
+
+\subsection{The Irreconcilability Theorem}
+
+\begin{theorem}[Presheaf Irreconcilability]\label{thm:irreconcilability}
+Let $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ with $\alpha, \beta \neq 0$ (non-trivial superposition). Then the friend's presheaf $\yo_{\F_\mathrm{obj}}$ and Wigner's presheaf $\yo_{\W_\mathrm{obj}}$ are non-isomorphic in $\PSh(\catMeas_\W)$:
+\[
+\yo_{\F_\mathrm{obj}} \not\cong \yo_{\W_\mathrm{obj}}.
+\]
+Moreover, there exists no single object $X \in \catMeas_\W$ such that $\yo_X$ restricts to $\yo_{\F_\mathrm{obj}}$ on the friend's accessible subcategory and to $\yo_{\W_\mathrm{obj}}$ on Wigner's accessible subcategory.
+\end{theorem}
+
+\begin{proof}
+We prove both statements.
+
+\textbf{Non-isomorphism.} The objects $\F_\mathrm{obj}$ and $\W_\mathrm{obj}$ live at different observer levels ($\ell = 1$ and $\ell = 2$ respectively) and have different Hilbert spaces ($\mathcal{H}_Q$ vs.\ $\mathcal{H}_Q \otimes \mathcal{H}_\F$). By the Yoneda embedding (which is full and faithful), $\yo_{\F_\mathrm{obj}} \cong \yo_{\W_\mathrm{obj}}$ would imply $\F_\mathrm{obj} \cong \W_\mathrm{obj}$ in $\catMeas_\W$. But this requires a pair of inverse CPTP maps between $\mathcal{B}(\mathcal{H}_Q)$ and $\mathcal{B}(\mathcal{H}_Q \otimes \mathcal{H}_\F)$. Since $\dim \mathcal{H}_\F \geq 2$ (the friend must have at least two distinguishable states), these algebras have different dimensions, and no isomorphism exists.
+
+\textbf{Non-existence of joint object.} Suppose $X = (\Sys_X, \ell_X, \rho_X)$ restricts to both presheaves. Then:
+\begin{itemize}
+\item Restricting to the friend's subcategory requires that $\rho_X$, when restricted to the system $Q$, gives the collapsed state $|k\rangle\langle k|$ for some definite $k$. This means $\rho_X$ determines a definite outcome.
+\item Restricting to Wigner's subcategory requires that $\rho_X$, when restricted to $Q \otimes \F$, gives the entangled state $|\Psi\rangle\langle\Psi|_{Q\F}$. This means $\rho_X$ preserves the superposition.
+\end{itemize}
+These conditions are contradictory: the entangled state $|\Psi\rangle_{Q\F}$ does not restrict to a pure collapsed state on $Q$ (it restricts to a mixed state). Therefore, no such joint object exists.
+\end{proof}
+
+\begin{remark}[Physical Interpretation]\label{rem:physical-interpretation}
+The irreconcilability theorem is the precise category-theoretic content of the statement ``there are no observer-independent facts'' in Wigner's friend scenarios. It is not a statement about the incompleteness of quantum mechanics or the subjectivity of reality; it is a structural consequence of the Yoneda embedding applied to a measurement category with nested observer levels. Different observers occupy different objects, generate different presheaves, and there is no ``God's-eye'' object that subsumes both.
+\end{remark}
+
+\subsection{The Irreconcilability Defect}
+
+We can quantify the degree of irreconcilability.
+
+\begin{definition}[Irreconcilability Defect]\label{def:irreconcilability-defect}
+The \emph{irreconcilability defect} between the friend and Wigner is
+\[
+\delta(\F, \W) = \inf_{X \in \catMeas_\W} \left\{ d_{\PSh}\!\left(\yo_X, \yo_{\F_\mathrm{obj}} \sqcup \yo_{\W_\mathrm{obj}}\right) \right\}
+\]
+where $d_{\PSh}$ is a suitable metric on presheaves (e.g., the supremum distance over evaluations) and $\sqcup$ denotes the ``ideal joint'' presheaf that would agree with both.
+\end{definition}
+
+\begin{proposition}[Lower Bound on Defect]\label{prop:defect-bound}
+The irreconcilability defect satisfies
+\[
+\delta(\F, \W) \geq S(\rho_Q^{\mathrm{red}}) = -\sum_k |\langle k|\psi\rangle|^2 \log |\langle k|\psi\rangle|^2
+\]
+where $S$ is the von Neumann entropy and $\rho_Q^{\mathrm{red}} = \Tr_\F(|\Psi\rangle\langle\Psi|_{Q\F})$ is the reduced state of $Q$ from Wigner's perspective.
+\end{proposition}
+
+\begin{proof}
+The entropy $S(\rho_Q^{\mathrm{red}})$ quantifies the entanglement between $Q$ and $\F$ in Wigner's description. The friend's presheaf assigns a pure state to $Q$ (zero entropy), while the restriction of Wigner's presheaf to $Q$ gives a mixed state with entropy $S(\rho_Q^{\mathrm{red}})$. Any joint object must interpolate between these, and the entropy gap provides a lower bound on the distance.
+\end{proof}
+
+\begin{corollary}\label{cor:max-defect}
+The irreconcilability defect is maximized when $|\alpha| = |\beta| = 1/\sqrt{2}$ (equal superposition), giving $\delta(\F, \W) \geq \log 2$, and vanishes when $\alpha = 0$ or $\beta = 0$ (no superposition, trivial scenario).
+\end{corollary}
+
+
+%% ============================================================
+\section{Observer Composition via Kan Extensions}\label{sec:kan-composition}
+%% ============================================================
+
+While the friend's and Wigner's presheaves are irreconcilable, the categorical framework allows us to ask: what is the \emph{best possible approximation} to a joint description? This question is naturally answered by Kan extensions.
+
+\subsection{The Composition Problem}
+
+\begin{definition}[Observer Composition Problem]\label{def:composition-problem}
+Given two observers $\Sys_1, \Sys_2$ at different levels with inclusion functors
+\[
+J_i: \catMeas_\W|_{\Sys_i} \hookrightarrow \catMeas_\W, \qquad i = 1, 2,
+\]
+the \emph{observer composition problem} asks whether the individual description functors $\mathfrak{D}_i = \yo_{\Sys_i} \circ J_i$ can be coherently extended to a global description functor on $\catMeas_\W$.
+\end{definition}
+
+\subsection{Left Kan Extension: Optimistic Composition}
+
+The left Kan extension provides the ``most generous'' composition of the two perspectives.
+
+\begin{proposition}[Left Kan Composition]\label{prop:left-kan}
+The left Kan extension $\Lan_{J_1}(\mathfrak{D}_1)$ along the friend's inclusion functor provides the best \emph{colimit approximation} to Wigner's presheaf that can be constructed from the friend's data. Explicitly, for an object $X$ in Wigner's subcategory:
+\[
+\Lan_{J_1}(\mathfrak{D}_1)(X) = \mathrm{colim}_{(\F_\mathrm{obj} \to X') \in (J_1 \downarrow X)} \mathfrak{D}_1(X')
+\]
+\end{proposition}
+
+The left Kan extension ``extrapolates'' the friend's local knowledge into Wigner's domain by taking colimits over all objects in the friend's subcategory that map into Wigner's domain. Crucially, the colimit construction can only assemble information from \emph{local} data available to the friend; it cannot synthesize the non-local correlations (entanglement) between the system and the friend that are present in Wigner's description. This is because entanglement is precisely the information that resides in the off-diagonal terms of the density matrix with respect to the product basis --- terms that are invisible to any measurement restricted to a single subsystem. This extrapolation is therefore generically unfaithful:
+
+\begin{theorem}[Observer Composition Deficit]\label{thm:composition-deficit}
+The \emph{observer composition deficit} is the natural transformation
+\[
+\Delta(\F, \W) = \coker\!\left(\Lan_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F) \Rightarrow \yo_{\W_\mathrm{obj}}\right)
+\]
+This deficit is non-trivial whenever the friend's measurement entangles the system and friend (i.e., whenever $\alpha\beta \neq 0$).
+\end{theorem}
+
+\begin{proof}
+The left Kan extension of the friend's presheaf, restricted to Wigner's level, reconstructs only the information about $Q \otimes \F$ that can be inferred from the friend's local data on $Q$. Since the friend has access only to the reduced state $|k\rangle\langle k|$ (a specific collapsed state), the extension cannot recover the coherences $\alpha\beta^*|0\rangle\langle 1| \otimes |f_0\rangle\langle f_1|$ that are present in Wigner's description. These off-diagonal terms --- which encode the entanglement between $Q$ and $\F$ --- constitute the cokernel of the comparison map.
+
+The deficit is non-trivial when $\alpha\beta \neq 0$ because the off-diagonal terms $\alpha\beta^*$ and $\alpha^*\beta$ are non-zero precisely in this case.
+\end{proof}
+
+\subsection{Right Kan Extension: Conservative Composition}
+
+\begin{proposition}[Right Kan Composition]\label{prop:right-kan}
+The right Kan extension $\Ran_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F)$ provides the ``most conservative'' approximation to Wigner's presheaf from the friend's data. It assigns to each object in Wigner's domain the \emph{limit} over all compatible friend descriptions.
+\end{proposition}
+
+\begin{proposition}[Composition Bracket]\label{prop:bracket}
+The left and right Kan extensions provide bounds:
+\[
+\Lan_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F) \Rightarrow \yo_{\W_\mathrm{obj}} \Rightarrow \Ran_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F)
+\]
+The width of this bracket measures the friend's fundamental uncertainty about Wigner's description.
+\end{proposition}
+
+\subsection{Composition with Multiple Friends}\label{subsec:multiple-friends}
+
+When there are multiple friends (as in the Brukner and Frauchiger--Renner scenarios), the composition problem becomes richer.
+
+\begin{definition}[Multi-Observer Composition]\label{def:multi-composition}
+Given $n$ friends $\F_1, \ldots, \F_n$ with respective presheaves and a Wigner $\W$ at a higher level, the \emph{multi-observer composition} is the left Kan extension
+\[
+\Lan_{J_1 \sqcup \cdots \sqcup J_n}\!\left(\bigsqcup_i \yo_{\F_i} \circ J_i\right)
+\]
+where $J_1 \sqcup \cdots \sqcup J_n$ is the coproduct of the inclusion functors.
+\end{definition}
+
+\begin{proposition}[Non-Additivity of Composition]\label{prop:non-additivity}
+The multi-observer composition deficit is generically not the sum of individual deficits:
+\[
+\Delta(\F_1 \cup \F_2, \W) \neq \Delta(\F_1, \W) + \Delta(\F_2, \W).
+\]
+The ``interaction'' between the friends' perspectives generates additional obstruction terms that reflect entanglement between the friends' subsystems.
+\end{proposition}
+
+
+%% ============================================================
+\section{The Frauchiger--Renner Paradox from the Yoneda Perspective}\label{sec:frauchiger-renner}
+%% ============================================================
+
+We now show that the Frauchiger--Renner paradox receives a natural explanation within the Yoneda Constraint framework: it arises from the failure of transitivity of the ``reasoning about other agents'' operation, which corresponds categorically to the failure of Kan extensions to compose faithfully.
+
+\subsection{Categorical Formulation of Agent Reasoning}
+
+\begin{definition}[Agent Reasoning Functor]\label{def:reasoning-functor}
+Let $\Sys_A$ and $\Sys_B$ be two observers at potentially different levels. The \emph{reasoning functor}
+\[
+\mathfrak{R}_{A \to B}: \catMeas_\W|_{\Sys_A} \to \catMeas_\W|_{\Sys_B}
+\]
+is the functor that translates $\Sys_A$'s descriptions into $\Sys_B$'s language, defined as the left Kan extension of $\Sys_A$'s presheaf along the appropriate inclusion functor, restricted to $\Sys_B$'s subcategory.
+\end{definition}
+
+In the Frauchiger--Renner scenario, agent $A$ reasons about agent $B$'s observations by applying $\mathfrak{R}_{A \to B}$. The ``consistency'' assumption (C) asserts that this reasoning is transitive: if $A$ can establish that $B$ is certain of $x$, then $A$ can conclude $x$. In categorical terms, this is the assumption that reasoning functors compose faithfully:
+\[
+\mathfrak{R}_{A \to C} \cong \mathfrak{R}_{B \to C} \circ \mathfrak{R}_{A \to B}.
+\]
+
+\subsection{Failure of Transitive Composition}
+
+\begin{theorem}[Failure of Reasoning Transitivity]\label{thm:reasoning-failure}
+In the Frauchiger--Renner scenario with four agents $\overline{F}, F, \overline{W}, W$, the composition of reasoning functors
+\[
+\mathfrak{R}_{\overline{W} \to W} \circ \mathfrak{R}_{F \to \overline{W}} \circ \mathfrak{R}_{\overline{F} \to F}
+\]
+does not equal $\mathfrak{R}_{\overline{F} \to W}$. The discrepancy is precisely the Frauchiger--Renner contradiction.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Each individual reasoning step is a Kan extension that is ``locally faithful'' but loses information about the higher-level correlations. Specifically:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak{R}_{\overline{F} \to F}$: Agent $\overline{F}$'s measurement creates correlations with $F$'s system. The Kan extension correctly propagates the outcome to $F$'s level.
+\item $\mathfrak{R}_{F \to \overline{W}}$: $F$ reasons about $\overline{W}$'s description. The Kan extension captures $F$'s knowledge but not the correlations between $\overline{F}$ and $\overline{W}$ that are invisible at $F$'s level.
+\item $\mathfrak{R}_{\overline{W} \to W}$: $\overline{W}$ reasons about $W$'s description. Again, the extension loses information about inter-laboratory correlations.
+\end{enumerate}
+
+The composition of these three steps accumulates information loss at each stage. The direct reasoning $\mathfrak{R}_{\overline{F} \to W}$ (a single Kan extension from $\overline{F}$'s level to $W$'s level) loses different information. The discrepancy between the composed and direct reasonings is a non-trivial natural transformation whose non-vanishing is the Frauchiger--Renner contradiction.
+
+Formally, the obstruction is measured by the iterated composition deficit:
+\[
+\Delta_\mathrm{FR} = \coker\!\left(\mathfrak{R}_{\overline{W} \to W} \circ \mathfrak{R}_{F \to \overline{W}} \circ \mathfrak{R}_{\overline{F} \to F} \Rightarrow \mathfrak{R}_{\overline{F} \to W}\right)
+\]
+which is non-trivial when the initial state is entangled.
+\end{proof}
+
+\begin{remark}[Interpretation]
+The Yoneda perspective reveals that the Frauchiger--Renner paradox is not a paradox at all: it is the \emph{expected} consequence of the non-transitivity of Kan extensions in the presence of entanglement. The assumptions (U), (S), (C) are jointly inconsistent precisely because (C) --- the transitivity of reasoning --- corresponds to the transitivity of Kan extension composition, which fails in the quantum measurement category whenever entanglement is present. Dropping (C) is thus the natural resolution from the Yoneda Constraint perspective.
+\end{remark}
+
+\subsection{Which Assumption Fails?}\label{subsec:which-fails}
+
+The Yoneda framework provides a precise answer to which of the Frauchiger--Renner assumptions fails:
+
+\begin{proposition}[Resolution of the FR Assumptions]\label{prop:FR-resolution}
+In the Yoneda Constraint framework:
+\begin{enumerate}[label=(A\arabic*$'$)]
+\item \textbf{Universality:} holds. Quantum mechanics applies to all systems. This is encoded by the fact that all objects in $\catMeas_\W$ --- at all levels --- are governed by quantum mechanical CPTP maps.
+\item \textbf{Single outcomes:} holds at each observer level. Each observer's presheaf assigns definite outcomes from that observer's perspective. The friend observes a definite outcome; Wigner assigns a definite (entangled) state.
+\item \textbf{Consistency:} \emph{fails} as a structural consequence. The reasoning functor $\mathfrak{R}_{A \to B}$ is a Kan extension, not an exact functor. Kan extensions do not compose transitively in general, and this non-transitivity is the structural source of the ``inconsistency.''
+\end{enumerate}
+\end{proposition}
+
+This resolution aligns with the relational interpretation of quantum mechanics \cite{rovelli1996,dibiaggio2021} but provides a precise mathematical grounding: the failure of (C) is not an interpretive choice but a mathematical theorem about the composition of Kan extensions in measurement categories.
+
+
+%% ============================================================
+\section{Brukner's No-Go as a Presheaf Theorem}\label{sec:brukner}
+%% ============================================================
+
+We now reformulate Brukner's no-go theorem for observer-independent facts in the presheaf framework.
+
+\subsection{The Extended Wigner's Friend Category}
+
+\begin{definition}[Extended Wigner Category]\label{def:extended-wigner}
+The \emph{extended Wigner measurement category} $\catMeas_\W^{\mathrm{ext}}$ is the measurement category for the Brukner scenario with:
+\begin{itemize}
+\item Two quantum systems $Q_1, Q_2$ prepared in an entangled state $|\Phi^+\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$.
+\item Two friends $\F_1, \F_2$ who measure $Q_1, Q_2$ respectively.
+\item Two Wigners $\W_1, \W_2$ who can either ``open'' their respective labs or perform an incompatible joint measurement.
+\end{itemize}
+\end{definition}
+
+The objects of $\catMeas_\W^{\mathrm{ext}}$ include:
+\begin{align}
+\F_{1,\mathrm{obj}} &= (\F_1, 1, \rho^{(\F_1)}_{Q_1}) \quad\text{(Friend 1's post-measurement state)} \label{eq:F1-obj}\\
+\F_{2,\mathrm{obj}} &= (\F_2, 1, \rho^{(\F_2)}_{Q_2}) \quad\text{(Friend 2's post-measurement state)} \label{eq:F2-obj}\\
+\W_{1,\mathrm{obj}} &= (\W_1, 2, \rho^{(\W_1)}_{Q_1\F_1}) \quad\text{(Wigner 1's entangled state)} \label{eq:W1-obj}\\
+\W_{2,\mathrm{obj}} &= (\W_2, 2, \rho^{(\W_2)}_{Q_2\F_2}) \quad\text{(Wigner 2's entangled state)} \label{eq:W2-obj}
+\end{align}
+
+\subsection{The ``Absolute Facts'' Presheaf}
+
+The assumption of ``observer-independent facts'' corresponds to the existence of a special presheaf:
+
+\begin{definition}[Absolute Facts Presheaf]\label{def:absolute-facts}
+An \emph{absolute facts presheaf} on $\catMeas_\W^{\mathrm{ext}}$ is a presheaf $\mathcal{A}: (\catMeas_\W^{\mathrm{ext}})^{\op} \to \catSet$ such that:
+\begin{enumerate}[label=(\roman*)]
+\item For each friend $\F_i$, $\mathcal{A}(\F_{i,\mathrm{obj}})$ contains the friend's definite outcome.
+\item For each Wigner $\W_j$, $\mathcal{A}(\W_{j,\mathrm{obj}})$ contains Wigner's measurement result.
+\item The restriction maps are consistent: if $\W_j$ ``opens the lab'' (measuring in the same basis as $\F_j$), the restriction $\mathcal{A}(\W_{j,\mathrm{obj}}) \to \mathcal{A}(\F_{j,\mathrm{obj}})$ recovers the friend's outcome.
+\item $\mathcal{A}$ admits a \emph{global section}: a compatible family of elements $\{s_X \in \mathcal{A}(X)\}_{X \in \catMeas_\W^{\mathrm{ext}}}$ satisfying all restriction conditions.
+\end{enumerate}
+\end{definition}
+
+\subsection{Non-Existence of Global Sections}
+
+\begin{theorem}[Brukner's No-Go as Presheaf Obstruction]\label{thm:brukner-presheaf}
+The absolute facts presheaf $\mathcal{A}$ on $\catMeas_\W^{\mathrm{ext}}$ does not admit a global section when the initial state is entangled. Equivalently, there is no consistent assignment of definite outcomes to all observers at all levels.
+\end{theorem}
+
+\begin{proof}
+The proof proceeds in three steps.
+
+\textbf{Step 1: Local compatibility.} Each friend $\F_i$ has a definite outcome $k_i \in \{0, 1\}$. Each Wigner $\W_j$ has two possible measurements: opening the lab (getting the friend's result) or performing a complementary measurement.
+
+\textbf{Step 2: Bell-like constraints.} A global section would require simultaneous definite values for all four measurements: $\F_1$'s outcome $a$, $\W_1$'s complementary outcome $\tilde{a}$, $\F_2$'s outcome $b$, $\W_2$'s complementary outcome $\tilde{b}$. The correlations between these values are constrained by a CHSH-type inequality.
+
+\textbf{Step 3: Quantum violation.} Quantum mechanics predicts correlations that violate this inequality. Specifically, for appropriate choices of the Wigners' complementary measurements, the quantum correlations exceed the classical bound of 2:
+\[
+|\langle \tilde{a} \cdot b \rangle + \langle \tilde{a} \cdot \tilde{b} \rangle + \langle a \cdot \tilde{b} \rangle - \langle a \cdot b \rangle| \leq 2 \quad \text{(classical)}
+\]
+but quantum mechanics predicts a value up to $2\sqrt{2}$. This violation is equivalent to the non-existence of a global section of $\mathcal{A}$.
+\end{proof}
+
+\begin{remark}[Connection to Contextuality]
+The non-existence of global sections of $\mathcal{A}$ is structurally identical to the sheaf-theoretic formulation of quantum contextuality by Abramsky and Brandenburger \cite{abramsky2011}. In both cases, the obstruction is the impossibility of consistently gluing local sections (definite outcomes in specific measurement contexts) into a global section (a definite assignment to all possible measurements). The Wigner's friend scenario reveals that this obstruction extends from observables at a single level to facts involving observers at multiple levels.
+\end{remark}
+
+\subsection{The Yoneda Constraint and Observer-Independent Facts}
+
+\begin{corollary}[Yoneda Constraint Implies No Observer-Independent Facts]\label{cor:no-independent-facts}
+The Yoneda Constraint on Observer Knowledge, applied to the extended Wigner category $\catMeas_\W^{\mathrm{ext}}$, implies that there are no observer-independent facts in scenarios involving nested observers and entanglement.
+\end{corollary}
+
+\begin{proof}
+By \cref{thm:yoneda-constraint}, each observer knows reality only through its representable presheaf. By \cref{thm:irreconcilability}, these presheaves are generically non-isomorphic for observers at different levels. By \cref{thm:brukner-presheaf}, no global section exists that would make all observers' facts simultaneously definite. Taken together, these results imply that ``facts'' are observer-relative: each observer's presheaf determines a consistent set of facts from that observer's position, but there is no meta-presheaf that reconciles all observers' facts into a single global description.
+\end{proof}
+
+
+%% ============================================================
+\section{The 2-Categorical Perspective}\label{sec:2-categorical}
+%% ============================================================
+
+The Wigner's friend scenario has a natural enrichment to a 2-categorical structure that captures additional subtleties.
+
+\subsection{2-Cells as Observer Transformations}
+
+\begin{definition}[2-Categorical Wigner Category]\label{def:2-wigner}
+The 2-category $\catMeas_{\W,2}$ enriches $\catMeas_\W$ with:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{2-morphisms} $\alpha: f \Rightarrow g$ between parallel measurement-preserving maps $f, g: X \to Y$, representing \emph{observer transformations} --- changes in the observer's internal description that preserve the structural relationships.
+\end{enumerate}
+\end{definition}
+
+\begin{example}[Basis Change as 2-Cell]
+When the friend considers measuring in a different basis $\{|+\rangle, |-\rangle\}$ instead of $\{|0\rangle, |1\rangle\}$, the change of basis defines a 2-cell between the corresponding measurement morphisms. This 2-cell encodes the unitary rotation $U = (|+\rangle\langle 0| + |-\rangle\langle 1|)$ that transforms one measurement into the other.
+\end{example}
+
+\subsection{Coherence Conditions and the Friend's Experience}
+
+\begin{proposition}[Coherence at the Wigner Level]\label{prop:wigner-coherence}
+At Wigner's level, the 2-categorical structure encodes the following coherence conditions:
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Horizontal composition:} Different measurement bases applied by Wigner compose coherently via their group structure.
+\item \textbf{Vertical composition:} Successive transformations of Wigner's description (e.g., first rotating the measurement basis, then coarse-graining) compose associatively.
+\item \textbf{Interchange law:} The order of applying basis changes and level transitions is irrelevant, up to coherent natural isomorphism.
+\end{enumerate}
+\end{proposition}
+
+The 2-categorical structure reveals an important point about the friend's experience: the friend's definite experience of outcome $k$ is encoded as a \emph{2-cell} from the identity morphism to the measurement morphism, representing the ``instantiation'' of a definite outcome within the friend's presheaf. This 2-cell exists at level 1 but has no counterpart at level 2, where the corresponding 2-cell would require the ``collapse'' of the superposition --- which does not occur in Wigner's unitary description.
+
+\subsection{The 2-Yoneda Constraint}
+
+\begin{proposition}[2-Yoneda Constraint for Wigner's Friend]\label{prop:2-yoneda-wigner}
+In $\catMeas_{\W,2}$, the 2-representable presheaf
+\[
+\Hom_{\catMeas_{\W,2}}(X, -): \catMeas_{\W,2} \to \mathbf{Cat}
+\]
+takes values in the 2-category of categories, capturing not only measurement outcomes but also the transformations between different descriptions. The 2-Yoneda lemma \cite{street1974} guarantees that this enriched presheaf determines $X$ up to 2-isomorphism, providing a finer resolution of the observer's epistemic position.
+\end{proposition}
+
+\begin{corollary}
+The 2-categorical irreconcilability between the friend's and Wigner's positions is strictly stronger than the 1-categorical version: even including all 2-cells (gauge transformations, basis changes) does not suffice to reconcile the two presheaves.
+\end{corollary}
+
+
+%% ============================================================
+\section{Relational Quantum Mechanics and the Yoneda Perspective}\label{sec:relational}
+%% ============================================================
+
+The Yoneda Constraint framework bears a close relationship to relational quantum mechanics (RQM) \cite{rovelli1996,laudisa2019,dibiaggio2021}, but provides additional mathematical structure.
+
+\subsection{RQM as Yoneda Embedding}
+
+Rovelli's central thesis --- that quantum states are not absolute but relational, describing the physical situation of one system relative to another --- is precisely the content of the Yoneda embedding applied to $\catMeas_\W$:
+
+\begin{proposition}[RQM from Yoneda]\label{prop:rqm-yoneda}
+The Yoneda embedding $\yo: \catMeas_\W \hookrightarrow \PSh(\catMeas_\W)$ implements the RQM principle that states are relational:
+\begin{enumerate}[label=(\alph*)]
+\item The representable presheaf $\yo_{(\Sys, \ell, \rho_\Sys)}$ is the ``state of reality relative to $\Sys$'' --- it encodes exactly how reality appears from $\Sys$'s position at level $\ell$.
+\item The Yoneda lemma's bijection $\Nat(\yo_X, F) \cong F(X)$ identifies the observer's knowledge with the natural transformations from its presheaf, which are the relations between the observer and all other objects.
+\item The fullness and faithfulness of $\yo$ guarantees that this relational description is maximal --- there is no additional ``hidden'' information beyond what is captured by the presheaf.
+\end{enumerate}
+\end{proposition}
+
+\subsection{Advantage Over Informal RQM}
+
+The Yoneda framework provides several advantages over the informal statement of RQM:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}]
+\item \textbf{Quantitative.} The extension deficit $\Delta(\F, \W)$ provides a precise measure of the ``gap'' between the friend's and Wigner's perspectives, which is absent in informal RQM.
+\item \textbf{Compositional.} The Kan extension machinery provides a systematic method for translating between perspectives, with precise error bounds.
+\item \textbf{Higher-categorical.} The 2-categorical enrichment captures gauge invariance and basis independence, which are important for ensuring that the relational descriptions are physically meaningful.
+\item \textbf{Predictive.} The framework makes precise predictions about which compositions of observer perspectives will fail (those involving entanglement across the composition boundary) and which will succeed (those within a single observer's accessible subcategory).
+\end{enumerate}
+
+\subsection{Cross-Perspective Correlations}
+
+\begin{definition}[Cross-Perspective Correlation]\label{def:cross-correlation}
+Given observers $\Sys_1, \Sys_2$ at different levels, a \emph{cross-perspective correlation} is a natural transformation
+\[
+\gamma: \yo_{\Sys_1} \times \yo_{\Sys_2} \Rightarrow \mathcal{P}
+\]
+where $\mathcal{P}$ is a probability presheaf, encoding the joint statistics of measurements by both observers.
+\end{definition}
+
+\begin{proposition}[Cross-Perspective Correlations from Entanglement]\label{prop:cross-correlations}
+In the Wigner's friend scenario, cross-perspective correlations exist between the friend's and Wigner's outcomes. These correlations are non-local in the sense that they cannot be factored through any single observer's presheaf. The violation of the CHSH inequality in the extended scenario (\cref{thm:brukner-presheaf}) is a cross-perspective correlation that witnesses the irreducible relational structure of the measurement category.
+\end{proposition}
+
+
+%% ============================================================
+\section{Everettian Interpretation and Branch Presheaves}\label{sec:everett}
+%% ============================================================
+
+The Yoneda framework also illuminates the Everettian (many-worlds) interpretation of Wigner's friend.
+
+\subsection{Branches as Objects in the Measurement Category}
+
+In the Everettian picture, after the friend's measurement, the universal state is $|\Psi\rangle_{Q\F} = \alpha|0\rangle|f_0\rangle + \beta|1\rangle|f_1\rangle$, and each branch corresponds to a definite experience for the friend.
+
+\begin{definition}[Branch Objects]\label{def:branch-objects}
+The \emph{branch objects} are:
+\begin{align}
+B_0 &= (\F, 1, |0\rangle\langle 0| \otimes |f_0\rangle\langle f_0|) \label{eq:branch0}\\
+B_1 &= (\F, 1, |1\rangle\langle 1| \otimes |f_1\rangle\langle f_1|) \label{eq:branch1}
+\end{align}
+representing the two branches of the post-measurement state.
+\end{definition}
+
+\begin{proposition}[Everett Branching as Presheaf Decomposition]\label{prop:everett-branching}
+From Wigner's perspective, the presheaf decomposes as a weighted coproduct:
+\[
+\yo_{\W_\mathrm{obj}} \cong |\alpha|^2 \cdot \yo_{B_0} + |\beta|^2 \cdot \yo_{B_1} + \text{interference terms}
+\]
+The interference terms represent the off-diagonal coherences in Wigner's description that are absent from each individual branch. The Everettian interpretation corresponds to treating each branch presheaf as an independent ``world,'' with the interference terms encoding inter-world coherences that are unobservable from within any single branch.
+\end{proposition}
+
+\begin{remark}[Decoherence and Branch Selection]
+From the perspective of the Yoneda Constraint, decoherence \cite{zurek2003,schlosshauer2007} is the process by which the interference terms become inaccessible to any embedded observer, leaving only the diagonal (branch) contributions. The decoherence functor $\mathcal{D}_\Env$ \cite{long2026yoneda} maps Wigner's presheaf to a mixture of branch presheaves, implementing the quantum-to-classical transition as a presheaf coarsening.
+\end{remark}
+
+\subsection{The Preferred Basis Problem}
+
+The Yoneda framework provides a perspective on the preferred basis problem: why does the friend's experience select a particular measurement basis?
+
+\begin{proposition}[Basis Selection from Presheaf Structure]\label{prop:basis-selection}
+The pointer states (eigenstates of the measurement interaction that are robust under decoherence) are characterized as fixed points of the decoherence functor \cite{long2026yoneda}, corresponding to presheaves that are invariant under environmental interaction. The ``selection'' of a basis is thus a structural property of the measurement category, not a subjective choice.
+\end{proposition}
+
+
+%% ============================================================
+\section{Quantum Gravity Implications}\label{sec:qg}
+%% ============================================================
+
+The Wigner's friend analysis has implications for quantum gravity, where the observer--system boundary becomes even more problematic.
+
+\subsection{The Problem of Time and Observer Levels}
+
+In quantum gravity, the distinction between ``levels'' in the measurement category becomes entangled with the problem of time. If spacetime is emergent \cite{long2026measurement}, the levels themselves may not be sharply defined.
+
+\begin{conjecture}[Level Emergence]\label{conj:level-emergence}
+In a quantum gravitational measurement category $\catMeas_{QG}$, the observer levels are not predetermined but emerge dynamically through the decoherence process. The measurement category structure --- including the level assignments $\ell$ --- is itself a colimit of more fundamental pre-geometric structures.
+\end{conjecture}
+
+\subsection{The Holographic Wigner's Friend}
+
+In holographic theories (AdS/CFT), a natural realization of the Wigner's friend scenario arises.
+
+\begin{definition}[Holographic Wigner's Friend]\label{def:holo-wigner}
+The \emph{holographic Wigner's friend} scenario places the friend in the bulk and Wigner on the boundary. The friend's laboratory is a bulk region $\Lab \subset \mathrm{AdS}$, and Wigner has access to the boundary CFT description.
+\end{definition}
+
+\begin{proposition}[Holographic Irreconcilability]\label{prop:holo-irreconcilability}
+In the holographic setting, the irreconcilability theorem (\cref{thm:irreconcilability}) takes the form: the friend's bulk-local presheaf and Wigner's boundary presheaf are non-isomorphic, with the irreconcilability defect bounded below by the RT surface area:
+\[
+\delta(\F_{\mathrm{bulk}}, \W_{\mathrm{boundary}}) \geq \frac{A(\gamma_{\Lab})}{4G_N}
+\]
+where $\gamma_{\Lab}$ is the minimal surface enclosing the laboratory.
+\end{proposition}
+
+This connects the observer-dependent facts of Wigner's friend to the entanglement structure of spacetime, suggesting that the relational nature of quantum facts is intimately connected to the holographic nature of gravity.
+
+
+%% ============================================================
+\section{Haskell Implementation}\label{sec:haskell}
+%% ============================================================
+
+We provide a Haskell implementation of the key categorical structures developed in this paper. The full code is available in the accompanying source files \cite{long2026code}; here we present the essential components.
+
+\subsection{Type-Level Encoding of the Measurement Category}
+
+The implementation works with a \emph{finite skeletal subcategory} of $\catMeas_\W$, restricting to qubit systems ($\mathcal{H} = \mathbb{C}^2$) and a discrete set of measurement bases. This finiteness is necessary for computational tractability; the continuous measurement category is recovered in the limit of increasingly fine discretizations. The measurement category is encoded using Haskell's type system, with observer levels as sum types and presheaves evaluated on finite basis sets:
+
+\begin{verbatim}
+-- Observer levels and objects in the Wigner measurement category
+data ObserverLevel = Level0 | Level1 | Level2 deriving (Eq, Ord, Show)
+
+data MeasObject = MeasObject
+  { obsLevel  :: ObserverLevel
+  , hilbDim   :: Int
+  , stateData :: DensityMatrix
+  } deriving (Show)
+\end{verbatim}
+
+\subsection{Presheaf Evaluation}
+
+The representable presheaf is evaluated at a measurement basis by computing Born-rule probabilities from the density matrix. For a finite set of measurement bases, this gives the presheaf's value as a probability distribution:
+
+\begin{verbatim}
+-- Evaluate the presheaf of observer X at measurement basis B
+-- Returns probability distribution over outcomes
+evalPresheaf :: MeasObject -> [[Complex]] -> [Double]
+\end{verbatim}
+
+\subsection{Irreconcilability Verification}
+
+The irreconcilability theorem is verified computationally for specific instances:
+
+\begin{verbatim}
+-- Verify that Friend's and Wigner's presheaves are non-isomorphic
+verifyIrreconcilability :: Complex Double -> Complex Double -> Bool
+\end{verbatim}
+
+Full implementation details, including the Kan extension computations and the Frauchiger--Renner analysis, are provided in the source files.
+
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection{Summary of Results}
+
+We have shown that the Yoneda Constraint on Observer Knowledge provides a natural and rigorous resolution of the conceptual puzzles raised by Wigner's friend and its extensions:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=6pt]
+\item The friend and Wigner occupy distinct objects in the measurement category, generating distinct representable presheaves (\cref{sec:irreconcilability}).
+\item These presheaves are provably non-isomorphic and cannot be unified into a single ``absolute'' presheaf (\cref{thm:irreconcilability}).
+\item The Frauchiger--Renner paradox arises from the non-transitivity of Kan extensions, resolving the contradiction by identifying the structural failure of the ``consistency'' assumption (\cref{sec:frauchiger-renner}).
+\item Brukner's no-go theorem is a consequence of the non-existence of global sections of the absolute facts presheaf (\cref{sec:brukner}).
+\item The irreconcilability defect $\delta(\F, \W)$ provides a quantitative measure of observer-dependence, bounded below by the entanglement entropy (\cref{prop:defect-bound}).
+\end{enumerate}
+
+\subsection{Comparison with Other Approaches}
+
+Our framework is compatible with but provides additional structure beyond several existing approaches:
+
+\textbf{Relational QM:} The Yoneda framework implements RQM's central insight (states are relational) with additional quantitative machinery (Kan extensions, composition deficits).
+
+\textbf{Consistent histories:} The presheaf framework subsumes consistent histories as special cases where the measurement category has a linear (totally ordered) structure.
+
+\textbf{QBism:} While sharing the emphasis on the observer's epistemic position, our framework grounds observer-relativity in the mathematical structure of categories rather than in subjective Bayesian probability.
+
+\textbf{Many-worlds:} The Everettian picture corresponds to the decomposition of Wigner's presheaf into branch presheaves (\cref{sec:everett}), with decoherence implementing the branch selection.
+
+\subsection{Open Questions}
+
+\begin{enumerate}[label=\textbf{(\arabic*)}, itemsep=6pt]
+\item \textbf{Experimental tests:} Can the irreconcilability defect be measured experimentally? This would require an implementation of the extended Wigner's friend scenario, as proposed by Bong et al.\ \cite{bong2020}.
+
+\item \textbf{Gravitational corrections:} How does the irreconcilability defect change when gravitational effects are included? The holographic analysis (\cref{sec:qg}) suggests a connection to the RT surface, but the full quantum gravitational calculation remains open.
+
+\item \textbf{$(\infty, n)$-categorical extensions:} The 2-categorical enrichment captures basis changes and gauge transformations. Higher categorical structure may encode additional coherence data relevant to the quantum gravity regime.
+
+\item \textbf{Information-theoretic bounds:} What is the precise relationship between the irreconcilability defect and quantum channel capacity? The defect should be related to the capacity of the ``communication channel'' between the friend's and Wigner's levels.
+
+\item \textbf{Consciousness and experience:} The Yoneda framework is purely structural and does not address the ``hard problem'' of consciousness. However, the identification of the friend's definite experience with a specific presheaf provides a precise mathematical handle for discussions of quantum consciousness, should one wish to pursue that direction.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+The Wigner's friend thought experiment, long regarded as one of the most puzzling aspects of quantum mechanics, receives a natural and satisfying resolution within the Yoneda Constraint framework. The resolution is neither mysterious nor interpretation-dependent: it follows from the mathematical structure of the measurement category and the Yoneda lemma.
+
+The key insight is simple but profound: \emph{different observers are different objects in the measurement category, and different objects have different representable presheaves}. When these presheaves are irreconcilable --- as they generically are when the observers are separated by entanglement --- there is no ``God's-eye'' description that encompasses both perspectives. This is not a failure of quantum mechanics or a sign of incompleteness; it is a \emph{feature} of the categorical structure of embedded observation, as inevitable as the fact that the Yoneda embedding preserves all information about an object's relationships but only about that object's relationships.
+
+The Yoneda Constraint thus transforms the Wigner's friend scenario from a paradox into a theorem: the observer-dependence of quantum facts is a structural consequence of the Yoneda lemma applied to the measurement category, and the impossibility of observer-independent facts is as solid as the mathematics underlying it.
+
+\bigskip
+
+\section*{Acknowledgments}
+
+The author thanks the YonedaAI Research Collective for ongoing collaborative development of the categorical framework for observer knowledge. This work was developed as part of the YonedaAI program on the mathematical foundations of quantum observation theory.
+
+
+%% ============================================================
+%% APPENDICES
+%% ============================================================
+\appendix
+
+\section{Detailed Proof of the Irreconcilability Theorem}\label{app:irreconcilability-proof}
+
+We provide a more detailed proof of \cref{thm:irreconcilability}, making explicit all categorical constructions.
+
+\begin{proof}[Detailed Proof of \cref{thm:irreconcilability}]
+Let $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ with $\alpha\beta \neq 0$.
+
+\textbf{Part 1: Non-isomorphism of presheaves.}
+
+Suppose for contradiction that $\yo_{\F_\mathrm{obj}} \cong \yo_{\W_\mathrm{obj}}$. Since the Yoneda embedding $\yo: \catMeas_\W \hookrightarrow \PSh(\catMeas_\W)$ is full and faithful, this implies $\F_\mathrm{obj} \cong \W_\mathrm{obj}$ in $\catMeas_\W$.
+
+An isomorphism $\F_\mathrm{obj} \cong \W_\mathrm{obj}$ requires invertible CPTP maps
+\[
+\Phi: \mathcal{B}(\mathcal{H}_Q) \to \mathcal{B}(\mathcal{H}_Q \otimes \mathcal{H}_\F), \qquad \Psi: \mathcal{B}(\mathcal{H}_Q \otimes \mathcal{H}_\F) \to \mathcal{B}(\mathcal{H}_Q)
+\]
+with $\Psi \circ \Phi = \id$ and $\Phi \circ \Psi = \id$. An invertible CPTP map between algebras of different dimensions is a unitary isomorphism of the underlying Hilbert spaces. But $\dim \mathcal{H}_Q = d$ and $\dim(\mathcal{H}_Q \otimes \mathcal{H}_\F) = d \cdot d_\F$ with $d_\F \geq 2$, so no such isomorphism exists. Contradiction.
+
+\textbf{Part 2: Non-existence of joint object.}
+
+Suppose $X = (\Sys_X, \ell_X, \rho_X)$ restricts to both presheaves. Define the ``friend restriction'' functor $R_\F: \catMeas_\W \to \catMeas_\W|_\F$ and ``Wigner restriction'' functor $R_\W: \catMeas_\W \to \catMeas_\W|_\W$. The condition is:
+\[
+R_\F^*(\yo_X) \cong \yo_{\F_\mathrm{obj}}|_\F, \qquad R_\W^*(\yo_X) \cong \yo_{\W_\mathrm{obj}}|_\W.
+\]
+
+From the first condition: $R_\F^*(\rho_X)$ must be the pure state $|k\rangle\langle k|$ for some definite $k$. This means the restriction of $X$'s state to the system $Q$ (as seen from the friend's subcategory) assigns a definite outcome.
+
+From the second condition: $R_\W^*(\rho_X)$ must be the entangled state $|\Psi\rangle\langle\Psi|_{Q\F}$. Restricting this to $Q$ gives the mixed state $\rho_Q = |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|$.
+
+But $|k\rangle\langle k| \neq \rho_Q$ when $\alpha\beta \neq 0$ (the pure collapsed state differs from the mixed reduced state). Therefore, no such $X$ exists.
+\end{proof}
+
+
+\section{Kan Extension Computations}\label{app:kan-computations}
+
+We present explicit computations of the Kan extensions for the spin-$\frac{1}{2}$ Wigner's friend scenario.
+
+\subsection{Setup}
+
+Let $\mathcal{H}_Q = \mathbb{C}^2$ (spin-1/2 system) and $\mathcal{H}_\F = \mathbb{C}^2$ (friend with two distinguishable states). The initial state is $|\psi\rangle = \cos\frac{\theta}{2}|0\rangle + e^{i\phi}\sin\frac{\theta}{2}|1\rangle$ on the Bloch sphere.
+
+After the friend's measurement in the $z$-basis:
+\begin{itemize}
+\item Friend's state (outcome $|0\rangle$): $\rho_\F = |0\rangle\langle 0|$.
+\item Wigner's state: $|\Psi\rangle = \cos\frac{\theta}{2}|0\rangle|f_0\rangle + e^{i\phi}\sin\frac{\theta}{2}|1\rangle|f_1\rangle$.
+\end{itemize}
+
+\subsection{Left Kan Extension}
+
+The left Kan extension of the friend's presheaf along the inclusion $J_\F: \catMeas_\W|_\F \hookrightarrow \catMeas_\W$ is computed pointwise. For an object $Y$ at Wigner's level:
+\[
+\Lan_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F)(Y) = \mathrm{colim}_{(Z \to Y) \in (J_\F \downarrow Y)} \yo_{\F_\mathrm{obj}}(Z)
+\]
+
+For $Y = \W_\mathrm{obj}$, the colimit is taken over all objects $Z$ in the friend's subcategory that map to $\W_\mathrm{obj}$. The resulting set corresponds to the friend's best reconstruction of Wigner's description, which is the product state $|0\rangle\langle 0| \otimes |f_0\rangle\langle f_0|$ (or $|1\rangle\langle 1| \otimes |f_1\rangle\langle f_1|$ for the other outcome).
+
+\subsection{Composition Deficit}
+
+The composition deficit is:
+\[
+\Delta(\F, \W) = \yo_{\W_\mathrm{obj}} - \Lan_{J_\F}(\yo_{\F_\mathrm{obj}} \circ J_\F)
+\]
+evaluated at $\W_\mathrm{obj}$. The deficit corresponds to the off-diagonal coherence terms:
+\begin{align}
+\Delta &\sim \cos\frac{\theta}{2}\sin\frac{\theta}{2}\left(e^{i\phi}|0\rangle\langle 1| \otimes |f_0\rangle\langle f_1| + e^{-i\phi}|1\rangle\langle 0| \otimes |f_1\rangle\langle f_0|\right)
+\end{align}
+The magnitude of the deficit is $|\Delta| = |\sin\theta|/2$, which is maximized for $\theta = \pi/2$ (equal superposition) and vanishes for $\theta = 0$ or $\theta = \pi$ (no superposition).
+
+
+\section{Connection to the Extended Wigner's Friend Experiment}\label{app:experiment}
+
+The extended Wigner's friend (EWF) scenario of Bong et al.\ \cite{bong2020} provides the most direct experimental test of our framework. We outline the connection.
+
+\subsection{The Local Friendliness Inequality}
+
+The Local Friendliness (LF) inequality is:
+\[
+S_\mathrm{LF} = \langle A_1 B_1 \rangle + \langle A_1 B_2 \rangle + \langle A_2 B_1 \rangle - \langle A_2 B_2 \rangle \leq 2
+\]
+where $A_i, B_j$ denote the measurement choices of the two Wigner--friend pairs.
+
+In our framework, this inequality is precisely the condition for the existence of a global section of the absolute facts presheaf (\cref{def:absolute-facts}). The quantum violation $S_\mathrm{LF} = 2\sqrt{2}$ witnesses the non-existence of such a section.
+
+\subsection{Irreconcilability Defect and Inequality Violation}
+
+\begin{proposition}\label{prop:defect-violation}
+The irreconcilability defect $\delta(\F, \W)$ is related to the LF inequality violation by:
+\[
+S_\mathrm{LF} - 2 \leq f(\delta(\F_1, \W_1), \delta(\F_2, \W_2))
+\]
+where $f$ is a monotonically increasing function of both arguments. This establishes that the LF violation is bounded by the irreconcilability of the observer perspectives.
+\end{proposition}
+
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{wigner1961}
+E.~P.~Wigner, ``Remarks on the mind-body question,'' in \emph{The Scientist Speculates}, I.~J.~Good, ed., Heinemann, 1961, pp.~284--302.
+
+\bibitem{frauchiger2018}
+D.~Frauchiger and R.~Renner, ``Quantum theory cannot consistently describe the use of itself,'' \emph{Nature Commun.}\ \textbf{9}, 3711 (2018). \href{https://arxiv.org/abs/1604.07422}{arXiv:1604.07422}.
+
+\bibitem{brukner2018}
+\v{C}.~Brukner, ``A no-go theorem for observer-independent facts,'' \emph{Entropy}\ \textbf{20}, 350 (2018). \href{https://arxiv.org/abs/1507.05255}{arXiv:1507.05255}.
+
+\bibitem{bong2020}
+K.-W.~Bong et al., ``A strong no-go theorem on the Wigner's friend paradox,'' \emph{Nature Physics}\ \textbf{16}, 1199--1205 (2020). \href{https://arxiv.org/abs/1907.05607}{arXiv:1907.05607}.
+
+\bibitem{wiseman2023}
+H.~M.~Wiseman, E.~G.~Cavalcanti, and E.~G.~Rieffel, ``A `thoughtful' Local Friendliness no-go theorem: a prospective experiment with new assumptions to close the superdeterminism loophole,'' \emph{Quantum}\ \textbf{7}, 1112 (2023).
+
+\bibitem{cavalcanti2021}
+E.~G.~Cavalcanti, ``The view from a Wigner bubble,'' \emph{Found. Phys.}\ \textbf{51}, 39 (2021). \href{https://arxiv.org/abs/2008.05100}{arXiv:2008.05100}.
+
+\bibitem{long2026yoneda}
+M.~Long, ``The significance of the Yoneda constraint on observer knowledge to foundational physics: from quantum to classical,'' GrokRxiv:2026.02, YonedaAI Research Collective (2026).
+
+\bibitem{long2026embedded}
+M.~Long, ``The embedded observer constraint: on the structural bounds of scientific measurement,'' GrokRxiv:2026.02, YonedaAI Research Collective (2026).
+
+\bibitem{long2026measurement}
+M.~Long, ``The measurement paradox in emergent spacetime physics: structural limits on observational access to pre-geometric ontology,'' GrokRxiv:2026.02, YonedaAI Research Collective (2026).
+
+\bibitem{long2026code}
+M.~Long, ``Haskell implementations for categorical quantum observer theory,'' YonedaAI Software Repository (2026). Available at \url{https://yonedaai.com/code}.
+
+\bibitem{rovelli1996}
+C.~Rovelli, ``Relational quantum mechanics,'' \emph{Int. J. Theor. Phys.}\ \textbf{35}, 1637--1678 (1996). \href{https://arxiv.org/abs/quant-ph/9609002}{arXiv:quant-ph/9609002}.
+
+\bibitem{laudisa2019}
+F.~Laudisa and C.~Rovelli, ``Relational quantum mechanics,'' in \emph{Stanford Encyclopedia of Philosophy}, 2019.
+
+\bibitem{dibiaggio2021}
+A.~Di~Biagio and C.~Rovelli, ``Stable facts, relative facts,'' \emph{Found. Phys.}\ \textbf{51}, 30 (2021). \href{https://arxiv.org/abs/2006.15543}{arXiv:2006.15543}.
+
+\bibitem{abramsky2004}
+S.~Abramsky and B.~Coecke, ``A categorical semantics of quantum protocols,'' in \emph{Proceedings of LICS 2004}, IEEE, pp.~415--425 (2004). \href{https://arxiv.org/abs/quant-ph/0402130}{arXiv:quant-ph/0402130}.
+
+\bibitem{coecke2017}
+B.~Coecke and A.~Kissinger, \emph{Picturing Quantum Processes}, Cambridge University Press, 2017.
+
+\bibitem{heunen2019}
+C.~Heunen and J.~Vicary, \emph{Categories for Quantum Theory}, Oxford University Press, 2019.
+
+\bibitem{abramsky2011}
+S.~Abramsky and A.~Brandenburger, ``The sheaf-theoretic structure of non-locality and contextuality,'' \emph{New J. Phys.}\ \textbf{13}, 113036 (2011). \href{https://arxiv.org/abs/1102.0264}{arXiv:1102.0264}.
+
+\bibitem{butterfield1998}
+J.~Butterfield and C.~J.~Isham, ``A topos perspective on the Kochen--Specker theorem,'' \emph{Int. J. Theor. Phys.}\ \textbf{37}, 2669--2733 (1998).
+
+\bibitem{doring2008}
+A.~D\"oring and C.~J.~Isham, ``A topos foundation for theories of physics,'' \emph{J. Math. Phys.}\ \textbf{49}, 053515 (2008).
+
+\bibitem{zurek2003}
+W.~H.~Zurek, ``Decoherence, einselection, and the quantum origins of the classical,'' \emph{Rev. Mod. Phys.}\ \textbf{75}, 715--775 (2003).
+
+\bibitem{schlosshauer2007}
+M.~Schlosshauer, \emph{Decoherence and the Quantum-to-Classical Transition}, Springer, 2007.
+
+\bibitem{street1974}
+R.~Street, ``Fibrations and Yoneda's lemma in a 2-category,'' \emph{Lecture Notes in Math.}\ \textbf{420}, 104--133 (1974).
+
+\bibitem{maclane1998}
+S.~Mac Lane, \emph{Categories for the Working Mathematician}, 2nd ed., Springer, 1998.
+
+\bibitem{deutsch1985}
+D.~Deutsch, ``Quantum theory as a universal physical theory,'' \emph{Int. J. Theor. Phys.}\ \textbf{24}, 1--41 (1985).
+
+\bibitem{healey2018}
+R.~Healey, ``Quantum theory and the limits of objectivity,'' \emph{Found. Phys.}\ \textbf{48}, 1568--1589 (2018).
+
+\bibitem{nurgalieva2019}
+N.~Nurgalieva and L.~del Rio, ``Inadequacy of modal logic in quantum settings,'' in \emph{Electronic Proceedings in Theoretical Computer Science}, \textbf{287}, pp.~267--297 (2019). \href{https://arxiv.org/abs/1804.01106}{arXiv:1804.01106}.
+
+\bibitem{baumann2021}
+V.~Baumann and \v{C}.~Brukner, ``Wigner's friend as a rational agent,'' in \emph{Quantum, Probability, Logic}, Springer, 2021, pp.~91--99.
+
+\bibitem{proietti2019}
+M.~Proietti et al., ``Experimental test of local observer independence,'' \emph{Science Advances}\ \textbf{5}, eaaw9832 (2019).
+
+\bibitem{zukowski2021}
+M.~\.{Z}ukowski and M.~Markiewicz, ``Physics and metaphysics of Wigner's friends: even performed premeasurements have no results,'' \emph{Phys. Rev. Lett.}\ \textbf{126}, 130402 (2021).
+
+\end{thebibliography}
+
+\end{document}

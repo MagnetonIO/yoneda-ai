@@ -1,0 +1,855 @@
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage{xcolor}
+\usepackage{thmtools}
+\usepackage{abstract}
+\usepackage{titlesec}
+\usepackage{setspace}
+
+% ============================================================
+% PAGE GEOMETRY
+% ============================================================
+\geometry{
+  left=2.5cm,
+  right=2.5cm,
+  top=2.8cm,
+  bottom=2.8cm
+}
+
+% ============================================================
+% GrokRxiv DOI SIDEBAR — per template (TikZ overlay, page 1 only)
+% ============================================================
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\small\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=22pt, yshift=-0.5\paperheight]current page.north west)
+      {GrokRxiv:2026.02.embedded-observer-constraint\quad
+       [\,physics.hist-ph\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+% ============================================================
+% PAGE STYLE (subsequent pages)
+% ============================================================
+\fancypagestyle{subsequent}{%
+  \fancyhf{}%
+  \fancyhead[R]{\small\thepage}%
+  \fancyfoot{}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+\pagestyle{subsequent}
+
+% ============================================================
+% THEOREM ENVIRONMENTS
+% ============================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{heuristic}[theorem]{Heuristic Principle}
+
+% ============================================================
+% HYPERREF CONFIG
+% ============================================================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black,
+  pdftitle={The Embedded Observer Constraint: On the Structural Bounds of Scientific Measurement},
+  pdfauthor={Matthew Long, The YonedaAI Collaboration}
+}
+
+% ============================================================
+% CUSTOM COMMANDS
+% ============================================================
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Obs}{\mathcal{O}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Hil}{\mathcal{H}}
+\newcommand{\Info}{\mathcal{I}}
+\newcommand{\catC}{\mathbf{C}}
+\newcommand{\catD}{\mathbf{D}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Sub}{\mathrm{Sub}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\Kolm}{K}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\Hilbert}{\mathscr{H}}
+
+% ============================================================
+% TITLE
+% ============================================================
+\title{%
+  \vspace{-1.5cm}
+  {\Large\bfseries The Embedded Observer Constraint:\\[4pt]
+  On the Structural Bounds of Scientific Measurement}\\[8pt]
+  {\normalsize\textit{Revised manuscript --- February 2026}}
+}
+
+\author{%
+  \textbf{Matthew Long}\\[2pt]
+  \textit{The YonedaAI Collaboration}\\[2pt]
+  YonedaAI Research Collective\\
+  Chicago, IL\\[4pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\thispagestyle{empty} % sidebar handles page 1
+\maketitle
+
+% ============================================================
+% ABSTRACT
+% ============================================================
+\begin{abstract}
+\noindent
+We present a conceptual and foundational synthesis of the \emph{embedded observer constraint}: the principle that any subsystem $\Sys$ embedded within a total structure $\R$ is subject to structural limitations on its capacity to measure, model, and describe $\R$ in its entirety. Rather than claiming novel mathematical results, we develop a unified framework---drawing on information-theoretic, category-theoretic, and topological ideas---that clarifies and connects observations distributed across several literatures, including relational quantum mechanics, algorithmic information theory, topos-theoretic physics, and recent work on embedded agency. We argue, within this framework, that the measurement capacity of an embedded subsystem is bounded by its own informational complexity, that perspectival bias is an ineliminable feature of subsystem-relative measurement, and that self-reference in the observer--observed relation generates fixed-point obstructions to total self-description. We situate these observations relative to recent observer-theoretic frameworks (Rovelli, Wolfram--Gorard, Heunen--Vicary, MIRI embedded agency) and develop the positive account of scientific knowledge as \emph{internal cartography}---extraordinarily accurate, yet structurally incapable of achieving ontological closure. The paper is intended as a contribution to the philosophy of physics and the epistemology of science, not as a claim of new results in pure mathematics or mathematical physics.
+
+\medskip
+\noindent\textbf{Keywords:} embedded observer, measurement theory, epistemic bounds, category theory, Kolmogorov complexity, self-reference, relational quantum mechanics, internal cartography, structural perspectivism
+
+\medskip
+\noindent\textbf{MSC 2020:} 81P15, 03B70, 18A15, 00A79
+
+\medskip
+\noindent\textbf{PACS:} 01.70.+w, 03.65.Ta, 04.60.-m
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+% ============================================================
+\section{Introduction}\label{sec:intro}
+% ============================================================
+
+The extraordinary predictive power of modern science---from the sub-femtometer precision of quantum electrodynamics to the large-scale structure predictions of $\Lambda$CDM cosmology---has, in many quarters, given rise to an implicit philosophical commitment: that reality is, at least in principle, coextensive with what can be observed and measured. On this view, the progressive refinement of experimental methods will, in the limit, yield a complete description of the natural world.
+
+In this paper, we challenge this implicit commitment on purely structural grounds. Our argument does not invoke mysticism, anti-scientism, or speculative metaphysics. Rather, we observe a simple and, once stated, nearly self-evident fact: \emph{the scientific observer is a subsystem of the very reality it seeks to describe}. This embeddedness imposes structural constraints on measurement, modeling, and description that cannot be overcome by any improvement in method, instrumentation, or computational power.
+
+\subsection{Scope and Character of the Contribution}
+
+We wish to be explicit about the nature of this work. The paper is a \emph{conceptual and foundational synthesis}. We do not claim to prove new theorems in the sense of pure mathematics; rather, we organize and connect observations that are individually well-known---or at least implicit---in several distinct research communities, and we argue that these observations, taken together, point to a coherent and philosophically significant structural constraint on scientific knowledge.
+
+The formal apparatus (category theory, Kolmogorov complexity, sheaf theory) is used to \emph{sharpen and organize} conceptual arguments, not to claim priority over mathematicians working in these fields. Where our formal arguments are heuristic rather than fully rigorous, we say so explicitly.
+
+\subsection{Relation to Existing Work}
+
+The idea that observers embedded within physical reality face structural limitations is not new. It appears, in various forms, in Rovelli's relational quantum mechanics \cite{rovelli1996,rovelli2022}, in the topos-theoretic approach to quantum physics developed by Isham, Butterfield, D\"oring, and extended by Heunen and collaborators \cite{butterfield1998,doring2008,heunen2009,heunen2017}, in Wolfram and Gorard's recent observer-theoretic framework for fundamental physics \cite{wolfram2020,gorard2024}, in the MIRI embedded agency research program \cite{demski2020,garrabrant2017}, in Deutsch and Marletto's constructor theory \cite{deutsch2015}, and in QBist and participatory realist approaches \cite{fuchs2014,healey2012}.
+
+What has been lacking is a \emph{unified formal framework} that connects the information-theoretic, category-theoretic, and topological dimensions of the problem while remaining agnostic about specific physical ontology. That is what we attempt here.
+
+\subsection{Plan of the Paper}
+
+The argument proceeds in stages. In \cref{sec:framework}, we establish the basic formal framework. In \cref{sec:information}, we develop information-theoretic bounds and their connection to self-referential obstructions. In \cref{sec:category}, we construct a categorical formalization. In \cref{sec:topology}, we develop the topological and sheaf-theoretic perspective. In \cref{sec:illustrations}, we discuss quantum and cosmological illustrations. In \cref{sec:cartography}, we develop the positive account of science as internal cartography. In \cref{sec:philosophy}, we engage with scientific realism and develop the position of structural perspectivism. In \cref{sec:discussion}, we summarize open directions.
+
+Throughout, we maintain a sharp distinction between two claims:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Structural epistemic bounds:} Science is extraordinarily powerful but subject to principled, structural limitations arising from the observer's embeddedness.
+  \item \textbf{Ontological inaccessibility:} The total structure of reality is, in principle, beyond complete subsystem-internal description.
+\end{enumerate}
+Claim (i) follows from the framework's axioms. Claim (ii) requires additional philosophical argument, which we develop in \cref{sec:philosophy}.
+
+
+% ============================================================
+\section{Formal Framework: Embeddedness and Measurement}\label{sec:framework}
+% ============================================================
+
+\subsection{The Total Structure and Embedded Subsystems}
+
+We begin with the most minimal ontological assumption available.
+
+\begin{axiom}[Totality]\label{ax:totality}
+There exists a total structure $\R$ that encompasses all that exists, including all observers, instruments, and measurement processes.
+\end{axiom}
+
+We make no commitment to the specific character of $\R$---it may be a spacetime manifold, a Hilbert space, an information-theoretic structure, a category, or something outside our current conceptual vocabulary. The only requirement is totality.
+
+\begin{definition}[Embedded Subsystem]\label{def:subsystem}
+An \emph{embedded subsystem} is a pair $(\Sys, \iota)$ where $\Sys$ is a structure and $\iota: \Sys \hookrightarrow \R$ is a proper inclusion morphism: $\Sys \neq \R$.
+\end{definition}
+
+We note that this setup is closely related to the ``system + constructor'' distinction in constructor theory \cite{deutsch2015} and to the ``system relative to observer'' framing in relational QM \cite{rovelli1996}. Our contribution is not the distinction itself but the systematic formal consequences we derive from it.
+
+\begin{definition}[Subsystem-Relative Measurement]\label{def:subsystem-measurement}
+A \emph{subsystem-relative measurement} is a morphism $M_\Sys: \R \to \D$ that factors through the accessible region:
+\[
+M_\Sys = m \circ \pi_\Sys
+\]
+where $\pi_\Sys: \R \to \R|_\Sys$ is the restriction of $\R$ to the region accessible to $\Sys$, and $m: \R|_\Sys \to \D$ is a map constructed from resources internal to $\Sys$.
+\end{definition}
+
+This factorization is the formal heart of the embedded observer constraint. Every measurement we perform has this structure: we do not access $\R$ from outside; we access it only through $\R|_\Sys$.
+
+\begin{definition}[Accessible Region]\label{def:accessible}
+The \emph{accessible region} $\R|_\Sys \subseteq \R$ is the maximal substructure of $\R$ from which $\Sys$ can extract information through physical processes.
+\end{definition}
+
+In general, $\R|_\Sys \subsetneq \R$. This is already evident in physics: lightcone constraints limit causal access; quantum complementarity limits simultaneous observable access; thermodynamic irreversibility limits information extraction.
+
+\subsection{The Measurement Algebra}
+
+\begin{definition}[Measurement Algebra]\label{def:meas-algebra}
+The \emph{measurement algebra} of $\Sys$ is the collection
+\[
+\mathfrak{M}(\Sys) = \{ M_\Sys : \R \to \D \mid M_\Sys \text{ is implementable by } \Sys \}
+\]
+equipped with composition, tensor products, and convex combinations.
+\end{definition}
+
+The embedded observer constraint can now be stated precisely. We frame it as a proposition rather than a theorem, since it follows directly from the definitions---its content lies in the setup, not in a surprising deduction.
+
+\begin{proposition}[Embedded Observer Constraint]\label{prop:EOC}
+For any proper embedded subsystem $(\Sys, \iota)$ with $\Sys \subsetneq \R$, the measurement algebra $\mathfrak{M}(\Sys)$ does not separate the points of $\R$. That is, there exist distinct states $r_1, r_2 \in \R$ such that $M_\Sys(r_1) = M_\Sys(r_2)$ for all $M_\Sys \in \mathfrak{M}(\Sys)$.
+\end{proposition}
+
+\begin{proof}
+Every $M_\Sys \in \mathfrak{M}(\Sys)$ factors through $\R|_\Sys$. Since $\R|_\Sys \subsetneq \R$, states that agree on $\R|_\Sys$ but differ outside it are indistinguishable by $\mathfrak{M}(\Sys)$.
+\end{proof}
+
+\begin{remark}\label{rmk:tautology}
+We acknowledge that this proposition is close to tautological given the definitions---as one reviewer noted, it amounts to ``no proper subsystem can distinguish all states of a larger system.'' The value lies not in the logical surprise but in making explicit a structural feature that is often tacitly assumed but rarely formalized as a constraint on the epistemology of science.
+\end{remark}
+
+
+% ============================================================
+\section{Information-Theoretic Bounds and Self-Reference}\label{sec:information}
+% ============================================================
+
+In this section, we develop information-theoretic perspectives on the embedded observer constraint. Following a reviewer's recommendation, we present the Kolmogorov complexity arguments as \emph{heuristic analogies} that illuminate the structural situation, rather than as fully rigorous proofs. The application of algorithmic complexity to physical/continuous settings involves well-known technical difficulties \cite{li2008,grunwald2004}; we indicate where these arise and where our arguments should be understood as suggestive rather than conclusive.
+
+\subsection{Descriptive Capacity: A Heuristic Bound}
+
+The fundamental intuition is that a subsystem cannot contain more information than its own complexity allows, and hence cannot encode a complete description of a more complex system.
+
+\begin{definition}[Descriptive Capacity]\label{def:desc-capacity}
+The \emph{descriptive capacity} of a subsystem $\Sys$ is defined as the supremum of the Kolmogorov complexities of the descriptions that $\Sys$ can internally represent:
+\[
+\mathrm{Cap}(\Sys) = \sup\{ \Kolm(d) \mid d \in \D, \; d = M_\Sys(r) \text{ for some } M_\Sys \in \mathfrak{M}(\Sys), \; r \in \R \}.
+\]
+\end{definition}
+
+\begin{heuristic}[Descriptive Capacity Bound]\label{heur:capacity-bound}
+The descriptive capacity of an embedded subsystem is bounded, up to logarithmic terms, by the Kolmogorov complexity of the subsystem itself:
+\[
+\mathrm{Cap}(\Sys) \lesssim \Kolm(\Sys).
+\]
+\end{heuristic}
+
+\begin{remark}
+In a fully rigorous treatment, this would require specifying a reference universal Turing machine, handling the distinction between plain and prefix-free complexity, and managing the well-known non-computability of $K$. We use $\lesssim$ to indicate an inequality that holds up to additive terms of order $O(\log \Kolm(\Sys))$, following the standard conventions of algorithmic information theory \cite{li2008}. The heuristic force of the argument does not depend on the exact form of these corrections: the point is that a subsystem's representational capacity is bounded by its own structural complexity.
+\end{remark}
+
+\begin{observation}[Incompleteness of Internal Description]\label{obs:incomplete}
+If the total complexity $\Kolm(\R)$ substantially exceeds $\Kolm(\Sys)$, then no measurement in $\mathfrak{M}(\Sys)$ provides a complete description of $\R$. The gap $\Kolm(\R) - \Kolm(\Sys)$ provides a rough measure of the irreducible epistemic deficit.
+\end{observation}
+
+\subsection{Shannon-Theoretic Formulation}
+
+The constraint also admits a Shannon-theoretic formulation that avoids some of the technical difficulties of Kolmogorov complexity.
+
+\begin{proposition}[Channel Capacity Bound]\label{prop:channel}
+The mutual information between the total state of $\R$ and the measurement outcome $\D$ is bounded by the channel capacity of the subsystem:
+\[
+I(\R; \D) \leq C(\Sys).
+\]
+When $H(\R) > C(\Sys)$, the measurement necessarily discards information about $\R$.
+\end{proposition}
+
+\begin{proof}
+Since $\R \to \R|_\Sys \to \D$ forms a Markov chain, the data processing inequality gives $I(\R; \D) \leq I(\R; \R|_\Sys) \leq C(\Sys)$.
+\end{proof}
+
+This result is mathematically standard but conceptually significant: it shows that the embedded observer constraint is not merely a philosophical observation but has precise information-theoretic content.
+
+\subsection{Self-Reference and Fixed-Point Obstructions}\label{subsec:self-ref}
+
+The most distinctive feature of the embedded observer problem is self-reference: the observer measures a system of which it is a part. Any complete description of $\R$ must include a description of $\Sys$, which must include $\Sys$'s description of $\R$, generating a recursive structure.
+
+\begin{definition}[Self-Inclusive Description]\label{def:self-inclusive}
+A description $d \in \mathfrak{D}(\Sys, \R|_\Sys)$ is \emph{self-inclusive} if it includes a complete description of $\Sys$'s state of holding description $d$.
+\end{definition}
+
+\begin{proposition}[Self-Description as Fixed Point]\label{prop:fixed-point}
+A self-inclusive description, if it exists, must be a fixed point of the operator $\Phi: d \mapsto \text{``description of $\R$ with $\Sys$ holding $d$''}$. That is, $d = \Phi(d)$.
+\end{proposition}
+
+\begin{proof}
+If $d$ is self-inclusive, then $d$ describes $\R$ in a state where $\Sys$ holds $d$. But the description of this state is $\Phi(d)$. Therefore $d = \Phi(d)$.
+\end{proof}
+
+The existence of such fixed points is obstructed by several mechanisms:
+
+\begin{proposition}[Complexity Obstruction to Self-Description]\label{prop:complexity-obstruction}
+If encoding $d$ into $\Sys$'s state increases $\Kolm(\Sys)$ beyond the capacity of $d$ to describe, then $\Phi$ has no fixed point. The argument is analogous to the Berry paradox and related diagonal constructions in algorithmic information theory \cite{chaitin1987,yanofsky2013}.
+\end{proposition}
+
+\begin{remark}
+We stress that the connection to G\"odelian incompleteness is \emph{analogical}, not a direct application. The structures share a common ancestor---diagonalization and self-reference---but the physical setting of embedded measurement is not a formal system in the sense required by G\"odel's theorems. The analogy is suggestive and conceptually illuminating, but should not be overstated. See Yanofsky \cite{yanofsky2013} for a careful treatment of the family resemblances among these impossibility results.
+\end{remark}
+
+\begin{proposition}[Dynamical Obstruction]\label{prop:dynamical}
+In a time-evolving system, completing a description changes the state of $\Sys$ (and hence $\R$), invalidating the description at the moment of completion. This generates a dynamical instability in the self-description problem.
+\end{proposition}
+
+This dynamical obstruction is closely related to what Rovelli \cite{rovelli1996} calls the ``relativity of states'' in relational QM, and to the observer-dependence emphasized in Wolfram and Gorard's framework \cite{wolfram2020,gorard2024}: the description and the described cannot be simultaneously stabilized from within.
+
+
+% ============================================================
+\section{Category-Theoretic Formalization}\label{sec:category}
+% ============================================================
+
+Category theory provides a natural language for expressing the structural relationships between observers, measurements, and reality. This section is the most mathematically developed part of the paper; we nonetheless present the main results as propositions within the framework rather than as standalone theorems, since their force depends on the conceptual setup of \cref{sec:framework}.
+
+\subsection{The Measurement Category}
+
+\begin{definition}[Measurement Category]\label{def:meas-cat}
+The \emph{measurement category} $\catMeas$ has:
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Objects:} Pairs $(\Sys, \R|_\Sys)$ where $\Sys$ is an observer subsystem and $\R|_\Sys$ is its accessible region.
+  \item \textbf{Morphisms:} A morphism $(\Sys_1, \R|_{\Sys_1}) \to (\Sys_2, \R|_{\Sys_2})$ is a compatible pair $(f, g)$ making the diagram
+  \[
+  \begin{tikzcd}
+    \Sys_1 \arrow[r, "f"] \arrow[d, hook, "\iota_1"'] & \Sys_2 \arrow[d, hook, "\iota_2"] \\
+    \R|_{\Sys_1} \arrow[r, "g"] & \R|_{\Sys_2}
+  \end{tikzcd}
+  \]
+  commute.
+  \item \textbf{Composition:} Componentwise.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Description and Reality Functors]\label{def:functors}
+The \emph{description functor} $\mathfrak{D}: \catMeas \to \catSet$ assigns to each $(\Sys, \R|_\Sys)$ the set of descriptions of $\R$ available to $\Sys$. The \emph{reality functor} $\mathfrak{R}: \catMeas \to \catSet$ is the constant functor assigning the set of all complete descriptions of $\R$.
+\end{definition}
+
+\subsection{The Non-Existence of Universal Measurement}
+
+\begin{proposition}[No Natural Isomorphism]\label{prop:no-universal}
+For any proper embedded subsystem $\Sys \subsetneq \R$, there is no natural isomorphism $\eta: \mathfrak{D} \Rightarrow \mathfrak{R}$.
+\end{proposition}
+
+\begin{proof}
+Such an isomorphism would require, for each $(\Sys, \R|_\Sys)$, a bijection between descriptions available to $\Sys$ and complete descriptions of $\R$. By \cref{prop:EOC}, the available descriptions fail to separate certain pairs of states, while complete descriptions do. No structure-preserving bijection can bridge this gap.
+\end{proof}
+
+This proposition expresses the embedded observer constraint categorically: the ``internal'' functor is structurally deficient relative to the ``external'' functor, and no natural transformation can bridge the gap.
+
+\subsection{The Yoneda Perspective}\label{subsec:yoneda}
+
+The Yoneda lemma provides perhaps the deepest insight into the nature of embedded observation, and merits careful development.
+
+Recall that for an object $X$ in a locally small category $\catC$, the \emph{Yoneda embedding} $\mathsf{y}: \catC \hookrightarrow [\catC^\op, \catSet]$ sends $X$ to the representable presheaf $\Hom_\catC(-, X)$. The Yoneda lemma then states that for any presheaf $F: \catC^\op \to \catSet$,
+\[
+\mathrm{Nat}(\Hom_\catC(-, X), F) \cong F(X).
+\]
+This means that an object is \emph{completely determined} by its web of relationships to all other objects---by how it is ``seen from every perspective.''
+
+\begin{proposition}[Yoneda Constraint on Observer Knowledge]\label{prop:yoneda}
+The embedded observer $\Sys$ knows $\R$ only through the representable presheaf $\Hom_\catMeas((\Sys, \R|_\Sys), -)$. By the Yoneda lemma, this determines $(\Sys, \R|_\Sys)$ up to isomorphism, but it does not determine $\R$ itself unless $\R|_\Sys = \R$.
+\end{proposition}
+
+\begin{proof}
+The Yoneda embedding tells us that the natural transformations from $\Hom((\Sys, \R|_\Sys), -)$ to any functor $F$ are in bijection with $F(\Sys, \R|_\Sys)$. This encodes everything about how $(\Sys, \R|_\Sys)$ relates to other objects in $\catMeas$. However, the object $(\Sys, \R|_\Sys)$ carries information only about $\R|_\Sys$, not about $\R \setminus \R|_\Sys$.
+\end{proof}
+
+The philosophical significance of this result is worth emphasizing. The Yoneda lemma is often glossed as ``an object is determined by its relationships.'' In the context of embedded observation, this becomes: \emph{an observer's knowledge is entirely relational}---determined by morphisms from the observer's position to other positions in the measurement category. The observer has no access to ``intrinsic'' features of $\R$ that do not manifest in these relational probes. This provides a precise category-theoretic formulation of the perspectivalism that appears informally in relational QM \cite{rovelli1996} and in Giere's scientific perspectivism \cite{giere2006}.
+
+Moreover, the Yoneda embedding is \emph{full and faithful}: no information is lost in passing from an object to its presheaf of relationships. This means that the observer's relational knowledge is the \emph{best possible} knowledge available from its position. The limitation is not in the quality of the relational knowledge but in the scope of the relations accessible from a proper subobject.
+
+\subsection{Kan Extensions and the Limits of Extrapolation}\label{subsec:kan}
+
+Can the observer ``extend'' its descriptions beyond the accessible region? This question is naturally formulated using Kan extensions.
+
+\begin{definition}[Extension Problem]\label{def:extension}
+Given the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas$ and the description functor $\mathfrak{D}$, the \emph{extension problem} asks whether the left Kan extension $\mathrm{Lan}_J(\mathfrak{D} \circ J)$ recovers $\mathfrak{R}$.
+\end{definition}
+
+\begin{proposition}[Obstruction to Total Extension]\label{prop:kan-obstruction}
+The left Kan extension $\mathrm{Lan}_J(\mathfrak{D} \circ J)$ provides the ``best approximation'' to $\mathfrak{R}$ constructible from data available to $\Sys$. The \emph{extension deficit}
+\[
+\Delta(\Sys) = \coker\!\big(\mathrm{Lan}_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}\big)
+\]
+vanishes if and only if $\R|_\Sys = \R$.
+\end{proposition}
+
+\begin{proof}
+The Kan extension, by its universal property, is the closest functor to $\mathfrak{R}$ constructible from the subcategory visible to $\Sys$. Since $\mathfrak{D}$ has strictly less informational content than $\mathfrak{R}$ (by \cref{prop:EOC}), the cokernel is non-trivial whenever $\R|_\Sys \subsetneq \R$.
+\end{proof}
+
+This result is significant because Kan extensions are the categorical analogue of ``best approximation'' or ``optimal extrapolation.'' It shows that even the \emph{best possible} extension of internal knowledge to the total system falls short, and quantifies the shortfall via the extension deficit $\Delta(\Sys)$.
+
+\subsection{The 2-Categorical Perspective}
+
+For completeness, we note that $\catMeas$ admits enrichment to a 2-category $\catMeas_2$ whose 2-cells are natural transformations between measurement-preserving maps, representing ``changes of measurement basis'' or ``gauge transformations'' between descriptions. The failure of these 2-cells to be invertible in general reflects the perspectival nature of measurement. We leave the detailed development of this 2-categorical structure to future work; see Heunen and Vicary \cite{heunen2017} for related constructions in categorical quantum mechanics.
+
+
+% ============================================================
+\section{Topological and Sheaf-Theoretic Perspectives}\label{sec:topology}
+% ============================================================
+
+\subsection{The Descriptive Space}
+
+We now develop a topological formulation, treating the space of possible descriptions as a topological object.
+
+\begin{definition}[Descriptive Space and Observer Neighborhood]\label{def:desc-space}
+The \emph{descriptive space} $\mathscr{D}(\R)$ is the space of all possible descriptions of $\R$, topologized so that neighborhoods correspond to descriptions agreeing on increasingly fine features. The \emph{observer neighborhood} $\mathscr{N}_\Sys \subseteq \mathscr{D}(\R)$ is the subspace of descriptions implementable by $\Sys$.
+\end{definition}
+
+\begin{proposition}[Proper Inclusion]\label{prop:proper-nbhd}
+For any $\Sys \subsetneq \R$, we have $\mathscr{N}_\Sys \subsetneq \mathscr{D}(\R)$.
+\end{proposition}
+
+\subsection{Sheaf-Theoretic Formulation: Perspectival Glueing Failure}
+
+The question of whether multiple observers can collectively describe all of $\R$ connects to sheaf theory.
+
+\begin{definition}[Measurement Presheaf]\label{def:presheaf}
+Let $\mathrm{Open}(\R)$ denote the poset of accessible regions. The \emph{measurement presheaf} $\mathscr{F}: \mathrm{Open}(\R)^\op \to \catSet$ assigns to each accessible region $U$ the set of valid partial descriptions constructible from data in $U$.
+\end{definition}
+
+\begin{heuristic}[Failure of the Sheaf Condition]\label{heur:sheaf-failure}
+The measurement presheaf $\mathscr{F}$ is, in general, \emph{not} a sheaf. The glueing axiom can fail when observer-relative descriptions from overlapping accessible regions carry incompatible perspectival information.
+\end{heuristic}
+
+We present this as a heuristic principle rather than a theorem because a fully rigorous statement would require specifying the topology on $\R$, the precise nature of ``perspectival incompatibility,'' and a concrete demonstration of cocycle failure. The physical motivations are, however, compelling:
+
+\begin{example}[Physical Instances of Glueing Failure]\label{ex:glueing}
+The following well-known physical phenomena instantiate the pattern of local descriptions that resist global glueing:
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{Gauge theory:} Different gauge choices on overlapping patches give descriptions related by gauge transformations that may not admit a global gauge. The non-triviality of principal bundles is precisely a glueing obstruction.
+  \item \textbf{Relativity:} Different reference frames give locally valid descriptions that are related by Lorentz transformations on overlaps, but there is in general no global inertial frame.
+  \item \textbf{Quantum mechanics:} Different pointer bases for measuring apparatus give locally consistent descriptions that cannot be simultaneously realized, per the Kochen--Specker theorem.
+\end{enumerate}
+\end{example}
+
+These examples show that the sheaf-failure heuristic is not speculative but reflects well-established features of physical theory. The contribution of our framework is to identify these as instances of a single structural pattern: the perspectival glueing failure inherent in embedded observation.
+
+\subsection{Covering and Collaboration}
+
+\begin{definition}[Observer Cover]\label{def:cover}
+An \emph{observer cover} is $\{\Sys_\alpha\}_{\alpha \in A}$ with $\bigcup_\alpha \R|_{\Sys_\alpha} = \R$.
+\end{definition}
+
+\begin{observation}
+Even when an observer cover exists, consistent patching of descriptions into a global one may fail---precisely the sheaf-theoretic obstruction. Science achieves remarkable inter-observer consistency (different labs, instruments, reference frames arriving at compatible results), but this consistency is \emph{inter-perspectival} rather than \emph{trans-perspectival}: it demonstrates agreement among embedded viewpoints, not access to a view from nowhere.
+\end{observation}
+
+
+% ============================================================
+\section{Illustrations: Quantum Mechanics and Cosmology}\label{sec:illustrations}
+% ============================================================
+
+We briefly discuss two physical settings that illustrate the embedded observer constraint. These are presented as \emph{existence proofs}---demonstrations that the abstract framework captures concrete physical phenomena---rather than as novel applications.
+
+\subsection{Quantum Measurement}
+
+In quantum mechanics, $\R$ is described by a state $|\Psi\rangle \in \Hilbert_\R$ evolving unitarily. The observer $\Sys$ occupies a tensor factor $\Hilbert_\Sys$ with $\Hilbert_\R = \Hilbert_\Sys \otimes \Hilbert_{\mathrm{env}}$.
+
+The accessible region for $\Sys$ is characterized by the reduced density matrix $\rho_\Sys = \mathrm{Tr}_{\mathrm{env}}(|\Psi\rangle\langle\Psi|)$. When $|\Psi\rangle$ is entangled across the partition, $\rho_\Sys$ is mixed: the von Neumann entropy $S(\rho_\Sys) = -\mathrm{Tr}(\rho_\Sys \log \rho_\Sys)$ quantifies the information about $\R$ inaccessible to $\Sys$ due to entanglement. This is a concrete realization of the epistemic remainder: entanglement entropy measures how much of $\R$'s state is lost in restriction to $\Sys$.
+
+The quantum measurement problem itself---the tension between unitary evolution and apparent collapse---is naturally situated within the embedded observer framework. From $\R$'s perspective, measurement is unitary; from $\Sys$'s perspective, it appears as projection. The two perspectives cannot be reconciled from within $\Sys$, because doing so would require accessing $\Sys$'s own entanglement with the environment.
+
+Bohr's complementarity and the Heisenberg uncertainty relation $\Delta x \cdot \Delta p \geq \hbar/2$ can be read as further manifestations of embedded measurement limits, connecting to the topos-theoretic approach where classical distributivity fails in the subobject classifier \cite{butterfield1998,doring2008,heunen2009}. The relational interpretation \cite{rovelli1996,rovelli2022} makes the observer-relativity of quantum states explicit, and our framework provides a broader structural context for this relativity.
+
+\subsection{Cosmological Horizons}
+
+Cosmology provides the most dramatic illustration: the particle horizon $d_H(t) = a(t) \int_0^t c \, dt'/a(t')$ defines a finite accessible region. In our framework, $\R$ is the entire universe (possibly infinite), $\Sys$ is the collection of observers within the observable universe, and $\R|_\Sys$ is bounded by the horizon.
+
+Additional cosmological manifestations include: underdetermination of initial conditions (multiple initial states compatible with present observations, since information has been diluted, thermalized, or carried beyond the horizon), and the landscape problem in string theory (an observer in one vacuum cannot directly probe others).
+
+These are textbook limitations \cite{weinberg2008,ellis2012}, and we do not claim novelty. Our point is that they instantiate the same structural pattern formalized in \cref{sec:framework}: the observer is a proper subsystem, the accessible region is bounded, and complete description is structurally precluded.
+
+
+% ============================================================
+\section{Science as Internal Cartography}\label{sec:cartography}
+% ============================================================
+
+We now develop the positive account. Science, on our view, is best understood as \emph{internal cartography}: the construction of extraordinarily accurate maps of reality from within reality.
+
+\subsection{The Map Metaphor, Made Precise}
+
+\begin{definition}[Internal Map]\label{def:internal-map}
+An \emph{internal map} is a description $d \in \mathfrak{D}(\Sys, \R|_\Sys)$ satisfying:
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{Local accuracy:} $d$ correctly represents $\R|_\Sys$ to within measurement precision.
+  \item \textbf{Predictive power:} $d$ enables prediction of future states of $\R|_\Sys$ with high fidelity.
+  \item \textbf{Coherence:} $d$ is internally consistent and composable with maps from compatible observers.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Power and Limits of Internal Maps]\label{prop:cartography}
+An internal map can be: (i) arbitrarily accurate on $\R|_\Sys$, (ii) predictively powerful within the accessible region, and (iii) extensible through inter-observer collaboration. An internal map \emph{cannot} be: (iv) a complete description of $\R$ (by \cref{prop:EOC}), (v) free of perspectival bias (by the factorization through $\R|_\Sys$), or (vi) provably self-inclusive (by \cref{prop:fixed-point}).
+\end{proposition}
+
+\subsection{Accuracy Without Completeness}
+
+The distinction between accuracy and completeness is philosophically crucial and often conflated.
+
+\begin{definition}\label{def:accuracy-completeness}
+A map $d$ is \emph{$\epsilon$-locally-accurate} on $U \subseteq \R|_\Sys$ if the discrepancy between predictions and observations is bounded by $\epsilon$ on $U$. A map is \emph{complete} if it separates all points of $\R$.
+\end{definition}
+
+\begin{observation}[Accuracy $\not\Rightarrow$ Completeness]\label{obs:acc-complete}
+A map can be $\epsilon$-accurate for arbitrarily small $\epsilon$ on $\R|_\Sys$ without being complete. QED predicts the electron magnetic moment to 12 significant figures; $\Lambda$CDM matches the CMB power spectrum across thousands of multipoles. These are extraordinary achievements of local accuracy. They do not entail that science can exhaustively characterize the total object it inhabits.
+\end{observation}
+
+\subsection{Convergence Without Closure}
+
+Scientific progress generates a sequence of maps $d_0, d_1, d_2, \ldots$ of increasing accuracy.
+
+\begin{proposition}[Convergence Without Closure]\label{prop:convergence}
+Under suitable continuity and compactness conditions, the sequence $\{d_n\}$ can converge in the topology of local accuracy on $\R|_\Sys$. The limit $d_\infty$, if it exists, is a complete description of $\R|_\Sys$---not of $\R$.
+\end{proposition}
+
+\begin{proof}
+Convergence on $\R|_\Sys$ follows from the assumption that refinement improves accuracy. The limit cannot extend to $\R \setminus \R|_\Sys$ by \cref{prop:EOC}.
+\end{proof}
+
+
+% ============================================================
+\section{Philosophical Implications: Structural Perspectivism}\label{sec:philosophy}
+% ============================================================
+
+\subsection{Locating the Position}
+
+The debate between scientific realism and anti-realism turns on whether our best theories are approximately true descriptions of reality. We argue that the embedded observer framework motivates a position we call \emph{structural perspectivism}, which offers a principled resolution.
+
+\begin{definition}[Structural Perspectivism]\label{def:perspectivism}
+\emph{Structural perspectivism} holds that:
+\begin{enumerate}[label=(\alph*)]
+  \item Reality $\R$ has objective structure independent of any observer.
+  \item Scientific theories accurately describe the \emph{relational structure} accessible to embedded observers.
+  \item This accuracy is genuine---not merely instrumental---but \emph{perspectival}: conditioned on the observer's position, capacities, and accessible region.
+  \item Complete, perspective-independent description of $\R$ is structurally impossible for any embedded observer.
+\end{enumerate}
+\end{definition}
+
+This position is realist about structure but agnostic about completeness. It validates the predictive success of science as genuine contact with reality, while maintaining that this contact is mediated by embeddedness.
+
+\subsection{Relation to Existing Positions}
+
+Structural perspectivism relates to but is distinct from several existing positions. It shares with structural realism \cite{worrall1989,ladyman2007} the commitment to objective structural content, but adds the perspectivality constraint. It shares with perspectival realism \cite{giere2006,massimi2022} the recognition of perspective-dependence, but grounds it in a formal framework. It differs from constructive empiricism \cite{vanfraassen1980} in maintaining that theories make genuine (not merely empirically adequate) contact with unobservable reality---just not complete contact.
+
+Importantly, structural perspectivism also resonates with recent developments in physics proper. Rovelli's relational QM \cite{rovelli1996,rovelli2022} argues that quantum states are relative to observers---our framework provides the broader structural context. Wolfram and Gorard's observer-theoretic framework \cite{wolfram2020,gorard2024} argues that many features of physical law arise from the observer's computational relationship to the underlying structure---our categorical formalization offers an alternative, more abstract expression of related ideas. The MIRI embedded agency program \cite{demski2020,garrabrant2017} identifies analogous self-reference problems for artificial agents reasoning about environments that contain them.
+
+\subsection{The Ineliminability of Perspective}
+
+\begin{proposition}[Ineliminability of Perspective]\label{prop:perspective}
+For any $\Sys \subsetneq \R$, the perspectival component of measurements cannot be completely eliminated from all elements of $\mathfrak{M}(\Sys)$.
+\end{proposition}
+
+\begin{proof}
+Eliminating all perspectival components would require $\Sys$ to model its own contribution to each measurement, requiring a complete self-model---which is obstructed by \cref{prop:fixed-point} and \cref{prop:complexity-obstruction}.
+\end{proof}
+
+Science achieves objectivity through \emph{inter-perspectival calibration}: different observers using different instruments arrive at consistent results. This is impressive and genuine, but it remains inter-perspectival rather than trans-perspectival. The consistency demonstrates agreement among embedded viewpoints, not transcendence beyond all viewpoints.
+
+\subsection{Implications for ``Final Theories''}
+
+\begin{proposition}[Incompleteness of Internally Formulated Final Theory]\label{prop:no-TOE}
+No theory $T$ formulated by an embedded subsystem can simultaneously: (i) completely describe $\R$, (ii) include a complete self-description of $\Sys$, and (iii) be verifiable by measurements in $\mathfrak{M}(\Sys)$.
+\end{proposition}
+
+This does not preclude a ``final theory'' in a weaker sense: one that is maximally accurate and predictive on $\R|_\Sys$, internally coherent, and not improvable by any measurement available to $\Sys$. Such an \emph{internal final theory} would be an extraordinary achievement---the best possible map. Recognizing its structural incompleteness relative to $\R$ contextualizes rather than diminishes this achievement.
+
+\subsection{Limits as Features, Not Failures}
+
+We close this section with a philosophical point that is central to the paper's ethos. The structural bounds on scientific knowledge are not deficiencies of the scientific method. They are consequences of the observer's ontological position within reality. A cartographer who understands the nature and limits of maps is a better cartographer, not a lesser one. The same holds for science.
+
+
+% ============================================================
+\section{Discussion and Open Directions}\label{sec:discussion}
+% ============================================================
+
+\subsection{Summary of Contributions}
+
+We have developed a unified framework for the embedded observer constraint, connecting information-theoretic, category-theoretic, and topological perspectives. The key results within this framework are:
+
+The \emph{Embedded Observer Constraint} (\cref{prop:EOC}): the measurement algebra of a proper subsystem does not separate the points of the total structure.
+
+The \emph{Channel Capacity Bound} (\cref{prop:channel}): mutual information between total state and measurement outcome is bounded by subsystem channel capacity.
+
+The \emph{No Natural Isomorphism} (\cref{prop:no-universal}): internal description and reality functors are not naturally isomorphic.
+
+The \emph{Yoneda Constraint} (\cref{prop:yoneda}): observer knowledge is relational and bounded by the accessible region.
+
+The \emph{Kan Extension Obstruction} (\cref{prop:kan-obstruction}): optimal extrapolation beyond the accessible region falls short by a quantifiable deficit.
+
+The \emph{Fixed-Point Obstruction} (\cref{prop:fixed-point}): self-inclusive descriptions face structural obstructions.
+
+The \emph{Convergence Without Closure} (\cref{prop:convergence}): scientific progress can converge locally without achieving global completeness.
+
+\subsection{Relation to Recent Literature}
+
+We situate our framework relative to the most relevant recent work:
+
+\textbf{Relational QM (Rovelli, Di Biagio, Rovelli--Vidotto).} The relational interpretation \cite{rovelli1996,rovelli2022,dibiagio2022} makes quantum states observer-relative. Our framework provides the broader structural context: observer-relativity is a consequence of embeddedness, not a peculiarity of quantum mechanics. The categorical formalization (\cref{sec:category}) offers a more abstract and physics-independent expression of the relational insight.
+
+\textbf{Wolfram--Gorard observer theory.} The Wolfram Physics Project and Gorard's extensions \cite{wolfram2020,gorard2024} develop a computational framework in which physical laws emerge from the observer's computational relationship to an underlying hypergraph. Our framework is more abstract (category-theoretic rather than computational) and more agnostic about the nature of $\R$, but shares the core insight that observer-embeddedness generates structural constraints on observation.
+
+\textbf{Topos-theoretic QM (Isham--Butterfield--D\"oring, Heunen--Vicary).} The topos approach \cite{butterfield1998,doring2008,heunen2009,heunen2017} formalizes quantum mechanics within topos theory, where the failure of classical logic is encoded in non-Boolean subobject classifiers. Our sheaf-theoretic discussion (\cref{sec:topology}) is closely related; we suggest that the perspectival glueing failure identified here may be profitably formalized within this topos-theoretic setting.
+
+\textbf{Embedded agency (MIRI).} The MIRI embedded agency program \cite{demski2020,garrabrant2017} addresses the problem of agents reasoning about environments that contain them---the AI analogue of our embedded observer. Their ``logical uncertainty'' and ``naturalized induction'' programs address self-referential reasoning in a computational setting that complements our more abstract framework.
+
+\textbf{Constructor theory (Deutsch--Marletto).} Constructor theory \cite{deutsch2015} reformulates physics in terms of which transformations are possible and impossible, rather than in terms of trajectories. The ``constructor'' plays a role analogous to our embedded observer, and the ``impossible transformations'' are related to our structural bounds.
+
+\subsection{Open Questions}
+
+Several questions remain:
+
+\textbf{Quantitative bounds.} The precise relationship between $\Kolm(\Sys)$, $\Kolm(\R)$, and the epistemic deficit in specific physical systems deserves investigation. The Bekenstein bound and holographic principle \cite{bekenstein1981,bousso2002,susskind1995} provide concrete physical constraints that could be connected to our framework.
+
+\textbf{Observer collaboration.} The formal limits of collaborative measurement---how close to $\R$ can $\bigcup_\alpha \R|_{\Sys_\alpha}$ get, and what obstructions prevent perfect collaboration?
+
+\textbf{Dynamical accessible regions.} The time-evolution of $\R|_\Sys$ and the resulting dynamics on $\mathfrak{M}(\Sys)$ have not been explored.
+
+\textbf{Quantum gravity.} In a theory where spacetime is emergent, the notion of ``embeddedness'' may require revision. Extending the framework to settings where the total structure is itself dynamical is a significant open problem.
+
+\textbf{Computational observers.} The implications for artificial intelligence and computational modeling---an AI is itself an embedded subsystem subject to the same constraints---connect to the MIRI embedded agency program and deserve development.
+
+\textbf{Rigorous sheaf theory.} The heuristic sheaf-failure argument (\cref{heur:sheaf-failure}) should be either upgraded to a rigorous statement (with explicit topology, cocycle conditions, and counterexample) or connected to existing results in the topos-theoretic QM literature \cite{heunen2009,heunen2017}.
+
+
+% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+% ============================================================
+
+We have developed a conceptual and foundational synthesis of the embedded observer constraint: the principle that any subsystem embedded within a total structure is subject to structural, ineliminable limitations on its capacity to describe that structure in its entirety.
+
+The framework does not claim novel mathematical results. Rather, it organizes and connects observations from information theory, category theory, topology, quantum foundations, and the philosophy of science into a coherent picture. The key insight is that embeddedness---the fact that the scientific observer is part of the reality it studies---generates structural epistemic bounds that are not failures of method but consequences of the observer's ontological position.
+
+Science is internal cartography: a map drawn on the surface of the territory it describes. It can be extraordinarily, breathtakingly accurate. But it cannot become ontologically external to what it maps.
+
+The recognition of these bounds does not diminish science. It deepens our understanding of what scientific knowledge is and what it achieves. A cartographer who understands the nature and limits of maps is a better cartographer, not a lesser one.
+
+\bigskip
+\noindent\textbf{Acknowledgments.} The author thanks the YonedaAI Research Collective for discussions on foundations of measurement theory and categorical epistemology. This work was developed in collaboration with AI research systems as part of the YonedaAI program on mathematical foundations of scientific epistemology. We are grateful to an anonymous reviewer whose detailed critique substantially improved the paper, particularly regarding the honest framing of formal claims, engagement with recent literature, and the distinction between heuristic and rigorous arguments.
+
+
+% ============================================================
+% APPENDIX: FORMAL RESTATEMENTS
+% ============================================================
+\appendix
+\section{Formal Restatements and Technical Notes}\label{app:formal}
+
+For readers who prefer a condensed formal reference, we collect the principal definitions and propositions of the paper in a unified notation.
+
+\subsection{Core Definitions}
+
+\noindent
+$\R$: total structure (Axiom~\ref{ax:totality}).\\
+$(\Sys, \iota)$: embedded subsystem with $\Sys \subsetneq \R$ (Def.~\ref{def:subsystem}).\\
+$\R|_\Sys$: accessible region (Def.~\ref{def:accessible}).\\
+$\mathfrak{M}(\Sys)$: measurement algebra (Def.~\ref{def:meas-algebra}).\\
+$\catMeas$: measurement category (Def.~\ref{def:meas-cat}).\\
+$\mathfrak{D}, \mathfrak{R}$: description and reality functors (Def.~\ref{def:functors}).\\
+$\mathscr{F}$: measurement presheaf (Def.~\ref{def:presheaf}).
+
+\subsection{Principal Results}
+
+\begin{enumerate}[label=(\Alph*)]
+  \item \textbf{Point separation failure} (\cref{prop:EOC}): $\mathfrak{M}(\Sys)$ does not separate points of $\R$.
+  \item \textbf{Channel bound} (\cref{prop:channel}): $I(\R;\D) \leq C(\Sys)$.
+  \item \textbf{Self-description fixed point} (\cref{prop:fixed-point}): Self-inclusive descriptions must satisfy $d = \Phi(d)$.
+  \item \textbf{No natural isomorphism} (\cref{prop:no-universal}): $\mathfrak{D} \not\cong \mathfrak{R}$ as functors $\catMeas \to \catSet$.
+  \item \textbf{Yoneda constraint} (\cref{prop:yoneda}): Observer knowledge is relational and bounded.
+  \item \textbf{Kan extension deficit} (\cref{prop:kan-obstruction}): $\Delta(\Sys) \neq 0$ when $\R|_\Sys \subsetneq \R$.
+  \item \textbf{Convergence without closure} (\cref{prop:convergence}): Local convergence $\not\Rightarrow$ global completeness.
+\end{enumerate}
+
+\subsection{Note on Kolmogorov Complexity}
+
+The arguments involving Kolmogorov complexity (\cref{sec:information}) are presented as heuristic analogies. A fully rigorous treatment would require:
+\begin{enumerate}[label=(\roman*)]
+  \item Specifying a reference universal prefix-free Turing machine $U$.
+  \item Working with prefix-free complexity $K_U$ or Levin's $Kt$ complexity rather than plain complexity.
+  \item Handling the non-computability of $K$ and the resulting impossibility of effective computation of the bounds.
+  \item Addressing the discretization required to apply algorithmic information theory to continuous physical systems.
+\end{enumerate}
+See Li and Vit\'anyi \cite{li2008} and Gr\"unwald and Vit\'anyi \cite{grunwald2004} for the relevant technical background. We believe the heuristic arguments capture the correct structural picture, but acknowledge that the rigorous details are non-trivial.
+
+\subsection{Note on the Diagonal Argument}
+
+The diagonal/self-referential argument for the impossibility of total compression (\cref{subsec:self-ref}) is closely related to classical impossibility results (Berry's paradox, Richard's paradox, the halting problem, Russell's paradox). The physical setting of embedded measurement is not identical to the formal settings of these classical results, and the analogy should be understood as structural rather than as a direct application. See Yanofsky \cite{yanofsky2013} for a systematic treatment of the family resemblances among these impossibility results and their epistemological implications.
+
+
+% ============================================================
+% REFERENCES
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{abramsky2004}
+S.~Abramsky and B.~Coecke, ``A categorical semantics of quantum protocols,'' in \textit{Proc.\ 19th IEEE LICS}, pp.~415--425, 2004.
+
+\bibitem{barrow1998}
+J.~D.~Barrow, \textit{Impossibility: The Limits of Science and the Science of Limits}. Oxford Univ.\ Press, 1998.
+
+\bibitem{bekenstein1981}
+J.~D.~Bekenstein, ``Universal upper bound on the entropy-to-energy ratio for bounded systems,'' \textit{Phys.\ Rev.\ D} \textbf{23}, 287--298, 1981.
+
+\bibitem{bousso2002}
+R.~Bousso, ``The holographic principle,'' \textit{Rev.\ Mod.\ Phys.} \textbf{74}, 825--874, 2002.
+
+\bibitem{butterfield1998}
+J.~Butterfield and C.~J.~Isham, ``A topos perspective on the Kochen--Specker theorem: I,'' \textit{Int.\ J.\ Theor.\ Phys.} \textbf{37}, 2669--2733, 1998.
+
+\bibitem{chaitin1987}
+G.~J.~Chaitin, \textit{Algorithmic Information Theory}. Cambridge Univ.\ Press, 1987.
+
+\bibitem{chakravartty2007}
+A.~Chakravartty, \textit{A Metaphysics for Scientific Realism}. Cambridge Univ.\ Press, 2007.
+
+\bibitem{demski2020}
+A.~Demski and G.~Garrabrant, ``Embedded agency,'' \textit{arXiv:1902.09469} [cs.AI], updated 2020.
+
+\bibitem{deutsch2015}
+D.~Deutsch and C.~Marletto, ``Constructor theory of information,'' \textit{Proc.\ R.\ Soc.\ A} \textbf{471}, 20140540, 2015.
+
+\bibitem{dibiagio2022}
+A.~Di Biagio and C.~Rovelli, ``Relational quantum mechanics is about facts, not states,'' \textit{Found.\ Phys.} \textbf{52}, 62, 2022.
+
+\bibitem{doring2008}
+A.~D\"oring and C.~J.~Isham, ``A topos foundation for theories of physics: I,'' \textit{J.\ Math.\ Phys.} \textbf{49}, 053515, 2008.
+
+\bibitem{ellis2012}
+G.~F.~R.~Ellis, R.~Maartens, and M.~A.~H.~MacCallum, \textit{Relativistic Cosmology}. Cambridge Univ.\ Press, 2012.
+
+\bibitem{fuchs2014}
+C.~A.~Fuchs, N.~D.~Mermin, and R.~Schack, ``An introduction to QBism with an application to the locality of quantum mechanics,'' \textit{Am.\ J.\ Phys.} \textbf{82}, 749--754, 2014.
+
+\bibitem{garrabrant2017}
+S.~Garrabrant et al., ``Logical induction,'' \textit{arXiv:1609.03543} [cs.AI], 2017.
+
+\bibitem{giere2006}
+R.~N.~Giere, \textit{Scientific Perspectivism}. Univ.\ of Chicago Press, 2006.
+
+\bibitem{godel1931}
+K.~G\"odel, ``\"Uber formal unentscheidbare S\"atze der Principia Mathematica und verwandter Systeme I,'' \textit{Monatsh.\ Math.\ Phys.} \textbf{38}, 173--198, 1931.
+
+\bibitem{gorard2024}
+J.~Gorard, ``Some quantum mechanical properties of the Wolfram model,'' \textit{Complex Syst.} \textbf{33}, 1--80, 2024.
+
+\bibitem{grunwald2004}
+P.~Gr\"unwald and P.~Vit\'anyi, ``Shannon information and Kolmogorov complexity,'' \textit{arXiv:cs/0410002}, 2004.
+
+\bibitem{healey2012}
+R.~Healey, ``Quantum theory: A pragmatist approach,'' \textit{Brit.\ J.\ Phil.\ Sci.} \textbf{63}, 729--771, 2012.
+
+\bibitem{heunen2009}
+C.~Heunen, N.~P.~Landsman, and B.~Spitters, ``A topos for algebraic quantum theory,'' \textit{Commun.\ Math.\ Phys.} \textbf{291}, 63--110, 2009.
+
+\bibitem{heunen2017}
+C.~Heunen and J.~Vicary, \textit{Categories for Quantum Theory}. Oxford Univ.\ Press, 2019 (preprint 2017).
+
+\bibitem{kolmogorov1965}
+A.~N.~Kolmogorov, ``Three approaches to the quantitative definition of information,'' \textit{Probl.\ Inf.\ Transm.} \textbf{1}, 1--7, 1965.
+
+\bibitem{ladyman2007}
+J.~Ladyman and D.~Ross, \textit{Every Thing Must Go}. Oxford Univ.\ Press, 2007.
+
+\bibitem{laudan1981}
+L.~Laudan, ``A confutation of convergent realism,'' \textit{Phil.\ Sci.} \textbf{48}, 19--49, 1981.
+
+\bibitem{li2008}
+M.~Li and P.~Vit\'anyi, \textit{An Introduction to Kolmogorov Complexity and Its Applications}, 3rd ed. Springer, 2008.
+
+\bibitem{maclane1971}
+S.~Mac~Lane, \textit{Categories for the Working Mathematician}. Springer, 1971.
+
+\bibitem{massimi2022}
+M.~Massimi, \textit{Perspectival Realism}. Oxford Univ.\ Press, 2022.
+
+\bibitem{mueller2020}
+M.~P.~M\"uller, ``Law without law: from observer states to physics via algorithmic information theory,'' \textit{Quantum} \textbf{4}, 301, 2020.
+
+\bibitem{psillos1999}
+S.~Psillos, \textit{Scientific Realism: How Science Tracks Truth}. Routledge, 1999.
+
+\bibitem{rovelli1996}
+C.~Rovelli, ``Relational quantum mechanics,'' \textit{Int.\ J.\ Theor.\ Phys.} \textbf{35}, 1637--1678, 1996.
+
+\bibitem{rovelli2022}
+C.~Rovelli, \textit{Helgoland: Making Sense of the Quantum Revolution}. Riverhead Books, 2021; see also ``Relational quantum mechanics,'' \textit{Rev.\ Mod.\ Phys.}, in press, 2022.
+
+\bibitem{susskind1995}
+L.~Susskind, ``The world as a hologram,'' \textit{J.\ Math.\ Phys.} \textbf{36}, 6377--6396, 1995.
+
+\bibitem{thooft1993}
+G.~'t~Hooft, ``Dimensional reduction in quantum gravity,'' in \textit{Salamfestschrift}, pp.~284--296, World Scientific, 1993.
+
+\bibitem{vanfraassen1980}
+B.~C.~van~Fraassen, \textit{The Scientific Image}. Clarendon Press, 1980.
+
+\bibitem{weinberg1992}
+S.~Weinberg, \textit{Dreams of a Final Theory}. Pantheon Books, 1992.
+
+\bibitem{weinberg2008}
+S.~Weinberg, \textit{Cosmology}. Oxford Univ.\ Press, 2008.
+
+\bibitem{wolfram2020}
+S.~Wolfram, ``A class of models with the potential to represent fundamental physics,'' \textit{Complex Syst.} \textbf{29}, 107--536, 2020.
+
+\bibitem{worrall1989}
+J.~Worrall, ``Structural realism: The best of both worlds?,'' \textit{Dialectica} \textbf{43}, 99--124, 1989.
+
+\bibitem{yanofsky2013}
+N.~S.~Yanofsky, \textit{The Outer Limits of Reason}. MIT Press, 2013.
+
+\bibitem{zurek2009}
+W.~H.~Zurek, ``Quantum Darwinism,'' \textit{Nature Phys.} \textbf{5}, 181--188, 2009.
+
+\end{thebibliography}
+
+\end{document}

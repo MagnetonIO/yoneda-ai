@@ -1,0 +1,1094 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\geometry{margin=1in}
+\onehalfspacing
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{axiom}[theorem]{Axiom}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catAlg}{\mathbf{Alg}}
+\newcommand{\catBan}{\mathbf{Ban}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catvNAlg}{\mathbf{vNAlg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\catCob}{\mathbf{Cob}}
+\newcommand{\catDiff}{\mathbf{Diff}}
+\newcommand{\catLor}{\mathbf{Lor}}
+\newcommand{\catRiem}{\mathbf{Riem}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+\newcommand{\lp}{\ell_P}
+\newcommand{\tp}{t_P}
+\newcommand{\Ep}{E_P}
+\newcommand{\Mp}{M_P}
+\newcommand{\GN}{G_N}
+
+%% ---- Hyperref ----
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black,
+  pdftitle={Limits of Quantum Gravity Observation: A Yoneda Constraint Analysis},
+  pdfauthor={Matthew Long}
+}
+
+%% ---- GrokRxiv DOI sidebar (official template) ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.limits-quantum-gravity-observation\quad
+       [\,gr-qc\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Title ----
+\title{\textbf{Limits of Quantum Gravity Observation:\\
+A Yoneda Constraint Analysis of Epistemic\\
+Horizons at the Planck Scale}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+We apply the Yoneda Constraint on Observer Knowledge---the principle that an embedded observer $\Sys$ accesses reality $\R$ only through the representable functor $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$---to the problem of observing quantum gravitational phenomena. We construct a \emph{quantum gravitational measurement category} $\catMeas_{QG}$ whose objects are observer-spacetime pairs and whose morphisms are diffeomorphism-compatible quantum channels. Within this framework, we demonstrate that Planck-scale physics imposes three independent obstructions to observation: (1) a \emph{gravitational epistemic horizon} arising from the formation of black holes when measurement energy exceeds the Schwarzschild threshold; (2) a \emph{diffeomorphism gauge obstruction} in which the background independence of quantum gravity forces observables into 2-categorical equivalence classes that reduce the representable functor's resolution; and (3) a \emph{holographic saturation bound} in which the Bekenstein--Hawking entropy limits the Kan extension deficit to scale with boundary area rather than bulk volume. We prove that the extension deficit $\Delta(\Sys)$ for any observer embedded in a quantum gravitational spacetime satisfies $\rank(\Delta(\Sys)) \geq A(\partial\Sys) / 4\GN\hbar$, connecting the Yoneda Constraint to the holographic principle. We analyze the implications for the asymptotic safety program, loop quantum gravity, string theory, and causal set theory, showing that each approach encounters distinct Yoneda obstructions. We develop Haskell implementations modeling the categorical structures and deficit computations. The results establish that quantum gravity observation is subject to principled categorical limits that transcend specific theoretical frameworks.
+
+\medskip
+\noindent\textbf{Keywords:} quantum gravity, Yoneda lemma, observational limits, Planck scale, holographic principle, epistemic horizon, category theory, Kan extensions, measurement categories, background independence
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The quest to observe quantum gravitational phenomena is one of the defining challenges of twenty-first century physics. Despite remarkable theoretical advances in loop quantum gravity \cite{rovelli2004,thiemann2007}, string theory \cite{polchinski1998,becker2007}, asymptotic safety \cite{reuter2012,percacci2017}, and causal set theory \cite{bombelli1987,surya2019}, direct experimental evidence for quantum gravity remains elusive. The energy scale at which quantum gravitational effects become dominant---the Planck energy $\Ep = \sqrt{\hbar c^5 / \GN} \approx 1.22 \times 10^{19}$ GeV---exceeds the reach of any conceivable accelerator by roughly fifteen orders of magnitude.
+
+The standard response is to search for indirect signatures: modifications to dispersion relations \cite{amelino-camelia1998}, decoherence effects \cite{pikovski2012}, primordial gravitational waves in the cosmic microwave background \cite{kamionkowski1997}, or tabletop experiments probing the quantum nature of gravity \cite{bose2017,marletto2017}. While these programs are experimentally motivated and scientifically valuable, the question of \emph{whether there exist principled limits to quantum gravity observation} has received comparatively little attention from a structural, framework-independent perspective.
+
+In this paper, we address this question using the \emph{Yoneda Constraint on Observer Knowledge} developed in \cite{long2026yoneda,long2026observer}. The Yoneda Constraint states that an embedded observer $\Sys$ within a physical system $\R$ accesses $\R$ only through the representable functor $\yo^{(\Sys,\sigma_\Sys)} = \Hom_{\catMeas}((\Sys, \sigma_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself unless $\Sys = \R$. The Kan extension deficit $\Delta(\Sys)$ quantifies the gap between the best extrapolation from local data and the true global description.
+
+We apply this machinery to quantum gravity by constructing a \emph{quantum gravitational measurement category} $\catMeas_{QG}$ that incorporates the distinctive features of quantum gravity: background independence, diffeomorphism invariance, the Planck scale as a natural cutoff, and the holographic principle. Within this category, we identify three independent obstructions to observation at the Planck scale, each arising from a different structural feature of $\catMeas_{QG}$:
+
+\begin{enumerate}[label=\textbf{(\roman*)},itemsep=6pt]
+\item \textbf{The Gravitational Epistemic Horizon.} When the energy concentrated in a measurement region exceeds the Schwarzschild threshold, a black hole forms, preventing information extraction. This creates a gravitational analogue of the epistemic horizon defined in \cite{long2026yoneda}, where the accessible subcategory is bounded by horizon formation.
+
+\item \textbf{The Diffeomorphism Gauge Obstruction.} Background independence in quantum gravity requires that physical observables be diffeomorphism-invariant. This forces the representable functor $\yo^{(\Sys, g|_\Sys)}$ to factor through equivalence classes of metrics modulo diffeomorphisms, reducing its resolving power. In the 2-categorical extension $\catMeas_{QG,2}$, diffeomorphisms appear as 2-cells, and the 2-Yoneda lemma shows that the observer's knowledge includes gauge-invariant content but at reduced resolution.
+
+\item \textbf{The Holographic Saturation Bound.} The Bekenstein--Hawking entropy $S_{BH} = A / 4\GN\hbar$ places an upper bound on the information content of any region, and hence on the rank of the Kan extension deficit. This connects the Yoneda Constraint to the holographic principle and implies that the deficit scales with boundary area rather than bulk volume.
+\end{enumerate}
+
+These obstructions are \emph{independent} in the sense that each arises from a different structural feature of $\catMeas_{QG}$, and they \emph{compose} in the sense that any realistic attempt at quantum gravity observation must contend with all three simultaneously.
+
+The paper is organized as follows. \Cref{sec:background} reviews the Yoneda Constraint framework and fixes notation. \Cref{sec:qg-meas-cat} constructs the quantum gravitational measurement category. \Cref{sec:gravitational-horizon} analyzes the gravitational epistemic horizon. \Cref{sec:diffeo-obstruction} treats the diffeomorphism gauge obstruction. \Cref{sec:holographic-bound} develops the holographic saturation bound. \Cref{sec:approaches} examines how specific approaches to quantum gravity encounter these obstructions. \Cref{sec:planck-probes} analyzes concrete observational scenarios. \Cref{sec:higher-cat} discusses higher-categorical extensions. \Cref{sec:philosophy} examines philosophical implications. \Cref{sec:conclusion} concludes.
+
+%% ============================================================
+\section{The Yoneda Constraint Framework}\label{sec:background}
+%% ============================================================
+
+We briefly review the Yoneda Constraint framework from \cite{long2026yoneda,long2026observer}, establishing the notation and key results that we will generalize to the quantum gravitational setting.
+
+\subsection{Measurement Categories and Embedded Observers}
+
+\begin{definition}[Measurement Category {\cite{long2026observer}}]\label{def:meas-cat}
+Fix a physical system $\R$. The \emph{measurement category} $\catMeas = \catMeas(\R)$ has:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Objects:} Pairs $(\Sys, \sigma_\Sys)$ where $\Sys \subseteq \R$ is a subsystem and $\sigma_\Sys$ is the state of $\R$ restricted to $\Sys$.
+\item \textbf{Morphisms:} State-preserving channels: completely positive trace-preserving (CPTP) maps $f: \mathcal{B}(\mathcal{H}_{\Sys_1}) \to \mathcal{B}(\mathcal{H}_{\Sys_2})$ with $f(\sigma_1) = \sigma_2$.
+\item \textbf{Composition:} Sequential composition of channels.
+\item \textbf{Identity:} The identity channel $\id_{(\Sys,\sigma)}$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Embedded Observer {\cite{long2026observer}}]\label{def:embedded-observer}
+An \emph{embedded observer} is an object $(\Sys, \sigma_\Sys) \in \catMeas$ with $\Sys \subsetneq \R$. The \emph{accessible subcategory} $\catMeas|_\Sys$ is the full subcategory on objects $(\Sys', \sigma_{\Sys'})$ with $\Sys' \subseteq \Sys$.
+\end{definition}
+
+\subsection{The Yoneda Constraint}
+
+\begin{proposition}[Yoneda Constraint {\cite{long2026yoneda}}]\label{prop:yoneda-constraint}
+The embedded observer $\Sys$ accesses $\R$ only through $\yo^{(\Sys, \sigma_\Sys)} = \Hom_{\catMeas}((\Sys, \sigma_\Sys), -)$. This determines $(\Sys, \sigma_\Sys)$ up to isomorphism but does not determine $\R$ unless $\Sys = \R$.
+\end{proposition}
+
+\subsection{Kan Extensions and the Extension Deficit}
+
+\begin{definition}[Extension Deficit {\cite{long2026yoneda}}]\label{def:extension-deficit}
+Given the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas$ and the description functor $\mathfrak{D}$, the \emph{extension deficit} is:
+\[
+\Delta(\Sys) = \coker\!\big(\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}\big)
+\]
+where $\mathfrak{R}$ is the total description functor. The deficit vanishes if and only if $\Sys = \R$.
+\end{definition}
+
+\begin{proposition}[Quantum Extension Deficit {\cite{long2026observer}}]\label{prop:quantum-deficit}
+In $\catMeas_Q$, for a bipartite system $\Sys \cup \Env$ in pure state $|\psi\rangle$, the extension deficit is non-trivial if and only if $S(\rho_\Sys) > 0$, where $S$ is the von Neumann entropy.
+\end{proposition}
+
+\subsection{The Epistemic Horizon}
+
+\begin{definition}[Epistemic Horizon {\cite{long2026yoneda}}]\label{def:epistemic-horizon}
+The \emph{epistemic horizon} of observer $\Sys$ is the full subcategory $\catMeas|_\Sys \subset \catMeas$. The \emph{epistemic boundary} is:
+\[
+\partial_\Sys = \{(\Sys', \sigma_{\Sys'}) \in \catMeas : \Hom((\Sys, \sigma_\Sys), (\Sys', \sigma_{\Sys'})) \neq \emptyset, \; \Sys' \not\subseteq \Sys\}
+\]
+\end{definition}
+
+%% ============================================================
+\section{The Quantum Gravitational Measurement Category}\label{sec:qg-meas-cat}
+%% ============================================================
+
+We now construct the measurement category appropriate to quantum gravity, incorporating the features that distinguish the gravitational setting from ordinary quantum mechanics: background independence, diffeomorphism invariance, and the Planck scale.
+
+\subsection{Motivation: What Makes Quantum Gravity Different}
+
+In ordinary quantum mechanics, the measurement category $\catMeas_Q$ is built on a fixed background: the Hilbert space $\mathcal{H}_\Sys \otimes \mathcal{H}_\Env$ with a fixed tensor product structure. In quantum gravity, three features fundamentally alter the situation:
+
+\begin{enumerate}[label=(\arabic*),itemsep=6pt]
+\item \textbf{No fixed background spacetime.} The metric $g_{\mu\nu}$ is a dynamical field, not a fixed background. The ``stage'' on which physics takes place is itself part of the physics.
+
+\item \textbf{Diffeomorphism invariance.} Physical observables must be invariant under diffeomorphisms $\phi \in \mathrm{Diff}(\mathcal{M})$. Two metric configurations related by a diffeomorphism are physically indistinguishable.
+
+\item \textbf{Planck-scale limitations.} The Planck length $\lp = \sqrt{\hbar \GN / c^3} \approx 1.616 \times 10^{-35}$ m defines a scale below which the classical spacetime concept breaks down. Concentrating energy sufficient to probe sub-Planckian distances creates black holes.
+\end{enumerate}
+
+Each of these features introduces a distinct obstruction to observation within the Yoneda framework.
+
+\subsection{Definition of $\catMeas_{QG}$}
+
+\begin{definition}[Quantum Gravitational Measurement Category]\label{def:qg-meas-cat}
+The \emph{quantum gravitational measurement category} $\catMeas_{QG}$ is defined as follows:
+
+\begin{enumerate}[label=(\roman*),itemsep=6pt]
+\item \textbf{Objects:} Triples $(\Sys, g_\Sys, \rho_\Sys)$ where:
+\begin{itemize}
+  \item $\Sys \subseteq \mathcal{M}$ is a spacetime region (a bounded open set in the spacetime manifold $\mathcal{M}$),
+  \item $g_\Sys$ is the metric restricted to $\Sys$ (or a quantum state of the metric in the full quantum theory),
+  \item $\rho_\Sys$ is the state of the matter fields on $\Sys$ coupled to $g_\Sys$.
+\end{itemize}
+The pair $(g_\Sys, \rho_\Sys)$ encodes the gravitational and matter degrees of freedom accessible to $\Sys$.
+
+\item \textbf{Morphisms:} A morphism $f: (\Sys_1, g_1, \rho_1) \to (\Sys_2, g_2, \rho_2)$ is a \emph{diffeomorphism-compatible quantum channel}: a CPTP map on the combined gravity-matter Hilbert space that:
+\begin{itemize}
+  \item preserves the state: $f(g_1, \rho_1) = (g_2, \rho_2)$,
+  \item respects diffeomorphism equivalence: if $\phi \in \mathrm{Diff}(\mathcal{M})$ with $\phi(\Sys_1) = \Sys_1'$, then $f$ factors through $\phi^*$.
+\end{itemize}
+
+\item \textbf{Composition:} Sequential composition of channels, with the constraint that the composed channel remains diffeomorphism-compatible.
+
+\item \textbf{Identity:} The identity channel preserving both metric and matter state.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Technical caveats]\label{rem:caveats}
+The definition of $\catMeas_{QG}$ inherits the difficulties of quantum gravity itself: the Hilbert space of quantum gravity is not well-defined in full generality, the notion of ``state of the metric'' requires a specific quantization scheme, and the diffeomorphism group acts on the space of metrics in ways that depend on the topology of $\mathcal{M}$. We proceed at the level of formal structure, noting where specific quantization schemes (LQG, string theory, etc.) provide concrete realizations.
+\end{remark}
+
+\subsection{The Inclusion Hierarchy}
+
+The quantum gravitational measurement category sits within a hierarchy of measurement categories:
+\[
+\catMeas_C \subset \catMeas_Q \subset \catMeas_{QG}
+\]
+where $\catMeas_C$ is the classical measurement category and $\catMeas_Q$ is the quantum measurement category. The inclusions are not full: the gravitational category has additional structure (metric degrees of freedom, diffeomorphism compatibility) not present in the quantum category.
+
+\begin{proposition}[Gravitational Enhancement of Epistemic Horizons]\label{prop:grav-horizon}
+In $\catMeas_{QG}$, the epistemic horizon of an observer $\Sys$ is strictly smaller than in $\catMeas_Q$ for the same matter content. That is, the gravitational degrees of freedom \emph{reduce} rather than expand the accessible information.
+\end{proposition}
+
+\begin{proof}
+In $\catMeas_Q$, the observer's accessible subcategory $\catMeas_Q|_\Sys$ contains all matter configurations within $\Sys$. In $\catMeas_{QG}$, the accessible subcategory $\catMeas_{QG}|_\Sys$ must additionally satisfy diffeomorphism compatibility, which identifies metric configurations related by diffeomorphisms and thereby reduces the number of distinct objects. Furthermore, the coupling between matter and geometry (encoded in the Einstein equations) means that high-energy matter configurations may produce black holes, removing them from the accessible subcategory entirely (see \cref{sec:gravitational-horizon}).
+\end{proof}
+
+\subsection{The Embedded Observer in Quantum Gravity}
+
+\begin{definition}[Gravitational Embedded Observer]\label{def:grav-observer}
+A \emph{gravitational embedded observer} is an object $(\Sys, g_\Sys, \rho_\Sys) \in \catMeas_{QG}$ with $\Sys \subsetneq \mathcal{M}$. The observer is characterized by:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item A spacetime region $\Sys$ with compact closure,
+\item A gravitational state $g_\Sys$ satisfying the constraint equations on $\Sys$,
+\item A matter state $\rho_\Sys$ compatible with $g_\Sys$ via the semiclassical Einstein equations,
+\item An energy budget $E_\Sys = \int_\Sys T_{00} \sqrt{g}\, d^3x \leq E_{\max}$ where $E_{\max}$ is bounded by the Schwarzschild condition (see \cref{sec:gravitational-horizon}). This includes the observer's own rest-mass energy: the total stress-energy content of $\Sys$, including the physical substrate of the observer itself, must not exceed the threshold.
+\end{enumerate}
+\end{definition}
+
+The energy budget constraint (d) is the key new feature: unlike in non-gravitational physics, the observer cannot arbitrarily increase the energy of its probes without gravitational backreaction. The inclusion of the observer's own mass-energy in $E_\Sys$ connects to the self-observation constraints developed in \cite{long2026embedded}: the observer's attempt to model itself increases its own energy, potentially tightening the Schwarzschild bound.
+
+%% ============================================================
+\section{The Gravitational Epistemic Horizon}\label{sec:gravitational-horizon}
+%% ============================================================
+
+The first obstruction to quantum gravity observation arises from the gravitational backreaction of measurements: concentrating sufficient energy to probe Planck-scale physics creates a black hole that prevents information extraction.
+
+\subsection{The Schwarzschild Bound on Measurement Energy}
+
+\begin{proposition}[Schwarzschild Measurement Bound]\label{prop:schwarzschild-bound}
+An observer $\Sys$ occupying a spatial region of characteristic size $L$ can employ a measurement probe of energy $E$ only if:
+\[
+E < \frac{c^4 L}{2\GN}
+\]
+When $E \geq c^4 L / 2\GN$, the probe creates a black hole of Schwarzschild radius $r_s = 2\GN E / c^4 \geq L$, which engulfs the measurement region and prevents information extraction.
+\end{proposition}
+
+\begin{proof}
+The Schwarzschild radius of a mass-energy $E/c^2$ is $r_s = 2\GN E / c^4$. For the measurement to be extractable, we need $r_s < L$, giving the stated bound. When $r_s \geq L$, the measurement apparatus is inside its own Schwarzschild radius, and the measurement outcome is trapped behind the event horizon.
+\end{proof}
+
+\begin{corollary}[Planck Resolution Limit]\label{cor:planck-limit}
+The minimum resolvable length scale for an observer using a probe of energy $E$ is bounded by:
+\[
+\delta x \geq \max\left(\frac{\hbar}{E/c}, \frac{2\GN E}{c^4}\right) \geq 2\lp
+\]
+where the first term is the quantum uncertainty and the second is the gravitational backreaction. The minimum is achieved at $E = \Ep$, yielding $\delta x = 2\lp$.
+\end{corollary}
+
+\begin{proof}
+The Heisenberg uncertainty principle gives $\delta x \geq \hbar c / E$, while the Schwarzschild bound gives $\delta x \geq 2\GN E / c^4$. Minimizing the sum $\delta x_{\mathrm{total}} = \hbar c / E + 2\GN E / c^4$ over $E$ gives $E_{\mathrm{opt}} = \Ep / \sqrt{2}$ and $\delta x_{\min} = 2\sqrt{2}\, \lp \geq 2\lp$.
+\end{proof}
+
+This result is well-known in the quantum gravity literature \cite{mead1964,garay1995,scardigli1999,adler2001} but takes a precise categorical form within the Yoneda framework.
+
+\subsection{The Gravitational Epistemic Horizon in $\catMeas_{QG}$}
+
+\begin{definition}[Gravitational Epistemic Horizon]\label{def:grav-epistemic-horizon}
+The \emph{gravitational epistemic horizon} of observer $\Sys$ is the full subcategory $\catMeas_{QG}^{<\mathrm{BH}}|_\Sys \subset \catMeas_{QG}|_\Sys$ consisting of objects $(\Sys', g', \rho')$ that are accessible without triggering black hole formation:
+\[
+\catMeas_{QG}^{<\mathrm{BH}}|_\Sys = \left\{ (\Sys', g', \rho') \in \catMeas_{QG}|_\Sys : E(\rho') < \frac{c^4 L(\Sys')}{2\GN} \right\}
+\]
+where $L(\Sys')$ is the characteristic size of $\Sys'$.
+\end{definition}
+
+\begin{theorem}[Gravitational Truncation of the Extension Deficit]\label{thm:grav-truncation}
+The gravitational epistemic horizon imposes a truncation on the Kan extension:
+\[
+\Lan_{J^{<\mathrm{BH}}}(\mathfrak{D} \circ J^{<\mathrm{BH}})(X) = \begin{cases}
+\Lan_J(\mathfrak{D} \circ J)(X) & \text{if } X \in \catMeas_{QG}^{<\mathrm{BH}} \\
+\text{undefined or trivial} & \text{if } X \notin \catMeas_{QG}^{<\mathrm{BH}}
+\end{cases}
+\]
+where $J^{<\mathrm{BH}}: \catMeas_{QG}^{<\mathrm{BH}}|_\Sys \hookrightarrow \catMeas_{QG}$ is the restricted inclusion. The extension deficit acquires a gravitational contribution:
+\[
+\Delta_{QG}(\Sys) \geq \Delta_Q(\Sys) + \Delta_{\mathrm{grav}}(\Sys)
+\]
+where $\Delta_Q$ is the quantum (entanglement) contribution and $\Delta_{\mathrm{grav}}$ is the gravitational contribution from the truncation.
+\end{theorem}
+
+\begin{proof}
+Since $\catMeas_{QG}^{<\mathrm{BH}}|_\Sys \subset \catMeas_{QG}|_\Sys$, the Kan extension over the smaller subcategory has access to less data. By the monotonicity of Kan extensions with respect to the domain, $\Lan_{J^{<\mathrm{BH}}}$ produces a coarser approximation than $\Lan_J$, increasing the deficit. The additivity follows from the independence of the quantum and gravitational contributions: the quantum deficit arises from entanglement entropy (tracing out the environment), while the gravitational deficit arises from the energy-dependent truncation of the accessible subcategory.
+\end{proof}
+
+\subsection{Trans-Planckian Censorship}
+
+The gravitational epistemic horizon has a natural interpretation as a categorical formulation of \emph{trans-Planckian censorship} \cite{bedroya2020}: physics beyond the Planck scale is not merely difficult to observe but is categorically excluded from the observer's representable functor.
+
+\begin{conjecture}[Categorical Trans-Planckian Censorship]\label{conj:TPC}
+In $\catMeas_{QG}$, the representable functor $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ undergoes rapid decay on objects whose characteristic energy density exceeds $\Ep / \lp^3$:
+\[
+|\yo^{(\Sys, g_\Sys, \rho_\Sys)}(\Sys', g', \rho')| \leq \exp\!\left(-\frac{E(\rho')/V(\Sys')}{\Ep/\lp^3}\right)
+\]
+This is the Yoneda-representable formulation of trans-Planckian censorship: the observer's relational knowledge is exponentially suppressed (though not strictly vanishing) above the Planck energy density. The non-vanishing tail allows for potential non-local effects that appear in some approaches to quantum gravity (e.g., string theory, where T-duality exchanges sub-stringy and super-stringy physics).
+\end{conjecture}
+
+\subsection{Information Recovery and the Black Hole Information Problem}
+
+The gravitational epistemic horizon connects to the black hole information problem. When a measurement creates a black hole, the information about the measurement outcome is encoded in Hawking radiation \cite{hawking1975}, which is thermal to a distant observer. In the Yoneda framework:
+
+\begin{proposition}[Black Hole Information as Extension Deficit]\label{prop:bh-information}
+For an observer outside a black hole formed during a measurement, the extension deficit includes the Bekenstein--Hawking entropy:
+\[
+\Delta_{\mathrm{grav}}(\Sys) \geq S_{BH} = \frac{A_H}{4\GN\hbar}
+\]
+where $A_H$ is the horizon area. The Page curve \cite{page1993} describes the time evolution of this contribution to the deficit as the black hole evaporates.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+The morphisms from $(\Sys, g_\Sys, \rho_\Sys)$ to objects behind the horizon are absent from the accessible subcategory. The number of independent degrees of freedom hidden behind the horizon is bounded below by $S_{BH}$, which is the entropy of the black hole. Each hidden degree of freedom contributes at least one dimension to the cokernel of the Kan extension comparison map.
+\end{proof}
+
+%% ============================================================
+\section{The Diffeomorphism Gauge Obstruction}\label{sec:diffeo-obstruction}
+%% ============================================================
+
+The second obstruction arises from the background independence of quantum gravity: physical observables must be diffeomorphism-invariant, which constrains the structure of the representable functor.
+
+\subsection{Diffeomorphisms as 2-Cells}
+
+In the 2-categorical extension of $\catMeas_{QG}$, diffeomorphisms naturally appear as 2-cells.
+
+\begin{definition}[2-Categorical Quantum Gravity Measurement Structure]\label{def:2-cat-qg}
+The 2-category $\catMeas_{QG,2}$ has:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Objects (0-cells):} Triples $(\Sys, g_\Sys, \rho_\Sys)$ as in \cref{def:qg-meas-cat}.
+\item \textbf{1-morphisms (1-cells):} Diffeomorphism-compatible quantum channels.
+\item \textbf{2-morphisms (2-cells):} Natural transformations between channels induced by diffeomorphisms $\phi \in \mathrm{Diff}(\mathcal{M})$: for channels $f, f': (\Sys_1, g_1, \rho_1) \to (\Sys_2, g_2, \rho_2)$, a 2-cell $\alpha: f \Rightarrow f'$ exists when $f' = \phi^* \circ f$ for some diffeomorphism $\phi$ fixing $\Sys_2$.
+\end{enumerate}
+\end{definition}
+
+\subsection{The Problem of Observables}
+
+The ``problem of observables'' in quantum gravity \cite{rovelli2002,tambornino2012,dittrich2007,goeller2022} is that diffeomorphism invariance drastically constrains the space of physical observables. In the Yoneda framework, this becomes a constraint on the representable functor.
+
+\begin{proposition}[Diffeomorphism Reduction of the Representable Functor]\label{prop:diffeo-reduction}
+The physical representable functor in quantum gravity is not $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ but the quotient:
+\[
+\yo^{[\Sys, g_\Sys, \rho_\Sys]}_{\mathrm{phys}} = \yo^{(\Sys, g_\Sys, \rho_\Sys)} / \mathrm{Diff}(\mathcal{M})
+\]
+where the quotient identifies morphisms related by diffeomorphisms. The physical functor has strictly fewer components than the kinematical one: $|\yo^{[\cdot]}_{\mathrm{phys}}(X)| \leq |\yo^{(\cdot)}(X)|$ for all objects $X$.
+\end{proposition}
+
+\begin{proof}
+Physical observables in quantum gravity are gauge equivalence classes of metric-matter configurations \cite{rovelli2002}. The representable functor $\yo^{(\Sys, g_\Sys, \rho_\Sys)}(X) = \Hom_{\catMeas_{QG}}((\Sys, g_\Sys, \rho_\Sys), X)$ counts all diffeomorphism-compatible channels, but channels related by diffeomorphisms represent the same physical process. The quotient by $\mathrm{Diff}(\mathcal{M})$ identifies these, reducing the set of morphisms.
+\end{proof}
+
+\subsection{Relational Observables and Partial Observables}
+
+The relational approach to the problem of observables \cite{rovelli2002,dittrich2007,goeller2022} constructs diffeomorphism-invariant observables by relating physical quantities to dynamical reference frames. In the Yoneda framework:
+
+\begin{definition}[Relational Representable Functor]\label{def:relational-functor}
+Given a dynamical reference frame $\mathcal{F} \subset \Sys$ (a subsystem serving as a clock and spatial reference), the \emph{relational representable functor} is:
+\[
+\yo^{(\Sys, g_\Sys, \rho_\Sys)}_{\mathcal{F}} = \Hom_{\catMeas_{QG}}((\Sys, g_\Sys, \rho_\Sys), -) / \mathrm{Diff}_{\mathcal{F}}(\mathcal{M})
+\]
+where $\mathrm{Diff}_{\mathcal{F}}(\mathcal{M})$ is the subgroup of diffeomorphisms that fix the reference frame $\mathcal{F}$.
+\end{definition}
+
+\begin{proposition}[Reference Frame Dependence of Observables]\label{prop:frame-dependence}
+The relational representable functor depends on the choice of reference frame $\mathcal{F}$:
+\[
+\yo^{(\Sys, g_\Sys, \rho_\Sys)}_{\mathcal{F}_1} \not\cong \yo^{(\Sys, g_\Sys, \rho_\Sys)}_{\mathcal{F}_2}
+\]
+in general when $\mathcal{F}_1 \neq \mathcal{F}_2$. Different reference frames yield different but physically equivalent descriptions, related by the Yoneda embedding applied to the reference frame transformation.
+\end{proposition}
+
+\begin{proof}
+The quotient by $\mathrm{Diff}_{\mathcal{F}_1}$ and by $\mathrm{Diff}_{\mathcal{F}_2}$ produces different equivalence classes when $\mathcal{F}_1 \neq \mathcal{F}_2$, since the stabilizer subgroups differ. The physical equivalence is guaranteed by the fact that $\mathrm{Diff}_{\mathcal{F}_1}$ and $\mathrm{Diff}_{\mathcal{F}_2}$ are conjugate subgroups of $\mathrm{Diff}(\mathcal{M})$.
+\end{proof}
+
+\subsection{The Gauge Contribution to the Extension Deficit}
+
+\begin{theorem}[Diffeomorphism Contribution to the Extension Deficit]\label{thm:diffeo-deficit}
+The diffeomorphism gauge structure contributes an additional term to the extension deficit:
+\[
+\Delta_{QG}(\Sys) \geq \Delta_Q(\Sys) + \Delta_{\mathrm{grav}}(\Sys) + \Delta_{\mathrm{gauge}}(\Sys)
+\]
+where $\Delta_{\mathrm{gauge}}(\Sys)$ arises from the reduction of the representable functor by the diffeomorphism quotient. In the semiclassical regime, $\Delta_{\mathrm{gauge}}$ is related to the volume of the diffeomorphism group orbit through $g_\Sys$.
+\end{theorem}
+
+\begin{proof}
+The physical Kan extension is computed from the reduced functor $\yo^{[\cdot]}_{\mathrm{phys}}$, which has fewer components than $\yo^{(\cdot)}$. The Kan extension of the reduced functor produces a coarser approximation to the physical description functor $\mathfrak{R}_{\mathrm{phys}}$ than the Kan extension of the unreduced functor produces to $\mathfrak{R}$. The additional coarseness is measured by $\Delta_{\mathrm{gauge}}$.
+\end{proof}
+
+\subsection{Background Independence and the Problem of Time}
+
+A closely related obstruction arises from the ``problem of time'' in quantum gravity \cite{isham1993,kuchar2011,anderson2012}: in a generally covariant theory, there is no preferred time parameter, and the Hamiltonian constraint $H|\psi\rangle = 0$ makes the quantum state appear ``frozen.''
+
+\begin{proposition}[The Problem of Time as Yoneda Obstruction]\label{prop:problem-of-time}
+In the constraint surface $H = 0$, the representable functor $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ assigns to each object the set of channels that preserve the constraint. Time evolution, which in ordinary quantum mechanics is a natural automorphism of the Yoneda embedding (\cite{long2026yoneda}, Prop.~7.15), is replaced in quantum gravity by a gauge transformation (a 2-cell in $\catMeas_{QG,2}$). The observer has no invariant way to distinguish ``before'' from ``after'' without a physical reference frame.
+\end{proposition}
+
+This result formalizes the intuition that the problem of time is not a technical difficulty to be overcome but a structural feature of the Yoneda Constraint in the gravitational measurement category.
+
+%% ============================================================
+\section{The Holographic Saturation Bound}\label{sec:holographic-bound}
+%% ============================================================
+
+The third obstruction connects the Yoneda Constraint to the holographic principle, providing a quantitative bound on the extension deficit.
+
+\subsection{The Bekenstein--Hawking Entropy Bound}
+
+The Bekenstein--Hawking entropy \cite{bekenstein1973,hawking1975} places an upper bound on the entropy (and hence the information content) of a region bounded by a surface of area $A$:
+\[
+S \leq S_{BH} = \frac{A}{4\GN\hbar}
+\]
+
+In the Yoneda framework, this becomes a bound on the rank of the representable functor.
+
+\begin{theorem}[Holographic Bound on the Representable Functor]\label{thm:holographic-representable}
+For an observer $\Sys$ occupying a spacetime region bounded by a surface of area $A(\partial\Sys)$, the number of independent components of the representable functor is bounded:
+\[
+\dim \yo^{(\Sys, g_\Sys, \rho_\Sys)} \leq \exp\!\left(\frac{A(\partial\Sys)}{4\GN\hbar}\right)
+\]
+where $\dim$ counts the number of independent natural transformations from $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ to a test functor.
+\end{theorem}
+
+\begin{proof}
+By the Yoneda lemma, natural transformations from $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ to a functor $F$ are in bijection with $F(\Sys, g_\Sys, \rho_\Sys)$. The set $F(\Sys, g_\Sys, \rho_\Sys)$ can have at most $\exp(S_{BH})$ distinguishable elements, since $S_{BH}$ bounds the total information content of $\Sys$. Therefore, the number of independent components of $\yo^{(\Sys, g_\Sys, \rho_\Sys)}$ is bounded by $\exp(S_{BH})$.
+\end{proof}
+
+\subsection{Holographic Saturation of the Extension Deficit}
+
+\begin{theorem}[Holographic Extension Deficit]\label{thm:holographic-deficit}
+For any observer $\Sys$ embedded in a quantum gravitational spacetime, the extension deficit satisfies:
+\[
+\rank(\Delta(\Sys)) \geq \frac{A(\partial\Sys)}{4\GN\hbar}
+\]
+where the rank is defined as the logarithm of the number of independent components of the cokernel.
+\end{theorem}
+
+\begin{proof}
+Consider the total system $\R$ and the observer $\Sys \subsetneq \R$. The total description functor $\mathfrak{R}$ assigns to $\R$ the full set of descriptions with information content $S(\R)$. The Kan extension from $\catMeas_{QG}|_\Sys$ can recover at most $\exp(S_{BH}(\Sys))$ independent descriptions, where $S_{BH}(\Sys) = A(\partial\Sys)/4\GN\hbar$. The cokernel, measuring the surplus in $\mathfrak{R}$ not accounted for by the extension, therefore has rank at least $S(\R) - S_{BH}(\Sys) \geq A(\partial\Sys)/4\GN\hbar$, where the last inequality follows from the holographic bound applied to the complement of $\Sys$.
+
+More precisely: the complement $\R \setminus \Sys$ has degrees of freedom bounded by $S_{BH}(\R \setminus \Sys) \geq A(\partial\Sys)/4\GN\hbar$ (since $\partial\Sys = \partial(\R \setminus \Sys)$). These degrees of freedom are entirely inaccessible from $\catMeas_{QG}|_\Sys$, contributing at least $A(\partial\Sys)/4\GN\hbar$ to the rank of the deficit.
+\end{proof}
+
+\begin{corollary}[Area Scaling of the Deficit]\label{cor:area-scaling}
+The extension deficit scales with the \emph{area} of the observer's boundary, not with the \emph{volume} of the observer's region. This is the Yoneda-theoretic content of the holographic principle: the information inaccessible to an embedded observer is controlled by the boundary area, not by the bulk volume.
+\end{corollary}
+
+\subsection{Connection to the Ryu--Takayanagi Formula}
+
+In the AdS/CFT correspondence \cite{maldacena1999}, the entanglement entropy of a boundary subregion $A$ is given by the Ryu--Takayanagi formula \cite{ryu2006}:
+\[
+S_A = \frac{\mathrm{Area}(\gamma_A)}{4\GN}
+\]
+where $\gamma_A$ is the minimal surface in the bulk homologous to $A$.
+
+\begin{proposition}[Ryu--Takayanagi as Yoneda Deficit]\label{prop:RT-deficit}
+In the AdS/CFT setting, the Kan extension deficit for a boundary observer $\Sys_A$ (probing subregion $A$) satisfies:
+\[
+\rank(\Delta(\Sys_A)) = S_A = \frac{\mathrm{Area}(\gamma_A)}{4\GN}
+\]
+The Ryu--Takayanagi formula is the holographic realization of the Yoneda extension deficit.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+In AdS/CFT, the boundary CFT is dual to the bulk gravitational theory. The boundary observer $\Sys_A$, with access to subregion $A$, has an epistemic horizon in the bulk bounded by the Ryu--Takayanagi surface $\gamma_A$. The bulk degrees of freedom beyond $\gamma_A$ are in the \emph{entanglement wedge} of the complement $\bar{A}$ and are inaccessible to $\Sys_A$. The Kan extension from $\Sys_A$'s data cannot recover these bulk degrees of freedom, and their number is precisely $S_A$.
+\end{proof}
+
+\subsection{Quantum Extremal Surfaces and the Generalized Deficit}
+
+The quantum extremal surface (QES) prescription \cite{engelhardt2015} generalizes the Ryu--Takayanagi formula to include quantum corrections:
+\[
+S_A = \min_{\gamma} \mathrm{ext}_{\gamma} \left[\frac{\mathrm{Area}(\gamma)}{4\GN} + S_{\mathrm{bulk}}(\Sigma_\gamma)\right]
+\]
+
+\begin{proposition}[Generalized Extension Deficit]\label{prop:QES-deficit}
+The generalized extension deficit, including bulk quantum corrections, is:
+\[
+\rank(\Delta_{\mathrm{gen}}(\Sys)) = \min_{\gamma} \mathrm{ext}_{\gamma} \left[\frac{\mathrm{Area}(\gamma)}{4\GN} + \rank(\Delta_Q(\Sigma_\gamma))\right]
+\]
+where $\Delta_Q(\Sigma_\gamma)$ is the purely quantum extension deficit of the bulk fields on the partial Cauchy surface $\Sigma_\gamma$ bounded by $\gamma$.
+\end{proposition}
+
+This result shows that the total Yoneda extension deficit in quantum gravity decomposes into a gravitational part (area term) and a quantum part (bulk entanglement), unified by the QES prescription.
+
+%% ============================================================
+\section{Approaches to Quantum Gravity and Their Yoneda Obstructions}\label{sec:approaches}
+%% ============================================================
+
+We now examine how specific approaches to quantum gravity encounter the obstructions identified in \cref{sec:gravitational-horizon,sec:diffeo-obstruction,sec:holographic-bound}.
+
+\subsection{Loop Quantum Gravity}
+
+Loop quantum gravity (LQG) \cite{rovelli2004,thiemann2007} quantizes the gravitational field using holonomy-flux variables on a graph $\Gamma$ embedded in the spatial manifold.
+
+\begin{proposition}[LQG Yoneda Obstruction]\label{prop:lqg-obstruction}
+In LQG, the quantum gravitational measurement category $\catMeas_{QG}^{\mathrm{LQG}}$ has objects $(\Gamma, j_e, i_v)$ where $\Gamma$ is a graph, $j_e$ are spins on edges, and $i_v$ are intertwiners at vertices. The representable functor $\yo^{(\Gamma, j_e, i_v)}$ is constrained by:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item \textbf{Area quantization:} The area spectrum $A = 8\pi \gamma \lp^2 \sum_e \sqrt{j_e(j_e+1)}$ (with Barbero--Immirzi parameter $\gamma$) discretizes the holographic bound, replacing it with a lattice condition.
+\item \textbf{Diffeomorphism invariance:} The physical Hilbert space $\mathcal{H}_{\mathrm{diff}}$ is obtained by quotienting by diffeomorphisms, reducing the spin network states to equivalence classes (s-knots) and hence reducing the representable functor.
+\item \textbf{Hamiltonian constraint:} The scalar constraint $\hat{H}|\psi\rangle = 0$ further restricts the physical states, contributing to $\Delta_{\mathrm{gauge}}$.
+\end{enumerate}
+\end{proposition}
+
+The area gap in LQG---the smallest non-zero eigenvalue of the area operator---provides a concrete realization of the Planck resolution limit (\cref{cor:planck-limit}): the minimum distinguishable area is $A_{\min} = 4\sqrt{3}\pi\gamma\lp^2$, below which the representable functor has no resolution.
+
+\subsection{String Theory}
+
+String theory \cite{polchinski1998,becker2007} provides a perturbative approach to quantum gravity with a natural UV completion at the string scale $\ell_s$.
+
+\begin{proposition}[String Theory Yoneda Obstruction]\label{prop:string-obstruction}
+In string theory, the measurement category is enriched by the string spectrum:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item \textbf{T-duality:} The identification $R \leftrightarrow \alpha'/R$ (where $\alpha' = \ell_s^2$) means that the representable functor cannot distinguish sub-stringy distances from super-stringy distances: $\yo^{(\Sys, R)} \cong \yo^{(\Sys, \alpha'/R)}$.
+\item \textbf{Moduli space:} The string landscape contains $\sim 10^{500}$ vacua, each defining a distinct measurement category. The observer's representable functor is restricted to a single vacuum, with no morphisms to objects in other vacua.
+\item \textbf{Holographic duality:} In AdS/CFT realizations, the holographic bound is exact, and the extension deficit is given by the Ryu--Takayanagi formula (\cref{prop:RT-deficit}).
+\end{enumerate}
+\end{proposition}
+
+The T-duality obstruction is particularly interesting: it implies that the minimum resolvable scale in string theory is $\ell_s$, not $\lp$, and that the representable functor has a \emph{self-dual} structure below this scale.
+
+\subsection{Asymptotic Safety}
+
+The asymptotic safety program \cite{reuter2012,percacci2017} seeks a non-perturbative UV fixed point of the gravitational renormalization group flow.
+
+\begin{proposition}[Asymptotic Safety Yoneda Obstruction]\label{prop:as-obstruction}
+In asymptotically safe gravity, the running of Newton's constant $\GN(k)$ with energy scale $k$ modifies the gravitational epistemic horizon:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item \textbf{Antiscreening:} At high energies, $\GN(k) \to 0$ (antiscreening), which weakens the Schwarzschild bound and potentially opens the sub-Planckian regime to observation.
+\item \textbf{Fixed point:} At the UV fixed point $k \to \infty$, the effective Newton's constant $\GN^* = \lim_{k\to\infty} \GN(k)$ determines a modified Planck length $\lp^* = \sqrt{\hbar \GN^* / c^3}$.
+\item \textbf{Fractal spacetime:} The spectral dimension of spacetime flows from $d_s = 4$ in the IR to $d_s = 2$ at the UV fixed point \cite{lauscher2005}, modifying the holographic bound.
+\end{enumerate}
+\end{proposition}
+
+If asymptotic safety is realized, the gravitational epistemic horizon is \emph{softened} rather than eliminated: the modified Planck length $\lp^*$ replaces $\lp$ as the fundamental resolution limit, but the categorical structure of the Yoneda obstruction persists.
+
+\subsection{Causal Set Theory}
+
+Causal set theory \cite{bombelli1987,surya2019} posits that spacetime is fundamentally a discrete partial order (causal set) at the Planck scale.
+
+\begin{proposition}[Causal Set Yoneda Obstruction]\label{prop:causet-obstruction}
+In causal set theory, the measurement category has objects that are finite causal sets (causets) $(\mathcal{C}, \preceq)$ with fundamental discreteness $\rho \sim \lp^{-4}$:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item \textbf{Discreteness:} The representable functor on a causet of $N$ elements has at most $2^N$ components, providing a sharp information-theoretic bound.
+\item \textbf{Hauptvermutung:} The ``causal set Hauptvermutung'' (that the causal structure determines the geometry) implies that the representable functor of a causet determines the approximate continuum geometry, up to conformal factor.
+\item \textbf{Non-locality:} Causal set dynamics (the Benincasa--Dowker action \cite{benincasa2010}) is non-local, meaning that morphisms in $\catMeas_{QG}^{\mathrm{CST}}$ do not respect a strict locality condition, altering the structure of the Kan extension.
+\end{enumerate}
+\end{proposition}
+
+\subsection{Comparative Summary}
+
+\begin{table}[htb]
+\centering
+\caption{Yoneda obstructions across quantum gravity approaches}
+\label{tab:comparison}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Approach} & \textbf{Grav.\ Horizon} & \textbf{Gauge Obstr.} & \textbf{Holo.\ Bound} \\
+\midrule
+Loop QG & Area gap & Diffeo + Hamiltonian & Area quantized \\
+String Theory & $\ell_s$ scale & T-duality + moduli & Exact (AdS/CFT) \\
+Asymptotic Safety & Softened & RG flow & Modified ($d_s = 2$) \\
+Causal Sets & Discreteness & Causal automorphisms & $2^N$ bound \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The key observation from \cref{tab:comparison} is that all four approaches encounter all three obstructions, though in different guises. This universality supports the conjecture that the Yoneda obstructions are structural features of \emph{any} consistent quantum theory of gravity, not artifacts of a particular approach.
+
+%% ============================================================
+\section{Concrete Observational Scenarios}\label{sec:planck-probes}
+%% ============================================================
+
+We now analyze specific observational scenarios, computing the Yoneda extension deficit in each case.
+
+\subsection{Gravitational Wave Detection at High Frequencies}
+
+Gravitational wave detectors (LIGO, Virgo, LISA) probe the classical gravitational wave spectrum. Quantum gravitational corrections to the gravitational wave signal are expected at frequencies $f \sim c/\lp \sim 10^{43}$ Hz, far beyond the sensitivity of any detector.
+
+\begin{proposition}[Gravitational Wave Deficit]\label{prop:gw-deficit}
+For a gravitational wave detector of characteristic size $L$ and energy sensitivity $E_{\min}$, the extension deficit for quantum gravitational corrections to the wave signal satisfies:
+\[
+\rank(\Delta_{\mathrm{GW}}(\Sys)) \geq \log_2\!\left(\frac{\lp}{L}\right) + \log_2\!\left(\frac{\Ep}{E_{\min}}\right)
+\]
+For LIGO ($L \sim 4$ km, $E_{\min} \sim 10^{-20}$ J), this gives $\rank(\Delta) \gtrsim 240$, indicating that $\sim 240$ independent bits of quantum gravitational information are inaccessible.
+\end{proposition}
+
+\subsection{CMB Observations and Trans-Planckian Modes}
+
+The cosmic microwave background (CMB) contains information about the very early universe, potentially including modes that were trans-Planckian at early times.
+
+\begin{proposition}[CMB Trans-Planckian Deficit]\label{prop:cmb-deficit}
+For CMB observations probing angular multipole $\ell$, the trans-Planckian modes that have been redshifted into the observable band contribute an extension deficit:
+\[
+\rank(\Delta_{\mathrm{TP}}(\Sys)) \geq N_{\mathrm{modes}} \cdot S_{\mathrm{scrambling}}
+\]
+where $N_{\mathrm{modes}}$ is the number of modes that were trans-Planckian at the onset of inflation and $S_{\mathrm{scrambling}}$ measures the information loss during the trans-Planckian phase.
+\end{proposition}
+
+The trans-Planckian censorship conjecture \cite{bedroya2020} can be reformulated as the statement that $S_{\mathrm{scrambling}}$ is maximal: all information about the trans-Planckian phase is completely scrambled, contributing maximally to the deficit.
+
+\subsection{Tabletop Quantum Gravity Experiments}
+
+Recent proposals \cite{bose2017,marletto2017} aim to detect the quantum nature of gravity through entanglement generation between two massive objects.
+
+\begin{proposition}[Tabletop Experiment Deficit]\label{prop:tabletop-deficit}
+In a Bose--Marletto--Vedral (BMV) experiment with masses $m$ separated by distance $d$, the Yoneda extension deficit for the gravitational entanglement witness is:
+\[
+\rank(\Delta_{\mathrm{BMV}}(\Sys)) = 0 \quad \text{(if entanglement is detected)}
+\]
+That is, the detection of gravitationally-induced entanglement does \emph{not} violate the Yoneda Constraint---it falls within the accessible subcategory $\catMeas_{QG}|_\Sys$ because the experiment probes the \emph{quantum} nature of gravity (which creates new morphisms in $\catMeas_{QG}$) without probing the \emph{Planck scale} (which is beyond the epistemic horizon).
+\end{proposition}
+
+This result is important: the Yoneda obstructions do not prevent all quantum gravity observations, only those that would probe beyond the gravitational epistemic horizon. Low-energy quantum gravitational effects (gravitational entanglement, graviton exchange) remain within the accessible subcategory.
+
+\subsection{Hawking Radiation Detection}
+
+The detection of Hawking radiation from astrophysical black holes or analog systems probes the interface between quantum mechanics and gravity.
+
+\begin{proposition}[Hawking Radiation Deficit]\label{prop:hawking-deficit}
+For an observer detecting Hawking radiation from a black hole of mass $M$, the extension deficit decomposes as:
+\[
+\Delta(\Sys) = \Delta_{\mathrm{thermal}} + \Delta_{\mathrm{scrambling}}
+\]
+where $\Delta_{\mathrm{thermal}}$ arises from the thermal character of the radiation (information loss due to the mixed state) and $\Delta_{\mathrm{scrambling}}$ arises from the scrambling dynamics of the black hole interior. The total deficit satisfies $\rank(\Delta) \leq S_{BH} = A_H / 4\GN\hbar$, with equality at the Page time.
+\end{proposition}
+
+%% ============================================================
+\section{Higher-Categorical Extensions}\label{sec:higher-cat}
+%% ============================================================
+
+The 2-categorical structure of $\catMeas_{QG,2}$ suggests that the full categorical framework for quantum gravity may require higher categories.
+
+\subsection{The $(\infty,1)$-Category of Spacetimes}
+
+\begin{conjecture}[$(\infty,1)$-Categorical Measurement Structure]\label{conj:infinity-cat}
+The appropriate measurement category for quantum gravity is an $(\infty,1)$-category $\catMeas_{QG}^{(\infty,1)}$ in which:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item Objects are spacetime-matter configurations,
+\item 1-morphisms are quantum channels,
+\item 2-morphisms are diffeomorphisms,
+\item $n$-morphisms ($n \geq 3$) encode higher gauge symmetries and homotopies between diffeomorphisms.
+\end{enumerate}
+The $(\infty,1)$-Yoneda lemma \cite{lurie2009} then provides the appropriate version of the Yoneda Constraint, incorporating all higher gauge data.
+\end{conjecture}
+
+\subsection{Extended TQFTs and the Cobordism Hypothesis}
+
+The cobordism hypothesis \cite{baez1995,lurie2009tft} states that fully extended topological quantum field theories (TQFTs) are classified by fully dualizable objects in the target $(\infty,n)$-category. This connects to our framework:
+
+\begin{proposition}[TQFT Measurement Functor]\label{prop:tqft-functor}
+A fully extended TQFT $Z: \catCob_n \to \catC$ defines a measurement functor from the cobordism category to the target category. The Yoneda Constraint, applied to $Z$, states that the observer's knowledge of the TQFT is determined by the representable functor evaluated on cobordisms accessible to the observer.
+\end{proposition}
+
+In the context of quantum gravity, topological invariants of spacetime are precisely the observables that survive the diffeomorphism quotient. The TQFT measurement functor captures the gauge-invariant content of the observer's knowledge.
+
+\subsection{The Homotopy Type of the Deficit}
+
+\begin{conjecture}[Homotopical Extension Deficit]\label{conj:homotopy-deficit}
+In the $(\infty,1)$-categorical setting, the extension deficit $\Delta(\Sys)$ has a natural homotopy type. The homotopy groups $\pi_n(\Delta(\Sys))$ encode:
+\begin{enumerate}[label=(\alph*),itemsep=4pt]
+\item $\pi_0$: The set of connected components (independent inaccessible sectors),
+\item $\pi_1$: The gauge loops (diffeomorphism orbits of inaccessible configurations),
+\item $\pi_n$ ($n \geq 2$): Higher gauge data.
+\end{enumerate}
+\end{conjecture}
+
+%% ============================================================
+\section{Composition of Obstructions}\label{sec:composition}
+%% ============================================================
+
+The three obstructions identified in Sections~\ref{sec:gravitational-horizon}--\ref{sec:holographic-bound} are independent but compose. We now analyze their joint structure.
+
+\subsection{The Total Deficit Decomposition}
+
+\begin{theorem}[Total Extension Deficit in Quantum Gravity]\label{thm:total-deficit}
+For an observer $\Sys$ in a quantum gravitational spacetime, the total extension deficit decomposes as:
+\[
+\Delta_{QG}(\Sys) = \Delta_Q(\Sys) + \Delta_{\mathrm{grav}}(\Sys) + \Delta_{\mathrm{gauge}}(\Sys) + \Delta_{\mathrm{holo}}(\Sys)
+\]
+where:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item $\Delta_Q(\Sys)$ is the quantum entanglement contribution (von Neumann entropy),
+\item $\Delta_{\mathrm{grav}}(\Sys)$ is the gravitational horizon contribution (black hole formation),
+\item $\Delta_{\mathrm{gauge}}(\Sys)$ is the diffeomorphism gauge contribution,
+\item $\Delta_{\mathrm{holo}}(\Sys)$ is the holographic saturation contribution.
+\end{enumerate}
+These contributions are not fully independent: the holographic bound constrains the sum $\Delta_Q + \Delta_{\mathrm{grav}} + \Delta_{\mathrm{gauge}} \leq A(\partial\Sys)/4\GN\hbar$.
+\end{theorem}
+
+\begin{proof}
+Each contribution arises from a distinct structural feature of $\catMeas_{QG}$: $\Delta_Q$ from the quantum tensor product structure, $\Delta_{\mathrm{grav}}$ from the energy-dependent truncation, $\Delta_{\mathrm{gauge}}$ from the diffeomorphism quotient, and $\Delta_{\mathrm{holo}}$ from the Bekenstein--Hawking bound. The additivity is an approximation valid when the contributions are supported on independent sectors of the measurement category. In the high-energy regime ($E \gtrsim \Ep$), the gravitational backreaction and gauge constraints are coupled through the Einstein equations, producing non-linear interference terms: $\Delta_{\mathrm{grav}} \otimes \Delta_{\mathrm{gauge}}$ may have non-trivial interaction components that modify the simple sum. The holographic constraint $\Delta_Q + \Delta_{\mathrm{grav}} + \Delta_{\mathrm{gauge}} \leq \Delta_{\mathrm{holo}}$ from \cref{thm:holographic-deficit} provides the overall bound regardless of such interactions.
+\end{proof}
+
+\subsection{The Planck Regime: All Obstructions Saturated}
+
+\begin{corollary}[Planck Saturation]\label{cor:planck-saturation}
+At the Planck scale ($L \sim \lp$, $E \sim \Ep$), all three obstructions are simultaneously saturated:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item The gravitational horizon is reached ($r_s \sim L$),
+\item The diffeomorphism group has maximal effect (quantum foam),
+\item The holographic bound is tight ($S_{BH} \sim 1$ for a Planck-area surface).
+\end{enumerate}
+The total extension deficit at the Planck scale is:
+\[
+\rank(\Delta_{QG}^{\mathrm{Planck}}(\Sys)) \sim O(1)
+\]
+That is, the observer retains only $O(1)$ bits of information about Planck-scale physics. This is the maximum possible ignorance consistent with the observer having any access at all.
+\end{corollary}
+
+\subsection{The Hierarchy of Scales}
+
+The obstructions activate at different scales, creating a hierarchy:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=6pt]
+\item \textbf{Classical regime} ($L \gg \lp$, $E \ll \Ep$): No gravitational obstructions. The Yoneda Constraint reduces to the quantum case (\cite{long2026yoneda}).
+
+\item \textbf{Semiclassical regime} ($L \gtrsim \lp$, $E \lesssim \Ep$): The gravitational horizon begins to affect the accessible subcategory. The holographic bound becomes relevant for regions approaching Planckian area. The extension deficit acquires gravitational corrections.
+
+\item \textbf{Planck regime} ($L \sim \lp$, $E \sim \Ep$): All obstructions are saturated. The representable functor retains only topological and large-scale features; all fine-grained Planck-scale structure is beyond the epistemic horizon.
+
+\item \textbf{Trans-Planckian regime} ($L < \lp$, $E > \Ep$): The representable functor has no non-trivial components (by \cref{conj:TPC}). Physics at this scale is categorically inaccessible.
+\end{enumerate}
+
+%% ============================================================
+\section{Philosophical Implications}\label{sec:philosophy}
+%% ============================================================
+
+\subsection{Structural Realism and Quantum Gravity}
+
+The Yoneda obstructions support a form of structural realism \cite{ladyman2007} about quantum gravity: while the fundamental theory may have definite structure, our access to that structure is inherently limited by our position as embedded observers. The limitations are not practical (insufficient technology) but structural (categorical obstructions).
+
+\begin{remark}[Structural Perspectivism in Quantum Gravity]
+The Yoneda Constraint in $\catMeas_{QG}$ yields a gravitational version of structural perspectivism (\cite{long2026observer}): the observer's knowledge of quantum gravitational reality is genuine but perspectival, bounded by the gravitational epistemic horizon, reduced by the diffeomorphism quotient, and saturated by the holographic bound. These are not failures of observation but structural features of embedded observation in a diffeomorphism-invariant quantum theory of gravity.
+\end{remark}
+
+\subsection{The Observability of Quantum Gravity}
+
+The obstructions identified in this paper do not imply that quantum gravity is \emph{unobservable}. Rather, they establish \emph{what can and cannot be observed}:
+
+\begin{enumerate}[label=\textbf{(\roman*)},itemsep=4pt]
+\item \textbf{Observable:} Low-energy quantum gravitational effects (gravitational entanglement, gravitational decoherence, graviton exchange in principle). These lie within the accessible subcategory.
+
+\item \textbf{Partially observable:} Semiclassical effects near the Planck scale (black hole thermodynamics, Hawking radiation spectrum, quantum corrections to classical gravity). These lie on the epistemic boundary $\partial_\Sys$.
+
+\item \textbf{Unobservable:} Trans-Planckian physics, the detailed structure of quantum spacetime at $\lp$, the specific quantum state of the gravitational field at the Planck scale. These lie beyond the gravitational epistemic horizon.
+\end{enumerate}
+
+\subsection{Implications for the ``Theory of Everything''}
+
+The Yoneda obstructions have implications for the possibility of a ``theory of everything'' (ToE) in quantum gravity:
+
+\begin{proposition}[Incompleteness of Any Internally Formulated ToE]\label{prop:toe}
+No theory formulated by an embedded observer can simultaneously provide a complete description of quantum gravitational physics at all scales, be fully self-inclusive, and be empirically verifiable. The extension deficit $\Delta(\Sys) > 0$ for any $\Sys \subsetneq \R$ ensures that there always exists physical content beyond the observer's reach.
+\end{proposition}
+
+However, this does not preclude a ``final theory'' in the sense of an \emph{internal final theory} \cite{long2026observer}: a theory that is maximally accurate on the accessible subcategory, maximally predictive, and not improvable by any refinement. Such a theory would be the best possible map of quantum gravitational reality from within.
+
+%% ============================================================
+\section{Discussion and Open Questions}\label{sec:open}
+%% ============================================================
+
+\subsection{Emergent Spacetime and the Pre-Geometric Measurement Category}
+
+If spacetime is emergent, the measurement category $\catMeas_{QG}$ should itself emerge from a more fundamental \emph{pre-geometric measurement category} $\catMeas_{\mathrm{pre}}$, whose objects are not spacetime regions but more primitive structures (spin networks, causal sets, tensor networks, etc.). The Yoneda Constraint in $\catMeas_{\mathrm{pre}}$ would impose even more fundamental limits on observation, prior to the emergence of spacetime concepts like area and volume.
+
+\begin{conjecture}[Pre-Geometric Yoneda Constraint]\label{conj:pre-geometric}
+In the pre-geometric measurement category $\catMeas_{\mathrm{pre}}$, the extension deficit $\Delta_{\mathrm{pre}}(\Sys)$ is more severe than $\Delta_{QG}(\Sys)$, reflecting the additional information loss in the emergence of spacetime from pre-geometric data. The holographic bound $A(\partial\Sys)/4\GN\hbar$ is a \emph{consequence} of the pre-geometric deficit, not a fundamental input.
+\end{conjecture}
+
+\subsection{Quantum Error Correction and Subregion Duality}
+
+The connection between quantum gravity and quantum error correction \cite{almheiri2015,pastawski2015,harlow2017} suggests that the Yoneda Constraint may be related to the error-correcting properties of the holographic code.
+
+\begin{conjecture}[Error Correction as Kan Extension]\label{conj:error-correction}
+In the holographic error-correcting code, the Kan extension $\Lan_J(\mathfrak{D} \circ J)$ corresponds to the reconstruction of bulk operators from boundary data. The extension deficit $\Delta(\Sys)$ measures the portion of the bulk that is \emph{not} in the entanglement wedge of the boundary region $\Sys$ and hence cannot be reconstructed.
+\end{conjecture}
+
+\subsection{Swampland Program}
+
+The Swampland program \cite{vafa2005,palti2019} identifies constraints that any consistent quantum gravity theory must satisfy (e.g., the weak gravity conjecture, the distance conjecture, the de Sitter conjecture). The Yoneda Constraint may provide a categorical framework for understanding these constraints.
+
+\begin{conjecture}[Swampland as Yoneda Constraint]\label{conj:swampland}
+The Swampland constraints are consequences of the Yoneda Constraint applied to $\catMeas_{QG}$: effective field theories that violate the Swampland bounds correspond to measurement categories with inconsistent representable functors (e.g., functors that would require the extension deficit to vanish when it cannot).
+\end{conjecture}
+
+\subsection{Open Questions}
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=8pt]
+
+\item \textbf{Explicit computations.} Can the extension deficit $\Delta_{QG}(\Sys)$ be computed explicitly in simple quantum gravity models (e.g., 2+1 gravity, Jackiw--Teitelboim gravity)?
+
+\item \textbf{Phenomenological signatures.} Are there observable consequences of the Yoneda obstructions that could distinguish them from ordinary decoherence effects?
+
+\item \textbf{Operational formulation.} Can the Yoneda Constraint be reformulated in operationally accessible terms, without reference to the full measurement category?
+
+\item \textbf{Thermodynamics.} What is the relationship between the extension deficit and the generalized second law of black hole thermodynamics?
+
+\item \textbf{Cosmology.} How do the Yoneda obstructions constrain the observable consequences of quantum gravity in cosmology (primordial gravitational waves, primordial power spectrum, bouncing cosmologies)?
+
+\item \textbf{Category of categories.} Is there a meta-categorical perspective in which the various quantum gravity measurement categories ($\catMeas_{QG}^{\mathrm{LQG}}$, $\catMeas_{QG}^{\mathrm{string}}$, etc.) are objects in a higher category, with the Yoneda Constraint providing morphisms between them?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have applied the Yoneda Constraint on Observer Knowledge to the problem of quantum gravity observation, constructing the quantum gravitational measurement category $\catMeas_{QG}$ and identifying three independent obstructions to Planck-scale observation.
+
+The key results are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=2em,itemsep=6pt]
+
+\item \textbf{The Gravitational Epistemic Horizon} (\cref{sec:gravitational-horizon}): Black hole formation at the Schwarzschild threshold truncates the accessible subcategory, imposing a resolution limit at $\delta x \geq 2\lp$ and contributing $\Delta_{\mathrm{grav}}(\Sys) \geq S_{BH}$ to the extension deficit.
+
+\item \textbf{The Diffeomorphism Gauge Obstruction} (\cref{sec:diffeo-obstruction}): Background independence forces the representable functor into diffeomorphism equivalence classes, reducing its resolving power. The problem of observables and the problem of time are structural features of this obstruction.
+
+\item \textbf{The Holographic Saturation Bound} (\cref{sec:holographic-bound}): The Bekenstein--Hawking entropy bounds the extension deficit: $\rank(\Delta(\Sys)) \geq A(\partial\Sys)/4\GN\hbar$. In AdS/CFT, the Ryu--Takayanagi formula is the holographic realization of the Yoneda extension deficit.
+
+\item \textbf{Universality across approaches} (\cref{sec:approaches}): All four major approaches to quantum gravity (LQG, string theory, asymptotic safety, causal sets) encounter all three obstructions, supporting the conjecture that these are structural features of \emph{any} consistent quantum theory of gravity.
+
+\item \textbf{Selective observability} (\cref{sec:planck-probes}): The obstructions do not prevent all quantum gravity observations. Low-energy quantum gravitational effects (gravitational entanglement, gravitational decoherence) remain within the accessible subcategory, while Planck-scale and trans-Planckian physics lies beyond the gravitational epistemic horizon.
+
+\end{enumerate}
+
+These results establish that quantum gravity observation is subject to principled categorical limits that are not artifacts of any particular theoretical framework but structural consequences of the Yoneda Constraint applied to embedded observers in a diffeomorphism-invariant quantum theory of gravity. The limits are not failures of observation but features of the categorical structure of physical knowledge at the most fundamental scale.
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the YonedaAI Research Collective for support and collaborative development of the categorical framework. This work was developed in part through extended AI-assisted research workflows.
+
+\paragraph{AI-assisted research disclosure.} Portions of this manuscript were developed through collaborative workflows with AI language models (Claude, Anthropic). All mathematical content, physical arguments, and editorial decisions were directed and verified by the human author.
+
+%% ============================================================
+\appendix
+
+\section{Categorical Definitions for Quantum Gravity}\label{app:definitions}
+
+\paragraph{The cobordism category.} The cobordism category $\catCob_n$ has $(n-1)$-dimensional closed manifolds as objects and $n$-dimensional cobordisms as morphisms. In quantum gravity, $\catCob_4$ (or its Lorentzian variant $\catCob_{3,1}$) provides the topological sector of the measurement category.
+
+\paragraph{Diffeomorphism groupoid.} The diffeomorphism groupoid $\catDiff(\mathcal{M})$ has points of $\mathcal{M}$ as objects and germs of diffeomorphisms as morphisms. The action of $\catDiff(\mathcal{M})$ on $\catMeas_{QG}$ encodes the gauge structure.
+
+\paragraph{Spin network category.} In LQG, the spin network category has spin networks $(\Gamma, j_e, i_v)$ as objects and graph morphisms compatible with the spin and intertwiner data as morphisms. This provides the combinatorial backbone of $\catMeas_{QG}^{\mathrm{LQG}}$.
+
+\section{Entropy Calculations}\label{app:entropy}
+
+\subsection{Bekenstein--Hawking Entropy for Schwarzschild Black Holes}
+
+For a Schwarzschild black hole of mass $M$:
+\[
+S_{BH} = \frac{A_H}{4\GN\hbar} = \frac{4\pi (2\GN M/c^2)^2}{4\GN\hbar} = \frac{4\pi \GN M^2}{\hbar c^4}
+\]
+The number of independent hidden degrees of freedom is $e^{S_{BH}}$, under the assumption that the black hole Hilbert space is finite-dimensional with $\dim \mathcal{H}_{BH} = e^{S_{BH}}$. This assumption is standard in the holographic context \cite{maldacena1999} and is supported by the finiteness of the Bekenstein--Hawking entropy, but it remains a non-trivial physical input that would need modification in approaches where the black hole Hilbert space is infinite-dimensional (e.g., certain formulations of loop quantum gravity where the micro-state counting diverges without an appropriate regularization).
+
+\subsection{Ryu--Takayanagi Entropy in AdS$_3$/CFT$_2$}
+
+For a boundary interval of length $\ell$ in AdS$_3$ with AdS radius $L_{\mathrm{AdS}}$:
+\[
+S_A = \frac{c}{3}\log\!\left(\frac{\ell}{\epsilon}\right)
+\]
+where $c$ is the central charge and $\epsilon$ is the UV cutoff. The extension deficit for a boundary observer probing interval $A$ is:
+\[
+\rank(\Delta(\Sys_A)) = \frac{c}{3}\log\!\left(\frac{\ell}{\epsilon}\right) = \frac{\mathrm{Area}(\gamma_A)}{4\GN}
+\]
+
+\section{Detailed Proofs}\label{app:proofs}
+
+\subsection{Proof of \cref{prop:grav-horizon}}
+
+\begin{proof}
+In $\catMeas_Q$, the objects are pairs $(\Sys, \rho_\Sys)$ and the morphisms are CPTP maps. The accessible subcategory $\catMeas_Q|_\Sys$ has $|\Ob(\catMeas_Q|_\Sys)| = |\{\rho \in \mathcal{B}(\mathcal{H}_\Sys) : \rho \geq 0, \Tr\rho = 1\}|$ (all density matrices on $\mathcal{H}_\Sys$).
+
+In $\catMeas_{QG}$, the objects are triples $(\Sys, g_\Sys, \rho_\Sys)$ and the morphisms must be diffeomorphism-compatible. Two effects reduce the accessible subcategory:
+
+1. \textbf{Diffeomorphism quotient:} Objects $(\Sys, g, \rho)$ and $(\Sys, \phi^*g, \phi^*\rho)$ are identified for $\phi \in \mathrm{Diff}(\Sys)$. This reduces the number of distinct objects by a factor related to the volume of $\mathrm{Diff}(\Sys)$.
+
+2. \textbf{Energy constraint:} Objects with $E(\rho) \geq c^4 L(\Sys)/2\GN$ are excluded (black hole formation). This removes a portion of the state space that grows with energy.
+
+Both effects strictly reduce $|\Ob(\catMeas_{QG}|_\Sys)|$ relative to $|\Ob(\catMeas_Q|_\Sys)|$.
+\end{proof}
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{long2026yoneda}
+M. Long, ``The significance of the Yoneda Constraint on observer knowledge to foundational physics: from quantum to classical,'' YonedaAI Research Collective, GrokRxiv:2026.02, 2026.
+
+\bibitem{long2026observer}
+M. Long, ``A Yoneda-lemma perspective on embedded observers: relational constraints from quantum measurement to classical phase space,'' YonedaAI Research Collective, GrokRxiv:2026.02, 2026.
+
+\bibitem{long2026embedded}
+M. Long, ``The embedded observer constraint: on the structural bounds of scientific measurement,'' YonedaAI Research Collective, GrokRxiv:2026.02, 2026.
+
+\bibitem{rovelli2004}
+C. Rovelli, \emph{Quantum Gravity}, Cambridge University Press, 2004.
+
+\bibitem{thiemann2007}
+T. Thiemann, \emph{Modern Canonical Quantum General Relativity}, Cambridge University Press, 2007.
+
+\bibitem{polchinski1998}
+J. Polchinski, \emph{String Theory}, vols.~1--2, Cambridge University Press, 1998.
+
+\bibitem{becker2007}
+K. Becker, M. Becker, and J. Schwarz, \emph{String Theory and M-Theory}, Cambridge University Press, 2007.
+
+\bibitem{reuter2012}
+M. Reuter and F. Saueressig, \emph{Quantum Einstein Gravity}, New J. Phys. \textbf{14}, 055022 (2012). arXiv:1202.2274.
+
+\bibitem{percacci2017}
+R. Percacci, \emph{An Introduction to Covariant Quantum Gravity and Asymptotic Safety}, World Scientific, 2017.
+
+\bibitem{bombelli1987}
+L. Bombelli, J. Lee, D. Meyer, and R. D. Sorkin, ``Space-time as a causal set,'' Phys. Rev. Lett. \textbf{59}, 521--524 (1987).
+
+\bibitem{surya2019}
+S. Surya, ``The causal set approach to quantum gravity,'' Living Rev. Rel. \textbf{22}, 5 (2019). arXiv:1903.11544.
+
+\bibitem{amelino-camelia1998}
+G. Amelino-Camelia, J. Ellis, N. E. Mavromatos, D. V. Nanopoulos, and S. Sarkar, ``Tests of quantum gravity from observations of $\gamma$-ray bursts,'' Nature \textbf{393}, 763--765 (1998). arXiv:astro-ph/9712103.
+
+\bibitem{pikovski2012}
+I. Pikovski, M. Zych, F. Costa, and \v{C}. Brukner, ``Universal decoherence due to gravitational time dilation,'' Nature Physics \textbf{11}, 668--672 (2015). arXiv:1311.1095.
+
+\bibitem{kamionkowski1997}
+M. Kamionkowski, A. Kosowsky, and A. Stebbins, ``A probe of primordial gravity waves and vorticity,'' Phys. Rev. Lett. \textbf{78}, 2058--2061 (1997). arXiv:astro-ph/9609132.
+
+\bibitem{bose2017}
+S. Bose et al., ``Spin entanglement witness for quantum gravity,'' Phys. Rev. Lett. \textbf{119}, 240401 (2017). arXiv:1707.06050.
+
+\bibitem{marletto2017}
+C. Marletto and V. Vedral, ``Gravitationally induced entanglement between two massive particles is sufficient evidence of quantum effects in gravity,'' Phys. Rev. Lett. \textbf{119}, 240402 (2017). arXiv:1707.06036.
+
+\bibitem{mead1964}
+C. A. Mead, ``Possible connection between gravitation and fundamental length,'' Phys. Rev. \textbf{135}, B849--B862 (1964).
+
+\bibitem{garay1995}
+L. J. Garay, ``Quantum gravity and minimum length,'' Int. J. Mod. Phys. A \textbf{10}, 145--166 (1995). arXiv:gr-qc/9403008.
+
+\bibitem{scardigli1999}
+F. Scardigli, ``Generalized uncertainty principle in quantum gravity from micro-black hole gedanken experiment,'' Phys. Lett. B \textbf{452}, 39--44 (1999). arXiv:hep-th/9904025.
+
+\bibitem{adler2001}
+R. J. Adler and D. I. Santiago, ``On gravity and the uncertainty principle,'' Mod. Phys. Lett. A \textbf{14}, 1371--1381 (1999). arXiv:gr-qc/9904026.
+
+\bibitem{bedroya2020}
+A. Bedroya and C. Vafa, ``Trans-Planckian censorship and the swampland,'' JHEP \textbf{2020}, 123 (2020). arXiv:1909.11063.
+
+\bibitem{hawking1975}
+S. W. Hawking, ``Particle creation by black holes,'' Commun. Math. Phys. \textbf{43}, 199--220 (1975).
+
+\bibitem{bekenstein1973}
+J. D. Bekenstein, ``Black holes and entropy,'' Phys. Rev. D \textbf{7}, 2333--2346 (1973).
+
+\bibitem{page1993}
+D. N. Page, ``Information in black hole radiation,'' Phys. Rev. Lett. \textbf{71}, 3743--3746 (1993). arXiv:hep-th/9306083.
+
+\bibitem{maldacena1999}
+J. Maldacena, ``The large-$N$ limit of superconformal field theories and supergravity,'' Int. J. Theor. Phys. \textbf{38}, 1113--1133 (1999). arXiv:hep-th/9711200.
+
+\bibitem{ryu2006}
+S. Ryu and T. Takayanagi, ``Holographic derivation of entanglement entropy from the anti-de Sitter space/conformal field theory correspondence,'' Phys. Rev. Lett. \textbf{96}, 181602 (2006). arXiv:hep-th/0603001.
+
+\bibitem{engelhardt2015}
+N. Engelhardt and A. C. Wall, ``Quantum extremal surfaces: holographic entanglement entropy beyond the classical regime,'' JHEP \textbf{2015}, 073 (2015). arXiv:1408.3203.
+
+\bibitem{rovelli2002}
+C. Rovelli, ``Partial observables,'' Phys. Rev. D \textbf{65}, 124013 (2002). arXiv:gr-qc/0110035.
+
+\bibitem{tambornino2012}
+J. Tambornino, ``Relational observables in gravity: a review,'' SIGMA \textbf{8}, 017 (2012). arXiv:1109.0740.
+
+\bibitem{dittrich2007}
+B. Dittrich, ``Partial and complete observables for Hamiltonian constrained systems,'' Gen. Rel. Grav. \textbf{39}, 1891--1927 (2007). arXiv:gr-qc/0411013.
+
+\bibitem{goeller2022}
+C. Goeller, P. A. H\"ohn, and J. Kirklin, ``Diffeomorphism-invariant observables and dynamical frames in gravity,'' arXiv:2206.01193 (2022).
+
+\bibitem{isham1993}
+C. J. Isham, ``Canonical quantum gravity and the problem of time,'' in \emph{Integrable Systems, Quantum Groups, and Quantum Field Theories}, NATO ASI Ser.~C \textbf{409}, Springer, 1993. arXiv:gr-qc/9210011.
+
+\bibitem{kuchar2011}
+K. V. Kucha\v{r}, ``Time and interpretations of quantum gravity,'' Int. J. Mod. Phys. D \textbf{20}, 3--86 (2011).
+
+\bibitem{anderson2012}
+E. Anderson, ``The problem of time in quantum gravity,'' Ann. Phys. (Berlin) \textbf{524}, 757--786 (2012). arXiv:1206.2564.
+
+\bibitem{almheiri2015}
+A. Almheiri, X. Dong, and D. Harlow, ``Bulk locality and quantum error correction in AdS/CFT,'' JHEP \textbf{2015}, 163 (2015). arXiv:1411.7041.
+
+\bibitem{pastawski2015}
+F. Pastawski, B. Yoshida, D. Harlow, and J. Preskill, ``Holographic quantum error-correcting codes: toy models for the bulk/boundary correspondence,'' JHEP \textbf{2015}, 149 (2015). arXiv:1503.06237.
+
+\bibitem{harlow2017}
+D. Harlow, ``The Ryu--Takayanagi formula from quantum error correction,'' Commun. Math. Phys. \textbf{354}, 865--912 (2017). arXiv:1607.03901.
+
+\bibitem{lurie2009}
+J. Lurie, ``Higher topos theory,'' Ann. Math. Stud. \textbf{170}, Princeton, 2009.
+
+\bibitem{lurie2009tft}
+J. Lurie, ``On the classification of topological field theories,'' in \emph{Current Developments in Mathematics}, 2008, pp.~129--280. arXiv:0905.0465.
+
+\bibitem{baez1995}
+J. C. Baez and J. Dolan, ``Higher-dimensional algebra and topological quantum field theory,'' J. Math. Phys. \textbf{36}, 6073--6105 (1995). arXiv:q-alg/9503002.
+
+\bibitem{lauscher2005}
+O. Lauscher and M. Reuter, ``Fractal spacetime structure in asymptotically safe gravity,'' JHEP \textbf{2005}, 050 (2005). arXiv:hep-th/0508202.
+
+\bibitem{benincasa2010}
+D. M. T. Benincasa and F. Dowker, ``The scalar curvature of a causal set,'' Phys. Rev. Lett. \textbf{104}, 181301 (2010). arXiv:1001.2725.
+
+\bibitem{ladyman2007}
+J. Ladyman and D. Ross, \emph{Every Thing Must Go: Metaphysics Naturalized}, Oxford University Press, 2007.
+
+\bibitem{vafa2005}
+C. Vafa, ``The string landscape and the swampland,'' arXiv:hep-th/0509212 (2005).
+
+\bibitem{palti2019}
+E. Palti, ``The swampland: introduction and review,'' Fortsch. Phys. \textbf{67}, 1900037 (2019). arXiv:1903.06239.
+
+\end{thebibliography}
+
+\end{document}

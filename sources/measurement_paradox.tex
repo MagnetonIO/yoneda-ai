@@ -1,0 +1,1134 @@
+\documentclass[12pt,a4paper,notitlepage]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{physics}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{decorations.pathmorphing,arrows.meta,positioning,calc,patterns,shapes.geometric}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{appendix}
+\usepackage{thmtools}
+
+\usepackage{cite}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{authblk}
+
+\geometry{margin=1in,top=1.2in,bottom=1.2in}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black
+}
+
+% ============================================================
+% THEOREM ENVIRONMENTS
+% ============================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{warning}[theorem]{Warning}
+
+% ============================================================
+% CUSTOM COMMANDS
+% ============================================================
+\newcommand{\Hilb}{\mathcal{H}}
+\newcommand{\Alg}{\mathcal{A}}
+\newcommand{\Obs}{\mathcal{O}}
+\newcommand{\State}{\mathcal{S}}
+\newcommand{\Meas}{\mathcal{M}}
+\newcommand{\Emer}{\mathcal{E}}
+\newcommand{\Pre}{\mathcal{P}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Vect}{\mathbf{Vect}}
+\newcommand{\Top}{\mathbf{Top}}
+\newcommand{\Man}{\mathbf{Man}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\rk}{\mathrm{rk}}
+\newcommand{\vN}{\mathrm{vN}}
+\newcommand{\TQFT}{\mathrm{TQFT}}
+\newcommand{\CFT}{\mathrm{CFT}}
+\newcommand{\AdS}{\mathrm{AdS}}
+\newcommand{\dS}{\mathrm{dS}}
+\newcommand{\RT}{\mathrm{RT}}
+\newcommand{\HRT}{\mathrm{HRT}}
+\newcommand{\QES}{\mathrm{QES}}
+\newcommand{\EW}{\mathrm{EW}}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\braket}[2]{\langle#1|#2\rangle}
+\newcommand{\ketbra}[2]{|#1\rangle\langle#2|}
+\newcommand{\expect}[1]{\langle#1\rangle}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\codim}{codim}
+
+% ============================================================
+% HEADER / FOOTER
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{The Measurement Paradox in Emergent Spacetime}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ============================================================
+% TITLE
+% ============================================================
+
+\title{%
+  \vspace{-1cm}
+  \textbf{The Measurement Paradox in Emergent Spacetime Physics:}\\[6pt]
+  \large Structural Limits on Observational Access to Pre-Geometric Ontology
+}
+
+\author[1]{Matthew Long}
+\author[1]{The YonedaAI Collaboration}
+\affil[1]{%
+  YonedaAI Research Collective\\
+  Chicago, IL\\
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ============================================================
+% ABSTRACT
+% ============================================================
+\begin{abstract}
+\noindent
+If spacetime is not fundamental but emergent from an underlying quantum-informational substrate, then a deep paradox infects the very notion of empirical observation: every component of a measurement apparatus---the detector, the interaction Hamiltonian, and the classical readout---is itself an emergent structure within the spacetime that it purports to probe. We call this the \emph{Measurement Boundary Problem}. This paper provides a rigorous formulation of this paradox within the frameworks of algebraic quantum field theory, quantum error correction models of holography, and category-theoretic descriptions of emergence. We prove several no-go results establishing that no measurement process describable within the emergent spacetime can provide direct, unmediated observational access to the pre-geometric degrees of freedom from which that spacetime arises. We introduce the concept of \emph{epistemic horizons} as structural analogs of event horizons, characterize the algebraic obstructions to ``seeing past'' emergence, and develop a theory of \emph{indirect witnesses}---observables within the emergent description that carry structural imprints of the pre-geometric substrate without constituting direct measurements thereof. We propose a classification of emergent spacetime theories according to their \emph{measurement opacity}, develop information-theoretic bounds on what can be inferred about pre-geometric structure from emergent observations, and outline experimental signatures that could distinguish between competing models of spacetime emergence despite the structural inaccessibility of the underlying ontology. Our analysis has implications for the interpretation of quantum gravity phenomenology, the epistemology of fundamental physics, and the foundations of quantum mechanics.
+
+\vspace{8pt}
+\noindent\textbf{Keywords:} emergent spacetime, measurement problem, quantum gravity, algebraic quantum field theory, quantum error correction, holography, epistemic horizons, category theory, pre-geometric ontology
+\end{abstract}
+
+\vspace{10pt}
+\tableofcontents
+\vspace{10pt}
+
+% ============================================================
+% 1. INTRODUCTION
+% ============================================================
+\section{Introduction}\label{sec:intro}
+
+The hypothesis that spacetime is emergent rather than fundamental has become a central theme in contemporary theoretical physics. Programs in loop quantum gravity, causal set theory, string theory (particularly through the AdS/CFT correspondence), and tensor network models all suggest, in various ways, that the smooth Lorentzian manifold of general relativity arises from more primitive, pre-geometric degrees of freedom \cite{seiberg2006,huggett2013,oriti2014}. While these programs differ substantially in their technical details and foundational commitments, they share a common structural feature that has received insufficient attention: they all face a fundamental epistemological challenge regarding the status of measurement.
+
+The challenge can be stated simply. Every act of physical measurement requires three ingredients:
+\begin{enumerate}[label=(\roman*)]
+  \item A \emph{physical detector}---a material system that interacts with the quantity to be measured.
+  \item An \emph{interaction}---a dynamical coupling between the detector and the system, governed by a Hamiltonian defined on some configuration space.
+  \item A \emph{classical readout}---a macroscopic, decoherence-stabilized record of the measurement outcome, existing at definite spacetime locations.
+\end{enumerate}
+But if spacetime itself emerges from a pre-geometric substrate, then the detector, the interaction, and the readout are \emph{all} emergent entities. They exist within the spacetime rather than prior to it. This creates a circularity: we cannot use spacetime-based measurement to probe the pre-spacetime ontology from which spacetime arises, because the measurement apparatus is itself a product of the very emergence process under investigation.
+
+We call this the \textbf{Measurement Boundary Problem} (MBP). It is not merely a practical or technological limitation---it is a \emph{structural} obstruction rooted in the logical relationship between emergence and observation. The purpose of this paper is to provide a mathematically precise formulation of the MBP, to prove several no-go theorems establishing its inevitability under reasonable assumptions, and to develop the conceptual and formal tools needed to navigate it.
+
+\subsection{Scope and Summary of Results}
+
+Our main contributions are the following:
+
+\textbf{Formal Framework} (\S\ref{sec:framework}). We develop a general algebraic framework for describing the relationship between pre-geometric and emergent descriptions, using the language of operator algebras and categorical structures. This framework accommodates holographic, tensor network, and causal set models as special cases.
+
+\textbf{No-Go Theorems} (\S\ref{sec:nogo}). We prove three no-go results:
+\begin{itemize}[leftmargin=2em]
+  \item \emph{Theorem~\ref{thm:nogo1} (Measurement Opacity)}: No observable in the emergent algebra can distinguish between pre-geometric states that map to the same emergent state under the emergence map.
+  \item \emph{Theorem~\ref{thm:nogo2} (Detector Circularity)}: Any detector modeled within the emergent theory cannot detect properties of the pre-geometric substrate that are not already encoded in the emergent description.
+  \item \emph{Theorem~\ref{thm:nogo3} (Readout Instability)}: Classical readout stability requires decoherence, which in turn requires the spacetime structure that is being probed.
+\end{itemize}
+
+\textbf{Epistemic Horizons} (\S\ref{sec:horizons}). We introduce the concept of epistemic horizons as algebraic analogs of causal horizons, characterizing the boundary between what is observable in principle from the emergent description and what is structurally inaccessible.
+
+\textbf{Indirect Witnesses} (\S\ref{sec:witnesses}). We develop the theory of indirect witnesses---emergent observables that carry structural imprints of pre-geometric features---and establish information-theoretic bounds on the fidelity of such witnessing.
+
+\textbf{Classification and Experimental Signatures} (\S\ref{sec:classification}--\S\ref{sec:experiment}). We classify emergent spacetime theories by their measurement opacity and identify observable signatures that could discriminate between theories despite the MBP.
+
+\subsection{Relation to Prior Work}
+
+The measurement problem has a long history in quantum mechanics \cite{wheeler1983,zurek2003}, but its specific manifestation in the context of emergent spacetime has been discussed only informally \cite{wuthrich2017,huggett2013b}. Our work connects to several established research programs. The algebraic approach to quantum field theory \cite{haag1996,brunetti2009} provides the natural language for formulating observables without presupposing a background spacetime. The quantum error correction interpretation of holography \cite{almheiri2015,harlow2017,pastawski2015} gives a concrete model in which the emergence map has a precise information-theoretic characterization. Category-theoretic approaches to quantum mechanics \cite{abramsky2004,coecke2017,heunen2019} furnish the structural language for discussing the relationship between different levels of description. The work of W\"uthrich \cite{wuthrich2017} and Huggett and W\"uthrich \cite{huggett2013b} on the empirical coherence of theories without fundamental spacetime provides philosophical motivation for our formal results.
+
+
+% ============================================================
+% 2. CONCEPTUAL ANATOMY OF THE PARADOX
+% ============================================================
+\section{Conceptual Anatomy of the Measurement Boundary Problem}\label{sec:anatomy}
+
+Before developing the formal framework, we provide a careful conceptual analysis of the paradox and its structural components.
+
+\subsection{The Three-Layer Structure of Measurement}
+
+Every physical measurement, when analyzed in sufficient detail, exhibits a three-layer structure:
+
+\begin{definition}[Measurement Triple]\label{def:meas_triple}
+A \emph{measurement triple} is a tuple $(\mathcal{D}, \mathcal{I}, \mathcal{R})$ where:
+\begin{itemize}[leftmargin=2em]
+  \item $\mathcal{D}$ is the \emph{detector}: a physical subsystem prepared in a known state;
+  \item $\mathcal{I}$ is the \emph{interaction}: a dynamical coupling between the system and the detector, typically described by an interaction Hamiltonian $H_{\mathrm{int}}$ acting on the joint Hilbert space;
+  \item $\mathcal{R}$ is the \emph{readout}: a classical record, stabilized by decoherence, of the measurement outcome.
+\end{itemize}
+\end{definition}
+
+In standard quantum mechanics on a fixed background spacetime, each of these components has a clear ontological status: the detector is a material system localized in a spacetime region, the interaction is governed by a Hamiltonian that presupposes the spacetime metric (through, e.g., propagators and coupling constants), and the readout is a decoherence-stabilized classical state whose persistence requires the causal structure of spacetime.
+
+\subsection{The Circularity}
+
+When spacetime is emergent, each layer of the measurement triple becomes self-referential:
+
+\textbf{Detector circularity.} The detector $\mathcal{D}$ is a material system. Material systems are excitations of quantum fields. Quantum fields are defined on spacetime. If spacetime is emergent, then the detector is an emergent entity. It exists \emph{within} the emergent spacetime, not in the pre-geometric substrate. Thus, it cannot directly interact with pre-geometric degrees of freedom.
+
+\textbf{Interaction circularity.} The interaction $\mathcal{I}$ is described by a Hamiltonian $H_{\mathrm{int}}$ that acts on a Hilbert space. The structure of this Hilbert space---its tensor product decomposition into spatial regions, its dynamics---depends on the spacetime geometry. If spacetime is emergent, then $H_{\mathrm{int}}$ is formulated in terms of emergent quantities. The dynamical coupling is therefore an emergent coupling, incapable of reaching ``below'' the emergence layer.
+
+\textbf{Readout circularity.} The readout $\mathcal{R}$ requires decoherence: the dissipation of quantum coherence into an environment, producing a stable classical record. Decoherence requires a notion of ``environment,'' which in turn requires spatial separation, thermal baths, and causal structure---all of which are features of the emergent spacetime. Without these, no stable classical readout is possible.
+
+\subsection{Distinction from the Standard Measurement Problem}
+
+It is essential to distinguish the MBP from the standard quantum measurement problem. The standard problem concerns the transition from quantum superposition to definite outcomes within a fixed spacetime. The MBP is orthogonal: it concerns whether the measurement apparatus itself has the ontological status needed to probe the substrate from which it arises. Even if the standard measurement problem were fully solved (e.g., by decoherence, many-worlds, or collapse theories), the MBP would persist undiminished.
+
+\begin{observation}
+The MBP is not a problem of quantum mechanics. It is a problem of \emph{emergence}. It would arise equally in a classical theory in which spacetime emerged from a non-spatiotemporal substrate, provided that the measurement apparatus is an emergent entity.
+\end{observation}
+
+\subsection{Analogy with G\"odel Incompleteness}
+
+There is a structural analogy between the MBP and G\"odel's incompleteness theorems. G\"odel showed that a sufficiently powerful formal system cannot prove its own consistency using only the resources available within the system. Similarly, the MBP suggests that an emergent spacetime cannot furnish measurements that directly access the pre-geometric substrate using only the resources (detectors, interactions, readouts) available within the emergent description. The analogy is not exact---G\"odel's results are about formal provability, while the MBP is about physical observability---but the structural pattern of self-referential limitation is similar.
+
+This analogy can be made more precise. Let $T_{\Pre}$ be the theory describing the pre-geometric substrate and $T_{\Emer}$ be the emergent spacetime theory. The emergence map $\phi: T_{\Pre} \to T_{\Emer}$ is not an isomorphism; it loses information. The question of whether $T_{\Emer}$ can ``see'' all of $T_{\Pre}$ is then analogous to asking whether a quotient structure retains all information about the original.
+
+
+% ============================================================
+% 3. FORMAL FRAMEWORK
+% ============================================================
+\section{Formal Framework}\label{sec:framework}
+
+We now develop the algebraic and categorical framework within which the MBP can be stated precisely.
+
+\subsection{Pre-Geometric and Emergent Algebras}
+
+\begin{definition}[Emergence Structure]\label{def:emergence}
+An \emph{emergence structure} is a tuple $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ where:
+\begin{itemize}[leftmargin=2em]
+  \item $\Alg_{\Pre}$ is a $C^*$-algebra (or von Neumann algebra) describing the pre-geometric degrees of freedom;
+  \item $\Alg_{\Emer}$ is a $C^*$-algebra describing the emergent spacetime observables;
+  \item $\Phi: \Alg_{\Emer} \hookrightarrow \Alg_{\Pre}$ is an injective $*$-homomorphism, the \emph{emergence embedding};
+  \item $\omega_{\Pre}$ is a state on $\Alg_{\Pre}$ (the ``vacuum'' or ``ground state'' of the pre-geometric theory).
+\end{itemize}
+The emergence embedding $\Phi$ encodes the emergent observables as a subalgebra of the pre-geometric algebra. Its image $\Phi(\Alg_{\Emer}) \subset \Alg_{\Pre}$ represents the ``coarse-grained'' or ``low-energy'' sector of the pre-geometric theory from which spacetime arises.
+\end{definition}
+
+The dual map $\Phi^*: \State(\Alg_{\Pre}) \to \State(\Alg_{\Emer})$ sends pre-geometric states to emergent states via $\Phi^*(\omega)(a) = \omega(\Phi(a))$ for $a \in \Alg_{\Emer}$. This is the \emph{emergence map on states}: it describes how a pre-geometric state gives rise to an emergent spacetime state.
+
+\begin{definition}[Emergence Kernel]\label{def:kernel}
+The \emph{emergence kernel} is the equivalence relation $\sim_\Phi$ on $\State(\Alg_{\Pre})$ defined by
+\[
+  \omega_1 \sim_\Phi \omega_2 \quad\Longleftrightarrow\quad \Phi^*(\omega_1) = \Phi^*(\omega_2).
+\]
+Two pre-geometric states are $\Phi$-equivalent if and only if they yield the same emergent spacetime state.
+\end{definition}
+
+The emergence kernel captures the information lost in the transition from pre-geometric to emergent description. When $\sim_\Phi$ is non-trivial (i.e., when distinct pre-geometric states map to the same emergent state), the emergent description is informationally impoverished relative to the pre-geometric one.
+
+\subsection{Measurement as Algebraic Operation}
+
+Within this framework, a measurement in the emergent theory is an operation formulated entirely in terms of the emergent algebra $\Alg_{\Emer}$.
+
+\begin{definition}[Emergent Measurement]\label{def:emeas}
+An \emph{emergent measurement} is a positive operator-valued measure (POVM) $\{E_i\}_{i \in I}$ with $E_i \in \Alg_{\Emer}$ and $\sum_i E_i = \mathbb{1}_{\Emer}$. The probability of outcome $i$ given an emergent state $\omega_{\Emer}$ is
+\[
+  p(i) = \omega_{\Emer}(E_i).
+\]
+\end{definition}
+
+\begin{definition}[Pre-Geometric Measurement]\label{def:pmeas}
+A \emph{pre-geometric measurement} is a POVM $\{F_j\}_{j \in J}$ with $F_j \in \Alg_{\Pre}$ and $\sum_j F_j = \mathbb{1}_{\Pre}$. The probability of outcome $j$ given a pre-geometric state $\omega_{\Pre}$ is
+\[
+  p(j) = \omega_{\Pre}(F_j).
+\]
+\end{definition}
+
+The critical question is: can an emergent measurement detect features of the pre-geometric state that are not already encoded in the emergent state?
+
+\subsection{The Commutant Structure}
+
+The algebraic structure of the emergence embedding determines the extent of the measurement boundary. Consider the commutant of the embedded emergent algebra within the pre-geometric algebra:
+\[
+  \Phi(\Alg_{\Emer})' := \{b \in \Alg_{\Pre} : [b, \Phi(a)] = 0 \;\;\forall\, a \in \Alg_{\Emer}\}.
+\]
+Elements of the commutant are pre-geometric observables that are invisible to all emergent measurements. They commute with every emergent observable, meaning that no emergent measurement can distinguish states that differ only in the expectation values of commutant elements.
+
+\begin{proposition}\label{prop:commutant}
+If $\Phi(\Alg_{\Emer})' \neq \mathbb{C} \cdot \mathbb{1}$, then there exist pre-geometric degrees of freedom that are structurally inaccessible to emergent measurements.
+\end{proposition}
+
+\begin{proof}
+Suppose $b \in \Phi(\Alg_{\Emer})'$ with $b \neq \lambda \mathbb{1}$ for any $\lambda \in \mathbb{C}$. Then for any POVM $\{E_i\}$ in $\Alg_{\Emer}$ and any pre-geometric state $\omega$, the measurement statistics $\omega(\Phi(E_i))$ depend only on the restriction of $\omega$ to $\Phi(\Alg_{\Emer})$, not on $\omega(b)$. Thus, the value of $\omega(b)$ is structurally inaccessible.
+\end{proof}
+
+\subsection{Categorical Framework}
+
+The emergence structure can be described more abstractly using category theory, which provides a natural language for discussing the structural relationships between different levels of description.
+
+\begin{definition}[Category of Emergence]\label{def:cat_emer}
+Define the category $\mathbf{Emer}$ whose objects are emergence structures $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ and whose morphisms are pairs of $*$-homomorphisms $(\alpha, \beta)$ forming a commutative square:
+\[
+\begin{tikzcd}
+  \Alg_{\Emer} \arrow[r, "\Phi"] \arrow[d, "\beta"'] & \Alg_{\Pre} \arrow[d, "\alpha"] \\
+  \Alg_{\Emer}' \arrow[r, "\Phi'"'] & \Alg_{\Pre}'
+\end{tikzcd}
+\]
+\end{definition}
+
+This category captures the natural transformations between different emergence structures---for instance, between different holographic dualities or between different coarse-graining prescriptions.
+
+\begin{definition}[Measurement Functor]\label{def:meas_functor}
+The \emph{measurement functor} $\Meas: \mathbf{Emer} \to \Set$ sends each emergence structure to its set of possible emergent measurement outcomes, and each morphism to the induced map on outcome spaces.
+\end{definition}
+
+The MBP can now be restated categorically: the measurement functor $\Meas$ factors through the emergent algebra, and therefore cannot detect any structure in the pre-geometric algebra that lies outside the image of the emergence embedding.
+
+
+% ============================================================
+% 4. NO-GO THEOREMS
+% ============================================================
+\section{No-Go Theorems}\label{sec:nogo}
+
+We now establish three precise no-go theorems that formalize different aspects of the Measurement Boundary Problem.
+
+\subsection{Theorem I: Measurement Opacity}
+
+\begin{theorem}[Measurement Opacity]\label{thm:nogo1}
+Let $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ be an emergence structure. For any emergent measurement $\{E_i\}_{i\in I}$ and any two pre-geometric states $\omega_1, \omega_2 \in \State(\Alg_{\Pre})$ with $\omega_1 \sim_\Phi \omega_2$, we have
+\[
+  \omega_1(\Phi(E_i)) = \omega_2(\Phi(E_i)) \quad \forall\, i \in I.
+\]
+That is, emergent measurements cannot distinguish $\Phi$-equivalent pre-geometric states.
+\end{theorem}
+
+\begin{proof}
+By definition of $\Phi$-equivalence (Definition~\ref{def:kernel}), $\omega_1 \sim_\Phi \omega_2$ means $\Phi^*(\omega_1) = \Phi^*(\omega_2)$, i.e., $\omega_1(\Phi(a)) = \omega_2(\Phi(a))$ for all $a \in \Alg_{\Emer}$. Since $E_i \in \Alg_{\Emer}$, the result follows immediately.
+\end{proof}
+
+\begin{corollary}\label{cor:info_loss}
+The emergence map on states, $\Phi^*: \State(\Alg_{\Pre}) \to \State(\Alg_{\Emer})$, is in general many-to-one. The cardinality of the fiber $(\Phi^*)^{-1}(\omega_{\Emer})$ quantifies the degree of pre-geometric degeneracy invisible to emergent measurements.
+\end{corollary}
+
+While this theorem may appear almost tautological, its force lies in its universality: it applies to \emph{any} emergence structure, regardless of the specific mechanism of emergence. It tells us that the emergence kernel $\sim_\Phi$ defines a fundamental epistemic boundary that no cleverness in the design of emergent measurements can overcome.
+
+\subsection{Theorem II: Detector Circularity}
+
+The second no-go result addresses the circularity in the detector itself.
+
+\begin{theorem}[Detector Circularity]\label{thm:nogo2}
+Let $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ be an emergence structure. Let $\mathcal{D} \subset \Alg_{\Emer}$ be a subalgebra modeling the detector and $H_{\mathrm{int}} \in \Alg_{\Emer}$ be an interaction Hamiltonian. Then the post-measurement state of the detector, obtained by partial tracing over the system degrees of freedom, depends on the pre-geometric state $\omega_{\Pre}$ only through $\Phi^*(\omega_{\Pre})$.
+\end{theorem}
+
+\begin{proof}
+The detector, the system, and their interaction are all described within $\Alg_{\Emer}$. The time evolution generated by $H_{\mathrm{int}}$ is an automorphism $\alpha_t$ of $\Alg_{\Emer}$ (or more precisely, of a suitable closure). The post-measurement state of the detector is
+\[
+  \omega_{\mathcal{D}}^{\mathrm{post}}(d) = \omega_{\Emer}(\alpha_t^{-1}(d)) \quad \text{for } d \in \mathcal{D},
+\]
+where $\omega_{\Emer} = \Phi^*(\omega_{\Pre})$. Since both $\alpha_t$ and $d$ are elements of (automorphisms of) $\Alg_{\Emer}$, and $\omega_{\Emer}$ depends on $\omega_{\Pre}$ only through $\Phi^*$, the post-measurement state depends on $\omega_{\Pre}$ only through $\Phi^*(\omega_{\Pre})$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:nogo2} formalizes the intuition that ``you cannot pull yourself up by your own bootstraps.'' A detector built from emergent spacetime components cannot detect features of the pre-geometric substrate that are not already reflected in the emergent description.
+\end{remark}
+
+\subsection{Theorem III: Readout Instability}
+
+The third no-go result concerns the stability of classical readouts.
+
+\begin{theorem}[Readout Instability]\label{thm:nogo3}
+Let $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ be an emergence structure, and suppose that the emergent spacetime description includes a decoherence mechanism that stabilizes classical readouts. If the decoherence mechanism depends on the emergent spacetime structure (causal structure, metric, thermal baths), then the readout stability is contingent on the validity of the emergent description. In particular, there exist perturbations of $\omega_{\Pre}$ that preserve $\Phi^*(\omega_{\Pre})$ (and hence the emergent spacetime) but alter the higher-order correlations in $\Alg_{\Pre}$ that would be relevant to any hypothetical pre-geometric measurement.
+\end{theorem}
+
+\begin{proof}
+Let $\omega_1, \omega_2 \in \State(\Alg_{\Pre})$ with $\Phi^*(\omega_1) = \Phi^*(\omega_2)$. The decoherence mechanism in the emergent theory depends on the emergent state $\omega_{\Emer} = \Phi^*(\omega_i)$, which is identical for both. Thus, the classical readout stability is the same for both pre-geometric states, and the readout cannot distinguish between them.
+
+Now consider a perturbation $\delta\omega$ of $\omega_{\Pre}$ supported entirely on $\Phi(\Alg_{\Emer})'$ (the commutant). This perturbation changes the pre-geometric state without changing the emergent state, and hence without affecting the decoherence mechanism or the readout stability. The perturbation $\delta\omega$ is therefore invisible to the readout, even though it represents a genuine change in the pre-geometric state.
+\end{proof}
+
+\begin{corollary}[Combined No-Go]\label{cor:combined}
+Under the assumptions of Theorems~\ref{thm:nogo1}--\ref{thm:nogo3}, no measurement process describable entirely within the emergent spacetime theory can provide direct observational access to pre-geometric degrees of freedom lying in the emergence kernel.
+\end{corollary}
+
+
+% ============================================================
+% 5. EPISTEMIC HORIZONS
+% ============================================================
+\section{Epistemic Horizons}\label{sec:horizons}
+
+The no-go theorems of the previous section establish that the emergence kernel defines a boundary to observational access. We now develop this idea into a systematic theory of \emph{epistemic horizons}.
+
+\subsection{Definition and Basic Properties}
+
+\begin{definition}[Epistemic Horizon]\label{def:epistemic_horizon}
+Given an emergence structure $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$, the \emph{epistemic horizon} $\mathfrak{H}$ is defined as the commutant
+\[
+  \mathfrak{H} := \Phi(\Alg_{\Emer})' \cap \Alg_{\Pre}.
+\]
+The epistemic horizon consists of all pre-geometric observables that commute with every emergent observable, and hence are undetectable by any emergent measurement.
+\end{definition}
+
+\begin{proposition}[Properties of the Epistemic Horizon]\label{prop:horizon_props}
+The epistemic horizon $\mathfrak{H}$ satisfies:
+\begin{enumerate}[label=(\alph*)]
+  \item $\mathfrak{H}$ is a $C^*$-subalgebra (or von Neumann subalgebra) of $\Alg_{\Pre}$.
+  \item $\mathfrak{H} \supseteq \mathcal{Z}(\Alg_{\Pre})$, the center of $\Alg_{\Pre}$.
+  \item If $\Phi$ is surjective (as a $*$-homomorphism onto $\Phi(\Alg_{\Emer})$), then $\mathfrak{H} = \Phi(\Alg_{\Emer})'$ is determined by the Tomita-Takesaki modular theory when $\Alg_{\Pre}$ is a von Neumann algebra with a cyclic and separating vector.
+  \item The ``size'' of $\mathfrak{H}$ quantifies the degree of measurement opacity: the larger $\mathfrak{H}$, the more pre-geometric structure is hidden from emergent observation.
+\end{enumerate}
+\end{proposition}
+
+\subsection{Analogy with Causal Horizons}
+
+The terminology ``epistemic horizon'' is deliberately chosen to evoke the analogy with causal horizons in general relativity. In GR, an event horizon separates a region from which information cannot escape from a region in which it can be received. The epistemic horizon plays an analogous role: it separates the pre-geometric degrees of freedom that are accessible (in principle) to emergent measurements from those that are structurally inaccessible.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Pre-geometric region
+  \fill[blue!8] (-3,-2) rectangle (3,2);
+  \node at (0, 2.4) {\textbf{Pre-Geometric Substrate $\Alg_{\Pre}$}};
+  
+  % Emergent region
+  \fill[green!12] (-1.8,-1.2) rectangle (1.8,1.2);
+  \node at (0, 0.8) {\small Emergent Sector};
+  \node at (0, 0.4) {\small $\Phi(\Alg_{\Emer})$};
+  
+  % Epistemic horizon
+  \draw[red, ultra thick, dashed] (-1.8,-1.2) rectangle (1.8,1.2);
+  \node[red] at (2.8, 0) {\small $\mathfrak{H}$};
+  \draw[red, ->, thick] (2.4, 0) -- (1.9, 0);
+  
+  % Hidden sector
+  \node at (-2.5, -1.6) {\small Hidden};
+  \node at (2.5, -1.6) {\small Hidden};
+  \node at (0, -1.6) {\small \textit{Emergence Kernel}};
+  
+  % Arrows showing inaccessibility
+  \draw[gray, ->, thick, dashed] (0, -0.2) -- (-2.4, -1.0);
+  \draw[gray, ->, thick, dashed] (0, -0.2) -- (2.4, -1.0);
+  \node[gray] at (0, -0.5) {\tiny inaccessible};
+\end{tikzpicture}
+\end{center}
+
+The analogy can be deepened. Just as the area of a black hole horizon is related to the entropy of the hidden region (via the Bekenstein-Hawking formula), we can define an ``epistemic entropy'' associated with the epistemic horizon.
+
+\begin{definition}[Epistemic Entropy]\label{def:epi_entropy}
+Given an emergence structure and a pre-geometric state $\omega_{\Pre}$, the \emph{epistemic entropy} is the von Neumann entropy of the restriction of $\omega_{\Pre}$ to the epistemic horizon:
+\[
+  S_{\mathrm{epi}}(\omega_{\Pre}) := S(\omega_{\Pre}|_{\mathfrak{H}}) = -\Tr(\rho_{\mathfrak{H}} \log \rho_{\mathfrak{H}}),
+\]
+where $\rho_{\mathfrak{H}}$ is the density operator obtained by restricting $\omega_{\Pre}$ to $\mathfrak{H}$.
+\end{definition}
+
+\begin{proposition}
+The epistemic entropy satisfies $S_{\mathrm{epi}} \geq 0$, with equality if and only if $\omega_{\Pre}$ is pure when restricted to $\mathfrak{H}$. The epistemic entropy quantifies the amount of pre-geometric information that is hidden behind the epistemic horizon.
+\end{proposition}
+
+\subsection{Modular Structure and the Epistemic Horizon}
+
+When $\Alg_{\Pre}$ is a von Neumann algebra with a cyclic and separating vector $\Omega$ (corresponding to the pre-geometric vacuum), the Tomita-Takesaki modular theory provides powerful tools for analyzing the epistemic horizon.
+
+Let $S_\Phi$ denote the Tomita operator associated with $\Phi(\Alg_{\Emer})$ and $\Omega$, with polar decomposition $S_\Phi = J_\Phi \Delta_\Phi^{1/2}$. The modular conjugation $J_\Phi$ maps $\Phi(\Alg_{\Emer})$ to its commutant:
+\[
+  J_\Phi \, \Phi(\Alg_{\Emer}) \, J_\Phi = \Phi(\Alg_{\Emer})' = \mathfrak{H}.
+\]
+This provides an explicit construction of the epistemic horizon from the emergent algebra via modular conjugation.
+
+\begin{theorem}[Modular Characterization]\label{thm:modular}
+Let $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ be an emergence structure with $\Alg_{\Pre}$ a von Neumann factor and $\omega_{\Pre}$ a faithful normal state. Then:
+\begin{enumerate}[label=(\alph*)]
+  \item The epistemic horizon $\mathfrak{H} = J_\Phi \, \Phi(\Alg_{\Emer}) \, J_\Phi$.
+  \item The modular automorphism group $\sigma_t^{\omega_{\Pre}}$ preserves $\Phi(\Alg_{\Emer})$ if and only if it preserves $\mathfrak{H}$.
+  \item The modular flow $\sigma_t^{\omega_{\Pre}}$ generates a ``thermal'' evolution on the epistemic horizon, with the modular parameter $t$ playing the role of an imaginary time.
+\end{enumerate}
+\end{theorem}
+
+This result connects the epistemic horizon to the thermodynamic properties of the emergence structure and suggests deep connections to the Unruh effect and to the thermal nature of horizons in quantum gravity.
+
+
+% ============================================================
+% 6. THE HOLOGRAPHIC REALIZATION
+% ============================================================
+\section{The Holographic Realization}\label{sec:holographic}
+
+The AdS/CFT correspondence provides the most concrete and well-studied example of spacetime emergence, and therefore serves as an important testing ground for the MBP framework.
+
+\subsection{Emergence Structure in AdS/CFT}
+
+In the AdS/CFT correspondence, the pre-geometric algebra $\Alg_{\Pre}$ is the algebra of observables of the boundary CFT, while the emergent algebra $\Alg_{\Emer}$ describes bulk observables. The emergence embedding $\Phi$ is realized through the dictionary that maps bulk operators to boundary operators.
+
+More precisely, for a boundary subregion $A$, the JLMS (Jafferis-Lewkowycz-Maldacena-Suh) result establishes that the bulk region reconstructible from $A$ is the entanglement wedge $\EW(A)$. The emergence embedding restricted to $\EW(A)$ gives
+\[
+  \Phi_A: \Alg_{\mathrm{bulk}}(\EW(A)) \hookrightarrow \Alg_{\mathrm{CFT}}(A).
+\]
+
+\subsection{Quantum Error Correction Interpretation}
+
+The quantum error correction (QEC) interpretation of holography, developed by Almheiri, Dong, and Harlow \cite{almheiri2015}, provides a particularly clean realization of the emergence structure.
+
+\begin{definition}[Holographic Emergence Structure]\label{def:holo_emer}
+A \emph{holographic emergence structure} is an emergence structure $(\Alg_{\mathrm{CFT}}, \Alg_{\mathrm{bulk}}, \Phi_{\mathrm{QEC}}, \omega_{\mathrm{CFT}})$ where:
+\begin{itemize}[leftmargin=2em]
+  \item $\Alg_{\mathrm{CFT}}$ is the boundary CFT algebra on the conformal boundary;
+  \item $\Alg_{\mathrm{bulk}}$ is the algebra of local bulk observables;
+  \item $\Phi_{\mathrm{QEC}}$ is the QEC encoding map, defined by the condition that bulk observables can be reconstructed from boundary data with error-correcting redundancy;
+  \item $\omega_{\mathrm{CFT}}$ is the CFT vacuum state.
+\end{itemize}
+\end{definition}
+
+\subsection{The Epistemic Horizon in Holography}
+
+In the holographic context, the epistemic horizon has a geometric interpretation. For a boundary subregion $A$, the epistemic horizon separates the entanglement wedge $\EW(A)$ from its complement. The RT/HRT surface serves as the geometric avatar of the epistemic horizon:
+
+\begin{proposition}\label{prop:holo_horizon}
+In a holographic emergence structure, the epistemic horizon for the boundary subregion $A$ coincides (at leading order in $G_N$) with the algebra of bulk operators localized on or beyond the HRT surface $\gamma_A$:
+\[
+  \mathfrak{H}_A \approx \Alg_{\mathrm{bulk}}(\overline{\EW(A)}^c),
+\]
+where $\overline{\EW(A)}^c$ is the complement of the closed entanglement wedge.
+\end{proposition}
+
+This provides a concrete geometric picture: the epistemic horizon is the HRT surface, and the epistemic entropy is (to leading order) the generalized entropy:
+\[
+  S_{\mathrm{epi}} \approx \frac{\text{Area}(\gamma_A)}{4G_N} + S_{\mathrm{bulk}}(\EW(A)).
+\]
+
+\subsection{Implications for Bulk Reconstruction}
+
+The MBP in the holographic context manifests as fundamental limitations on bulk reconstruction. While the entanglement wedge reconstruction theorem guarantees that bulk operators within $\EW(A)$ can be represented as boundary operators in $A$, it also implies that bulk operators \emph{outside} $\EW(A)$ are structurally inaccessible from $A$.
+
+\begin{theorem}[Holographic Measurement Opacity]\label{thm:holo_opacity}
+In a holographic emergence structure, no boundary measurement on subregion $A$ can access bulk information localized outside the entanglement wedge $\EW(A)$. This limitation is exact (not merely perturbative) when the QEC structure is exact.
+\end{theorem}
+
+This result is well-known in the holography literature, but our framework reveals it as a special case of the general Measurement Opacity Theorem~\ref{thm:nogo1}.
+
+
+% ============================================================
+% 7. INDIRECT WITNESSES
+% ============================================================
+\section{Indirect Witnesses}\label{sec:witnesses}
+
+The no-go theorems establish that direct measurement of pre-geometric degrees of freedom from within the emergent description is impossible. However, this does not mean that emergent observations carry \emph{no} information about the pre-geometric substrate. We now develop the theory of \emph{indirect witnesses}---emergent observables that carry structural imprints of pre-geometric features.
+
+\subsection{Definition and Characterization}
+
+\begin{definition}[Indirect Witness]\label{def:witness}
+Let $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ be an emergence structure. An \emph{indirect witness} for a pre-geometric property $P$ is an emergent observable $W \in \Alg_{\Emer}$ such that:
+\begin{enumerate}[label=(\roman*)]
+  \item $W$ does not directly measure $P$ (i.e., there is no POVM element in $\Alg_{\Emer}$ whose expectation value equals the value of $P$).
+  \item The expectation value $\omega_{\Emer}(W) = \Phi^*(\omega_{\Pre})(W)$ carries a non-trivial correlation with $P$ across the space of pre-geometric states that give rise to physically reasonable emergent spacetimes.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Witness Fidelity]\label{def:witness_fidelity}
+The \emph{fidelity} of an indirect witness $W$ for property $P$ is defined as
+\[
+  \mathcal{F}(W, P) := \sup_{\{E_i\}} \left| \sum_i \lambda_i \, \mathrm{Corr}_{\omega_{\Pre}}(\Phi(E_i), P) \right|,
+\]
+where the supremum is over all POVMs $\{E_i\}$ in $\Alg_{\Emer}$, $\lambda_i$ are optimal linear coefficients, and $\mathrm{Corr}$ denotes the connected correlation function. The fidelity measures how well the indirect witness can constrain the value of $P$.
+\end{definition}
+
+\subsection{Information-Theoretic Bounds}
+
+We can establish rigorous bounds on the witness fidelity using information-theoretic arguments.
+
+\begin{theorem}[Witness Bound]\label{thm:witness_bound}
+For any indirect witness $W$ and pre-geometric property $P$:
+\[
+  \mathcal{F}(W, P) \leq \sqrt{1 - e^{-I(\Phi(\Alg_{\Emer}) : \mathfrak{H})}},
+\]
+where $I(\Phi(\Alg_{\Emer}) : \mathfrak{H})$ is the mutual information between the emergent sector and the epistemic horizon in the state $\omega_{\Pre}$.
+\end{theorem}
+
+\begin{proof}
+The correlation between an emergent observable and a pre-geometric property is bounded by the mutual information between the corresponding algebras (a consequence of the Pinsker inequality and the data processing inequality). The mutual information $I(\Phi(\Alg_{\Emer}) : \mathfrak{H})$ quantifies the total correlations between the emergent sector and the hidden sector. The bound follows from the monotonicity of mutual information under local operations.
+\end{proof}
+
+\begin{corollary}\label{cor:zero_witness}
+If $\Phi(\Alg_{\Emer})$ and $\mathfrak{H}$ are statistically independent in the state $\omega_{\Pre}$ (i.e., $I(\Phi(\Alg_{\Emer}) : \mathfrak{H}) = 0$), then no indirect witness exists: $\mathcal{F}(W, P) = 0$ for all $W$ and $P$.
+\end{corollary}
+
+\subsection{Examples of Indirect Witnesses}
+
+Despite the limitations established by the no-go theorems and the witness bound, several physically important indirect witnesses exist:
+
+\textbf{Entanglement entropy as a witness for pre-geometric connectivity.} The entanglement entropy of a spatial region in the emergent theory, while computable entirely within the emergent description, reflects the connectivity structure of the pre-geometric substrate. In tensor network models, the entanglement entropy is determined by the bond dimension of the network, which is a pre-geometric quantity. The emergent entanglement entropy thus serves as an indirect witness for pre-geometric connectivity, with fidelity bounded by the mutual information between the effective field theory description and the UV completion.
+
+\textbf{Spectral gaps as witnesses for pre-geometric discreteness.} The spectrum of the Laplacian on the emergent spacetime carries signatures of any underlying discrete pre-geometric structure. If spacetime emerges from a discrete structure (as in causal set theory or loop quantum gravity), the high-energy spectrum of the emergent Laplacian will exhibit deviations from the continuum prediction. These deviations serve as indirect witnesses for pre-geometric discreteness, though their fidelity is typically exponentially suppressed at energies well below the discreteness scale.
+
+\textbf{Anomalies as witnesses for pre-geometric topology.} 't Hooft anomaly matching provides a remarkable example of an indirect witness: anomalies in the emergent theory must match anomalies in the pre-geometric theory, providing exact constraints on the pre-geometric structure that are visible from the emergent level.
+
+\subsection{The Witness Hierarchy}
+
+Indirect witnesses can be organized into a hierarchy based on the type of pre-geometric information they constrain:
+
+\begin{definition}[Witness Hierarchy]\label{def:witness_hierarchy}
+The \emph{witness hierarchy} for an emergence structure is the sequence of sets
+\[
+  \mathcal{W}_0 \subset \mathcal{W}_1 \subset \mathcal{W}_2 \subset \cdots
+\]
+where $\mathcal{W}_n$ consists of all emergent observables that constrain $n$-point correlation functions of pre-geometric observables. That is, $W \in \mathcal{W}_n$ if $\omega_{\Emer}(W)$ is correlated with some $n$-point function $\omega_{\Pre}(b_1 \cdots b_n)$ with $b_i \in \mathfrak{H}$.
+\end{definition}
+
+\begin{proposition}
+In holographic theories, the witness hierarchy satisfies:
+\begin{enumerate}[label=(\alph*)]
+  \item $\mathcal{W}_1 = \emptyset$ (no emergent observable constrains one-point functions of hidden operators).
+  \item $\mathcal{W}_2 \neq \emptyset$ in general (entanglement entropy constrains two-point functions).
+  \item Higher levels $\mathcal{W}_n$ for $n \geq 3$ are generically non-empty but have exponentially decreasing fidelity.
+\end{enumerate}
+\end{proposition}
+
+
+% ============================================================
+% 8. CLASSIFICATION OF THEORIES BY MEASUREMENT OPACITY
+% ============================================================
+\section{Classification by Measurement Opacity}\label{sec:classification}
+
+Different approaches to quantum gravity and emergent spacetime differ in the ``size'' of their emergence kernels and hence in the severity of the MBP. We now develop a classification scheme based on measurement opacity.
+
+\subsection{The Opacity Spectrum}
+
+\begin{definition}[Measurement Opacity Index]\label{def:opacity}
+The \emph{measurement opacity index} $\kappa$ of an emergence structure $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ is defined as
+\[
+  \kappa := 1 - \frac{\dim \Phi(\Alg_{\Emer})}{\dim \Alg_{\Pre}},
+\]
+where $\dim$ denotes the appropriate notion of dimension (e.g., the Murray-von Neumann dimension for von Neumann algebras, or the logarithm of the Hilbert space dimension in finite-dimensional cases).
+\end{definition}
+
+The opacity index ranges from $0$ (fully transparent: $\Phi$ is an isomorphism) to $1$ (fully opaque: the emergent algebra captures negligible information about the pre-geometric substrate). We can classify theories accordingly:
+
+\begin{enumerate}[label=\textbf{Class \Roman*.}, leftmargin=3em]
+  \item \textbf{Transparent} ($\kappa = 0$): The emergence map is an isomorphism. There is no MBP. This class is essentially trivial from the perspective of emergence---the ``pre-geometric'' theory is the same as the emergent theory.
+  
+  \item \textbf{Quasi-transparent} ($0 < \kappa \ll 1$): The emergence map loses very little information. Most pre-geometric features are accessible to emergent measurements. Example: effective field theory at energies well below the cutoff.
+  
+  \item \textbf{Partially opaque} ($\kappa \sim 1/2$): A significant fraction of pre-geometric degrees of freedom are hidden. Example: holographic theories, where the bulk reconstruction covers only the entanglement wedge.
+  
+  \item \textbf{Quasi-opaque} ($\kappa \to 1$): Almost all pre-geometric information is hidden. Example: theories in which spacetime is a highly coarse-grained description of a fundamentally non-spatial theory.
+  
+  \item \textbf{Fully opaque} ($\kappa = 1$): The emergent description is maximally uninformative about the pre-geometric substrate. This extreme case may correspond to theories in which the emergence is entirely ``accidental'' and carries no structural imprint.
+\end{enumerate}
+
+\subsection{Opacity of Specific Theories}
+
+We now estimate the opacity index for several prominent approaches to quantum gravity.
+
+\textbf{Causal set theory.} In causal set theory, spacetime is replaced by a locally finite partial order (a causal set). The emergence map takes a causal set to a Lorentzian manifold (when one exists). The opacity index depends on the ``Hauptvermutung''---the conjecture that the causal set faithfully determines the continuum geometry. If the Hauptvermutung holds exactly, $\kappa$ is small (the continuum geometry retains most of the causal set information). If it fails, $\kappa$ can be large.
+
+\textbf{Loop quantum gravity.} In LQG, the pre-geometric description involves spin networks and spin foams. The emergent spacetime arises through a coarse-graining of the spin network states. The opacity index depends on the coarse-graining scale: at the Planck scale, $\kappa$ is small, but at macroscopic scales, $\kappa$ approaches $1$ as the vast majority of spin network microstates map to the same semiclassical geometry.
+
+\textbf{String theory / AdS/CFT.} In the holographic context, the opacity index for a boundary subregion $A$ is related to the ratio of the entanglement wedge volume to the total bulk volume. For the full boundary, $\kappa \to 0$ (full bulk reconstruction is possible). For a subregion, $\kappa > 0$ depends on the geometry of the entanglement wedge.
+
+\textbf{Tensor network models.} In tensor network models such as MERA or HaPPY codes, the opacity index is determined by the bond dimension and the number of layers of coarse-graining. It is typically computable explicitly.
+
+\subsection{Functorial Properties of Opacity}
+
+\begin{proposition}\label{prop:opacity_functor}
+The measurement opacity index is functorial: given a morphism $(\alpha, \beta): (\Alg_{\Pre}, \Alg_{\Emer}, \Phi) \to (\Alg_{\Pre}', \Alg_{\Emer}', \Phi')$ in $\mathbf{Emer}$, we have
+\[
+  \kappa' \leq \kappa \quad \text{if } \alpha \text{ is injective and } \beta \text{ is surjective}.
+\]
+That is, a refinement of the pre-geometric description (injective $\alpha$) combined with a coarsening of the emergent description (surjective $\beta$) can only increase opacity.
+\end{proposition}
+
+
+% ============================================================
+% 9. THE BOOTSTRAP PROBLEM
+% ============================================================
+\section{The Bootstrap Problem and Self-Referential Emergence}\label{sec:bootstrap}
+
+The MBP reveals a deeper conceptual challenge: the \emph{bootstrap problem} of emergent spacetime. If the tools of measurement are themselves emergent, how can we ever validate the theory of emergence?
+
+\subsection{Self-Referential Validation}
+
+Consider the following epistemic chain:
+\begin{enumerate}[label=\arabic*.]
+  \item We observe phenomena in spacetime using spacetime-based detectors.
+  \item We construct a theory $T_{\Emer}$ that describes these phenomena.
+  \item We postulate a pre-geometric theory $T_{\Pre}$ from which $T_{\Emer}$ emerges.
+  \item We seek to validate $T_{\Pre}$ by observing its predictions.
+  \item But the predictions of $T_{\Pre}$ that go beyond $T_{\Emer}$ are, by the MBP, inaccessible to our spacetime-based observations.
+\end{enumerate}
+
+This creates a validation problem: we cannot directly test the pre-geometric theory using emergent measurements. However, we argue that this does not render pre-geometric theories empirically vacuous, for several reasons.
+
+\subsection{Resolution via Structural Constraints}
+
+First, even though individual pre-geometric observables may be inaccessible, the \emph{structure} of the pre-geometric theory imposes constraints on the emergent theory that are testable. These constraints come in several forms:
+
+\textbf{Consistency constraints.} Not every possible emergent theory $T_{\Emer}$ can arise from a well-defined pre-geometric theory $T_{\Pre}$. The requirement that $T_{\Emer}$ admits a pre-geometric completion imposes non-trivial constraints on $T_{\Emer}$ (analogous to the way that UV completability imposes constraints on effective field theories).
+
+\textbf{Anomaly matching.} As noted in \S\ref{sec:witnesses}, anomalies must match between the pre-geometric and emergent descriptions. This provides exact, testable constraints.
+
+\textbf{Universal features.} Certain features may be universal across all pre-geometric completions of a given emergent theory. These universal features are testable even though the specific pre-geometric completion is not directly observable.
+
+\subsection{The Meta-Observational Stance}
+
+We propose a resolution of the bootstrap problem through what we call the \emph{meta-observational stance}. Rather than seeking direct observational access to pre-geometric degrees of freedom, we seek to:
+\begin{enumerate}[label=(\alph*)]
+  \item Characterize the \emph{space} of pre-geometric completions consistent with the observed emergent physics.
+  \item Identify \emph{structural invariants} that are shared by all members of this space.
+  \item Use these invariants as indirect tests of the emergence hypothesis.
+\end{enumerate}
+
+\begin{definition}[Completion Space]\label{def:completion}
+Given an emergent theory $T_{\Emer}$, the \emph{completion space} $\mathcal{C}(T_{\Emer})$ is the moduli space of all emergence structures $(\Alg_{\Pre}, \Alg_{\Emer}, \Phi, \omega_{\Pre})$ that produce $T_{\Emer}$ as their emergent description.
+\end{definition}
+
+\begin{theorem}[Structural Invariant Theorem]\label{thm:structural}
+Let $\mathcal{I} \subset \Obs(\Alg_{\Emer})$ be the set of emergent observables whose values are constant over the completion space $\mathcal{C}(T_{\Emer})$. Then $\mathcal{I}$ is non-empty (it contains at least the identity) and its elements provide model-independent predictions of the emergence hypothesis.
+\end{theorem}
+
+
+% ============================================================
+% 10. INFORMATION-THEORETIC ANALYSIS
+% ============================================================
+\section{Information-Theoretic Analysis}\label{sec:information}
+
+We now develop a quantitative information-theoretic framework for analyzing the MBP.
+
+\subsection{Channel-Theoretic Formulation}
+
+The emergence map $\Phi^*: \State(\Alg_{\Pre}) \to \State(\Alg_{\Emer})$ can be viewed as a quantum channel---a completely positive, trace-preserving (CPTP) map. The information-processing properties of this channel characterize the MBP quantitatively.
+
+\begin{definition}[Emergence Channel]\label{def:channel}
+The \emph{emergence channel} is the CPTP map $\mathcal{N}: \State(\Alg_{\Pre}) \to \State(\Alg_{\Emer})$ defined by $\mathcal{N}(\rho) = \Tr_{\mathfrak{H}}(\rho)$, where $\Tr_{\mathfrak{H}}$ denotes the partial trace over the epistemic horizon.
+\end{definition}
+
+\subsection{Capacity of the Emergence Channel}
+
+The capacity of the emergence channel determines the maximum rate at which pre-geometric information can be transmitted to the emergent level.
+
+\begin{theorem}[Emergence Channel Capacity]\label{thm:capacity}
+The classical capacity of the emergence channel is
+\[
+  C(\mathcal{N}) = \sup_{\{p_i, \rho_i\}} \left[ S\!\left(\sum_i p_i \mathcal{N}(\rho_i)\right) - \sum_i p_i \, S(\mathcal{N}(\rho_i)) \right],
+\]
+where the supremum is over all ensembles $\{p_i, \rho_i\}$ of pre-geometric states. The channel capacity satisfies:
+\[
+  C(\mathcal{N}) \leq \log \dim \Alg_{\Emer} - S_{\mathrm{epi}}(\omega_{\Pre}),
+\]
+where $S_{\mathrm{epi}}$ is the epistemic entropy. In particular, when the epistemic entropy saturates its maximum, the channel capacity approaches zero.
+\end{theorem}
+
+\subsection{Data Processing Inequality for Emergence}
+
+The data processing inequality takes a particularly illuminating form in the emergence context:
+
+\begin{proposition}[Emergence Data Processing]\label{prop:data_proc}
+For any pre-geometric observable $O_{\Pre}$ and any emergent processing map $\Lambda: \Alg_{\Emer} \to \Alg_{\Emer}$,
+\[
+  I(O_{\Pre} : \Lambda \circ \Phi(O_{\Emer})) \leq I(O_{\Pre} : \Phi(O_{\Emer})) \leq I(O_{\Pre} : O_{\Pre}).
+\]
+No processing of emergent data can increase the mutual information with pre-geometric observables beyond what is already available in the raw emergent description.
+\end{proposition}
+
+This result establishes that clever post-processing of emergent observations cannot circumvent the MBP. The information about the pre-geometric substrate that is available from the emergent description is bounded by the properties of the emergence channel itself.
+
+\subsection{Quantum Fisher Information and the Measurement Boundary}
+
+The quantum Fisher information provides a more refined measure of the information about pre-geometric parameters available from emergent measurements.
+
+\begin{definition}\label{def:qfi}
+Let $\theta$ be a parameter of the pre-geometric state $\omega_{\Pre}(\theta)$. The \emph{emergent quantum Fisher information} about $\theta$ is
+\[
+  \mathcal{F}_{\Emer}(\theta) := \mathcal{F}(\Phi^*(\omega_{\Pre}(\theta))),
+\]
+where $\mathcal{F}$ denotes the standard quantum Fisher information of the parametric family $\{\Phi^*(\omega_{\Pre}(\theta))\}_\theta$.
+\end{definition}
+
+\begin{theorem}[Fisher Information Bound]\label{thm:fisher}
+The emergent quantum Fisher information satisfies:
+\[
+  \mathcal{F}_{\Emer}(\theta) \leq \mathcal{F}_{\Pre}(\theta),
+\]
+with equality if and only if the pre-geometric parameter $\theta$ affects only the emergent sector $\Phi(\Alg_{\Emer})$ and not the epistemic horizon $\mathfrak{H}$. The ratio $\mathcal{F}_{\Emer}(\theta) / \mathcal{F}_{\Pre}(\theta)$ quantifies the fraction of information about $\theta$ that survives the emergence process.
+\end{theorem}
+
+
+% ============================================================
+% 11. EXPERIMENTAL SIGNATURES
+% ============================================================
+\section{Experimental Signatures and Phenomenology}\label{sec:experiment}
+
+Despite the structural limitations established by the no-go theorems, the MBP framework identifies several avenues for experimental investigation.
+
+\subsection{Signatures from the Witness Hierarchy}
+
+The indirect witnesses identified in \S\ref{sec:witnesses} suggest specific experimental signatures:
+
+\textbf{Modified dispersion relations.} If spacetime emerges from a discrete pre-geometric structure, the emergent Lorentz symmetry is expected to be only approximate, with Planck-suppressed violations. The witness hierarchy predicts a specific pattern of violations:
+\[
+  E^2 = p^2 + m^2 + \xi_1 \frac{E^3}{M_{\mathrm{Pl}}} + \xi_2 \frac{E^4}{M_{\mathrm{Pl}}^2} + \cdots,
+\]
+where the coefficients $\xi_n$ are determined by the structure of the emergence kernel. Different pre-geometric theories predict different patterns of $\xi_n$, providing discriminating power even without direct access to the pre-geometric substrate.
+
+\textbf{Entanglement entropy scaling.} The scaling of entanglement entropy with subsystem size provides a witness for pre-geometric connectivity. In theories where spacetime emerges from entanglement (as in ER=EPR or tensor network models), the entanglement entropy satisfies an area law with specific subleading corrections:
+\[
+  S(A) = \frac{\text{Area}(\partial A)}{4G_N} + c_0 \log(\text{Area}(\partial A)) + c_1 + \cdots
+\]
+The coefficients $c_0, c_1, \ldots$ are indirect witnesses for the pre-geometric structure.
+
+\textbf{Anomalous thermal effects.} Near horizons (both black hole and cosmological), the thermal properties of the emergent spacetime are sensitive to the pre-geometric structure. Deviations from the Hawking temperature formula, particularly in the greybody factors, could serve as witnesses for the pre-geometric substrate.
+
+\subsection{The Opacity--Discriminability Trade-off}
+
+\begin{proposition}[Trade-off]\label{prop:tradeoff}
+There is a fundamental trade-off between the measurement opacity of an emergence structure and the discriminability of competing pre-geometric theories: higher opacity implies lower discriminability. Quantitatively:
+\[
+  D(T_{\Pre}^{(1)}, T_{\Pre}^{(2)}) \leq f(\kappa) \cdot D_{\mathrm{max}},
+\]
+where $D$ is a suitable distance measure between the emergent predictions of two pre-geometric theories, $D_{\mathrm{max}}$ is the maximum possible distance, and $f(\kappa)$ is a monotonically decreasing function of the opacity index with $f(0) = 1$ and $f(1) = 0$.
+\end{proposition}
+
+This trade-off has important implications for the experimental program: highly opaque theories are harder to test but not impossible, while quasi-transparent theories are easier to test but may be less interesting from the perspective of fundamental physics.
+
+\subsection{Proposed Experimental Tests}
+
+Based on the analysis above, we identify three classes of experimental tests:
+
+\textbf{Class A: Anomaly tests.} Search for the anomaly-matching constraints predicted by the emergence structure. These are exact and model-independent, but may require very high precision.
+
+\textbf{Class B: Spectral tests.} Measure the spectrum of excitations in regimes where pre-geometric discreteness effects are expected to appear (e.g., ultra-high-energy cosmic rays, precision spectroscopy of atoms near black holes).
+
+\textbf{Class C: Entanglement tests.} Measure entanglement entropy scaling and subleading corrections in analog gravity systems (BECs, optical lattices) that can simulate the emergence of spacetime from pre-geometric structures.
+
+
+% ============================================================
+% 12. THE CATEGORICAL PERSPECTIVE
+% ============================================================
+\section{Categorical Perspective on the Measurement Boundary}\label{sec:categorical}
+
+We now provide a more systematic categorical treatment of the MBP, which illuminates its universal character across different frameworks for emergent spacetime.
+
+\subsection{Topos-Theoretic Formulation}
+
+The MBP has a natural formulation in the language of topoi. The key insight is that the pre-geometric and emergent descriptions correspond to different topoi, with the emergence map inducing a geometric morphism between them.
+
+\begin{definition}[Emergence Topos]\label{def:topos}
+An \emph{emergence topos pair} is a geometric morphism $f: \mathcal{E}_{\Emer} \to \mathcal{E}_{\Pre}$ between topoi, where:
+\begin{itemize}[leftmargin=2em]
+  \item $\mathcal{E}_{\Pre}$ is the topos of ``pre-geometric contexts''---the presheaf topos on the category of pre-geometric observables;
+  \item $\mathcal{E}_{\Emer}$ is the topos of ``emergent contexts''---the presheaf topos on the category of emergent observables;
+  \item $f = (f^*, f_*)$ with $f^*: \mathcal{E}_{\Pre} \to \mathcal{E}_{\Emer}$ the inverse image functor and $f_*: \mathcal{E}_{\Emer} \to \mathcal{E}_{\Pre}$ the direct image functor.
+\end{itemize}
+\end{definition}
+
+In this formulation, the measurement functor factors through $\mathcal{E}_{\Emer}$, and the epistemic horizon corresponds to the kernel of the inverse image functor $f^*$.
+
+\begin{proposition}\label{prop:topos_meas}
+The MBP is equivalent to the statement that $f^*$ is not an equivalence of categories: the inverse image functor loses information, and the lost information is precisely the content of the epistemic horizon.
+\end{proposition}
+
+\subsection{Fibered Categories and Layered Emergence}
+
+In many physical situations, emergence occurs in multiple stages: from a fundamental pre-geometric theory to an intermediate description to the final emergent spacetime. This layered structure is naturally captured by fibered categories.
+
+\begin{definition}[Emergence Fibration]\label{def:fibration}
+An \emph{emergence fibration} is a functor $p: \mathcal{C}_{\Pre} \to \mathcal{C}_{\Emer}$ that is a Grothendieck fibration. The fiber $p^{-1}(x)$ over an emergent object $x$ represents the space of pre-geometric realizations of $x$.
+\end{definition}
+
+The MBP manifests in the fibration structure as the non-triviality of the fibers: when the fibers contain more than one object (up to isomorphism), there are pre-geometric realizations that are indistinguishable from the emergent level.
+
+\subsection{Yoneda Embedding and the Limits of Representation}
+
+The Yoneda lemma provides a deep perspective on the MBP. The Yoneda embedding
+\[
+  \mathbf{y}: \mathcal{C} \hookrightarrow [\mathcal{C}^{\op}, \Set]
+\]
+represents each object by its ``functor of points''---the totality of morphisms into it. In the context of emergence, the Yoneda embedding of the pre-geometric category contains strictly more information than the Yoneda embedding of the emergent category, and the difference is precisely the content of the epistemic horizon.
+
+\begin{theorem}[Yoneda Characterization of the MBP]\label{thm:yoneda}
+Let $F: \mathcal{C}_{\Pre} \to \mathcal{C}_{\Emer}$ be the emergence functor. The MBP is non-trivial (i.e., the epistemic horizon is non-empty) if and only if the induced natural transformation
+\[
+  \mathbf{y} \circ F: \mathcal{C}_{\Pre} \to [\mathcal{C}_{\Emer}^{\op}, \Set]
+\]
+is not fully faithful. The failure of full faithfulness is measured by the kernel and cokernel of the induced maps on hom-sets, which correspond precisely to the hidden pre-geometric degrees of freedom.
+\end{theorem}
+
+
+% ============================================================
+% 13. PHILOSOPHICAL IMPLICATIONS
+% ============================================================
+\section{Philosophical Implications}\label{sec:philosophy}
+
+The MBP has significant implications for several ongoing debates in the philosophy of physics and the philosophy of science more broadly.
+
+\subsection{Empirical Coherence of Spacetime Emergence}
+
+Huggett and W\"uthrich \cite{huggett2013b} have raised the question of whether theories of emergent spacetime are empirically coherent---whether they can make contact with observation despite denying the fundamental status of the spacetime within which observations take place. Our analysis shows that the answer is nuanced. On one hand, the no-go theorems establish genuine structural limitations on empirical access to the pre-geometric substrate. On the other hand, the theory of indirect witnesses and structural invariants shows that emergence theories are not empirically vacuous: they make testable predictions at the emergent level, even though these predictions cannot probe the pre-geometric substrate directly.
+
+\subsection{Structural Realism and Emergence}
+
+The MBP provides support for a form of structural realism about emergent spacetime. Since the pre-geometric ontology is structurally inaccessible to emergent measurements, our best empirical access to the ``true'' ontology comes through the \emph{structural invariants} that are preserved by all emergence maps. This suggests that the physically real content of theories of spacetime emergence lies not in the specific pre-geometric ontology but in the structural relationships that are invariant under changes of pre-geometric completion.
+
+\subsection{The Epistemology of Fundamental Physics}
+
+The MBP raises profound questions about the epistemology of fundamental physics. If the most fundamental level of physical description is structurally inaccessible to observation, what is the epistemic status of theories about that level? We argue that the appropriate epistemic stance is what we call \emph{structural inference}: we infer the existence and properties of the pre-geometric substrate from the structural constraints it imposes on the emergent description, in much the same way that we infer the existence and properties of quarks from the patterns they impose on hadronic physics, even though isolated quarks cannot be directly observed.
+
+\subsection{Connection to the Hard Problem of Consciousness}
+
+We note, briefly and speculatively, a structural parallel between the MBP and the hard problem of consciousness in philosophy of mind. In both cases, there is a ``gap'' between a lower-level description (pre-geometric / neural) and a higher-level description (spacetime / conscious experience), and the higher-level description seems to lack the resources to ``reach down'' and directly access the lower-level ontology. Whether this parallel is merely formal or reflects a deeper structural principle remains an open question.
+
+
+% ============================================================
+% 14. DISCUSSION AND OUTLOOK
+% ============================================================
+\section{Discussion and Outlook}\label{sec:discussion}
+
+\subsection{Summary of Results}
+
+We have provided a rigorous formulation of the Measurement Boundary Problem---the structural obstruction to using spacetime-based measurements to probe the pre-geometric substrate from which spacetime emerges. Our main results include:
+
+The formal framework of emergence structures (\S\ref{sec:framework}), which provides a unified algebraic and categorical language for discussing the MBP across different approaches to quantum gravity.
+
+Three no-go theorems (\S\ref{sec:nogo}) establishing the measurement opacity, detector circularity, and readout instability that collectively constitute the MBP.
+
+The theory of epistemic horizons (\S\ref{sec:horizons}), which characterizes the boundary between accessible and inaccessible pre-geometric information and connects to modular theory and the thermodynamics of horizons.
+
+The theory of indirect witnesses (\S\ref{sec:witnesses}), which shows that despite the no-go results, emergent observations carry structural imprints of the pre-geometric substrate, with fidelity bounded by information-theoretic inequalities.
+
+A classification of emergent spacetime theories by measurement opacity (\S\ref{sec:classification}), and proposed experimental signatures (\S\ref{sec:experiment}).
+
+A categorical and topos-theoretic formulation (\S\ref{sec:categorical}) that reveals the MBP as a universal feature of emergence, not specific to any particular approach.
+
+\subsection{Open Problems}
+
+Several important open problems emerge from this work:
+
+\textbf{Sharpening the witness bounds.} The information-theoretic bounds on witness fidelity (Theorem~\ref{thm:witness_bound}) are likely not tight. Sharpening these bounds for specific emergence structures (e.g., holographic theories, tensor networks) would have both theoretical and practical significance.
+
+\textbf{Dynamical epistemic horizons.} We have treated the emergence structure as fixed. In a fully dynamical theory, the emergence map $\Phi$ itself may evolve, leading to a time-dependent epistemic horizon. Developing the theory of dynamical epistemic horizons---their evolution, stability, and possible ``phase transitions''---is an important direction.
+
+\textbf{The MBP and the black hole information paradox.} The MBP is closely related to the black hole information paradox, as both concern the accessibility of information across a horizon. Exploring this connection in detail, particularly in light of recent developments on the Page curve and the island formula, is a promising research direction.
+
+\textbf{Computational complexity of the MBP.} Is there a computational complexity characterization of the MBP? Specifically, is the problem of extracting pre-geometric information from emergent observations computationally hard (e.g., NP-hard or worse), even when it is information-theoretically possible?
+
+\textbf{Experimental realization.} The experimental signatures identified in \S\ref{sec:experiment} need to be developed into concrete experimental proposals with detailed sensitivity estimates. Analog gravity systems offer the most promising near-term avenue.
+
+\subsection{Concluding Remarks}
+
+The Measurement Boundary Problem is not a deficiency of any particular theory of emergent spacetime. It is a structural feature of the \emph{concept} of emergence itself, when the emergent level is the one from which observations are made. The paradox is not that we cannot test theories of spacetime emergence---we can, through indirect witnesses and structural constraints---but that the \emph{nature} of testing is fundamentally different from what we are accustomed to in the rest of physics. In emergent spacetime physics, we are not passive observers of an external world; we are \emph{part of the emergence}, looking outward from within the very structure we seek to understand. The measurement boundary is not a wall to be breached but a horizon to be mapped, and the mapping of this horizon is itself a form of understanding.
+
+
+% ============================================================
+% ACKNOWLEDGMENTS
+% ============================================================
+\section*{Acknowledgments}
+
+The authors thank the members of the YonedaAI Research Collective for ongoing discussions on the foundations of emergent spacetime and the categorical structures underlying quantum gravity. M.L.\ acknowledges the intellectual environment of Chicago's research community. This work was supported in part by the YonedaAI Research Collective.
+
+
+% ============================================================
+% APPENDICES
+% ============================================================
+\begin{appendices}
+
+\section{Algebraic Preliminaries}\label{app:algebra}
+
+We collect here the algebraic definitions and results used throughout the paper.
+
+\begin{definition}[$C^*$-algebra]
+A \emph{$C^*$-algebra} is a Banach algebra $\Alg$ over $\mathbb{C}$ equipped with an involution $*: \Alg \to \Alg$ satisfying $\|a^* a\| = \|a\|^2$ for all $a \in \Alg$.
+\end{definition}
+
+\begin{definition}[von Neumann algebra]
+A \emph{von Neumann algebra} is a $C^*$-algebra $\mathcal{M} \subset B(\Hilb)$ of bounded operators on a Hilbert space that is closed in the weak operator topology, equivalently $\mathcal{M}'' = \mathcal{M}$ by the bicommutant theorem.
+\end{definition}
+
+\begin{definition}[Completely positive map]
+A linear map $\Phi: \Alg \to \mathcal{B}$ between $C^*$-algebras is \emph{completely positive} if $\Phi \otimes \id_n: \Alg \otimes M_n(\mathbb{C}) \to \mathcal{B} \otimes M_n(\mathbb{C})$ is positive for all $n \geq 1$.
+\end{definition}
+
+The Tomita-Takesaki modular theory, central to our analysis of epistemic horizons (\S\ref{sec:horizons}), assigns to each von Neumann algebra $\mathcal{M}$ with a cyclic and separating vector $\Omega$ a modular operator $\Delta$ and modular conjugation $J$ satisfying $J\mathcal{M}J = \mathcal{M}'$ and $\Delta^{it}\mathcal{M}\Delta^{-it} = \mathcal{M}$ for all $t \in \mathbb{R}$.
+
+
+\section{Quantum Error Correction Details}\label{app:qec}
+
+The quantum error correction framework for holography involves the following structure. A quantum error-correcting code is a triple $(\Hilb_{\mathrm{code}}, \Hilb_{\mathrm{phys}}, V)$ where $V: \Hilb_{\mathrm{code}} \to \Hilb_{\mathrm{phys}}$ is an isometric embedding. The code subspace is $\im(V) \subset \Hilb_{\mathrm{phys}}$.
+
+In the holographic context, $\Hilb_{\mathrm{code}}$ is the bulk Hilbert space and $\Hilb_{\mathrm{phys}}$ is the boundary Hilbert space. The isometry $V$ is the holographic map. A bulk operator $\phi$ acts on the code subspace as
+\[
+  \tilde{\phi} = V \phi V^\dagger,
+\]
+and its representation on a boundary subregion $A$ exists if and only if $\phi$ is localized within the entanglement wedge $\EW(A)$.
+
+The connection to our emergence structure is: $\Alg_{\mathrm{bulk}} \cong V^\dagger \Alg_{\mathrm{CFT}} V|_{\mathrm{code}}$, with $\Phi(a) = V a V^\dagger$ providing the emergence embedding.
+
+
+\section{Proofs of Technical Lemmas}\label{app:proofs}
+
+\begin{proof}[Proof of Proposition~\ref{prop:horizon_props}]
+(a) follows from the fact that the commutant of a $C^*$-subalgebra is a $C^*$-subalgebra. (b) follows because elements of $\mathcal{Z}(\Alg_{\Pre})$ commute with everything in $\Alg_{\Pre}$, hence with $\Phi(\Alg_{\Emer})$ in particular. (c) follows from the Tomita-Takesaki theorem when applied to $\Phi(\Alg_{\Emer})$ as a von Neumann subalgebra. (d) is a consequence of the Murray-von Neumann dimension theory applied to the relative commutant.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:opacity_functor}]
+If $\alpha: \Alg_{\Pre} \to \Alg_{\Pre}'$ is injective, then $\dim \Alg_{\Pre}' \geq \dim \Alg_{\Pre}$. If $\beta: \Alg_{\Emer} \to \Alg_{\Emer}'$ is surjective, then $\dim \Phi'(\Alg_{\Emer}') \leq \dim \Phi(\Alg_{\Emer})$ (since $\beta$ may identify distinct elements). Therefore:
+\[
+  \kappa' = 1 - \frac{\dim \Phi'(\Alg_{\Emer}')}{\dim \Alg_{\Pre}'} \geq 1 - \frac{\dim \Phi(\Alg_{\Emer})}{\dim \Alg_{\Pre}} = \kappa. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:yoneda}]
+By the Yoneda lemma, $\mathbf{y}$ is fully faithful. The composition $\mathbf{y} \circ F$ is fully faithful if and only if $F$ is fully faithful. If $F$ is not fully faithful, then there exist morphisms in $\mathcal{C}_{\Pre}$ that are either collapsed or not detected by $F$, corresponding to pre-geometric structure invisible at the emergent level. The kernel of the induced map $\Hom_{\mathcal{C}_{\Pre}}(x, y) \to \Hom_{\mathcal{C}_{\Emer}}(Fx, Fy)$ consists of precisely those morphisms that correspond to hidden pre-geometric degrees of freedom.
+\end{proof}
+
+\end{appendices}
+
+
+% ============================================================
+% REFERENCES
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{seiberg2006}
+N.~Seiberg, ``Emergent Spacetime,'' in \textit{The Quantum Structure of Space and Time}, World Scientific, 2006, pp.~163--178.
+
+\bibitem{huggett2013}
+N.~Huggett and C.~W\"uthrich, ``Emergent spacetime and empirical (in)coherence,'' \textit{Stud.\ Hist.\ Philos.\ Mod.\ Phys.}\ \textbf{44}, 276--285 (2013).
+
+\bibitem{oriti2014}
+D.~Oriti, ``Disappearance and emergence of space and time in quantum gravity,'' \textit{Stud.\ Hist.\ Philos.\ Mod.\ Phys.}\ \textbf{46}, 186--199 (2014).
+
+\bibitem{wheeler1983}
+J.~A.~Wheeler and W.~H.~Zurek (eds.), \textit{Quantum Theory and Measurement}, Princeton University Press, 1983.
+
+\bibitem{zurek2003}
+W.~H.~Zurek, ``Decoherence, einselection, and the quantum origins of the classical,'' \textit{Rev.\ Mod.\ Phys.}\ \textbf{75}, 715--775 (2003).
+
+\bibitem{wuthrich2017}
+C.~W\"uthrich, ``Raiders of the lost spacetime,'' in \textit{Towards a Theory of Spacetime Theories}, Birkh\"auser, 2017, pp.~297--335.
+
+\bibitem{huggett2013b}
+N.~Huggett and C.~W\"uthrich, ``Emergent spacetime and empirical (in)coherence,'' \textit{Stud.\ Hist.\ Philos.\ Mod.\ Phys.}\ \textbf{44}, 276--285 (2013).
+
+\bibitem{haag1996}
+R.~Haag, \textit{Local Quantum Physics: Fields, Particles, Algebras}, 2nd ed., Springer, 1996.
+
+\bibitem{brunetti2009}
+R.~Brunetti, K.~Fredenhagen, and R.~Verch, ``The generally covariant locality principle---A new paradigm for local quantum field theory,'' \textit{Commun.\ Math.\ Phys.}\ \textbf{237}, 31--68 (2003).
+
+\bibitem{almheiri2015}
+A.~Almheiri, X.~Dong, and D.~Harlow, ``Bulk locality and quantum error correction in AdS/CFT,'' \textit{JHEP}\ \textbf{04}, 163 (2015).
+
+\bibitem{harlow2017}
+D.~Harlow, ``The Ryu-Takayanagi formula from quantum error correction,'' \textit{Commun.\ Math.\ Phys.}\ \textbf{354}, 865--912 (2017).
+
+\bibitem{pastawski2015}
+F.~Pastawski, B.~Yoshida, D.~Harlow, and J.~Preskill, ``Holographic quantum error-correcting codes: Toy models for the bulk/boundary correspondence,'' \textit{JHEP}\ \textbf{06}, 149 (2015).
+
+\bibitem{abramsky2004}
+S.~Abramsky and B.~Coecke, ``A categorical semantics of quantum protocols,'' in \textit{Proceedings of the 19th Annual IEEE Symposium on Logic in Computer Science}, 2004, pp.~415--425.
+
+\bibitem{coecke2017}
+B.~Coecke and A.~Kissinger, \textit{Picturing Quantum Processes: A First Course in Quantum Theory and Diagrammatic Reasoning}, Cambridge University Press, 2017.
+
+\bibitem{heunen2019}
+C.~Heunen and J.~Vicary, \textit{Categories for Quantum Theory: An Introduction}, Oxford University Press, 2019.
+
+\bibitem{maldacena1999}
+J.~Maldacena, ``The large $N$ limit of superconformal field theories and supergravity,'' \textit{Int.\ J.\ Theor.\ Phys.}\ \textbf{38}, 1113--1133 (1999).
+
+\bibitem{ryu2006}
+S.~Ryu and T.~Takayanagi, ``Holographic derivation of entanglement entropy from the anti-de Sitter space/conformal field theory correspondence,'' \textit{Phys.\ Rev.\ Lett.}\ \textbf{96}, 181602 (2006).
+
+\bibitem{swingle2012}
+B.~Swingle, ``Entanglement renormalization and holography,'' \textit{Phys.\ Rev.\ D}\ \textbf{86}, 065007 (2012).
+
+\bibitem{vanchurin2022}
+V.~Vanchurin, Y.~I.~Wolf, E.~V.~Koonin, and M.~I.~Katsnelson, ``Toward a theory of evolution as multilevel learning,'' \textit{Proc.\ Natl.\ Acad.\ Sci.}\ \textbf{119}, e2120037119 (2022).
+
+\bibitem{verlinde2011}
+E.~Verlinde, ``On the origin of gravity and the laws of Newton,'' \textit{JHEP}\ \textbf{04}, 029 (2011).
+
+\bibitem{jacobson1995}
+T.~Jacobson, ``Thermodynamics of spacetime: The Einstein equation of state,'' \textit{Phys.\ Rev.\ Lett.}\ \textbf{75}, 1260 (1995).
+
+\bibitem{vanraamsdonk2010}
+M.~Van~Raamsdonk, ``Building up spacetime with quantum entanglement,'' \textit{Gen.\ Relativ.\ Gravit.}\ \textbf{42}, 2323--2329 (2010).
+
+\bibitem{sorkin2003}
+R.~D.~Sorkin, ``Causal sets: Discrete gravity,'' in \textit{Lectures on Quantum Gravity}, Springer, 2003, pp.~305--327.
+
+\bibitem{rovelli2004}
+C.~Rovelli, \textit{Quantum Gravity}, Cambridge University Press, 2004.
+
+\bibitem{connes1994}
+A.~Connes, \textit{Noncommutative Geometry}, Academic Press, 1994.
+
+\bibitem{penrose1971}
+R.~Penrose, ``Angular momentum: an approach to combinatorial spacetime,'' in \textit{Quantum Theory and Beyond}, T.~Bastin, ed., Cambridge University Press, 1971, pp.~151--180.
+
+\bibitem{bekenstein1973}
+J.~D.~Bekenstein, ``Black holes and entropy,'' \textit{Phys.\ Rev.\ D}\ \textbf{7}, 2333 (1973).
+
+\bibitem{hawking1975}
+S.~W.~Hawking, ``Particle creation by black holes,'' \textit{Commun.\ Math.\ Phys.}\ \textbf{43}, 199--220 (1975).
+
+\bibitem{penington2020}
+G.~Penington, ``Entanglement wedge reconstruction and the information problem,'' \textit{JHEP}\ \textbf{09}, 002 (2020).
+
+\bibitem{almheiri2019}
+A.~Almheiri, N.~Engelhardt, D.~Marolf, and H.~Maxfield, ``The entropy of bulk quantum fields and the entanglement wedge of an evaporating black hole,'' \textit{JHEP}\ \textbf{12}, 063 (2019).
+
+\bibitem{isham1994}
+C.~J.~Isham, ``Quantum logic and the histories approach to quantum theory,'' \textit{J.\ Math.\ Phys.}\ \textbf{35}, 2157--2185 (1994).
+
+\bibitem{butterfield2001}
+J.~Butterfield and C.~J.~Isham, ``Spacetime and the philosophical challenge of quantum gravity,'' in \textit{Physics Meets Philosophy at the Planck Scale}, C.~Callender and N.~Huggett, eds., Cambridge University Press, 2001, pp.~33--89.
+
+\bibitem{doering2008}
+A.~D\"oring and C.~J.~Isham, ``A topos foundation for theories of physics: I. Formal languages for physics,'' \textit{J.\ Math.\ Phys.}\ \textbf{49}, 053515 (2008).
+
+\end{thebibliography}
+
+\end{document}

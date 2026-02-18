@@ -1,0 +1,841 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{everypage}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{doi}
+\usepackage{abstract}
+
+\geometry{margin=1in}
+
+%% ---- Theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{heuristic}[theorem]{Heuristic}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ---- Custom commands ----
+\newcommand{\catC}{\mathcal{C}}
+\newcommand{\catD}{\mathcal{D}}
+\newcommand{\catMeas}{\mathbf{Meas}}
+\newcommand{\catHilb}{\mathbf{Hilb}}
+\newcommand{\catFdHilb}{\mathbf{FdHilb}}
+\newcommand{\catSet}{\mathbf{Set}}
+\newcommand{\catTop}{\mathbf{Top}}
+\newcommand{\catAlg}{\mathbf{Alg}}
+\newcommand{\catBan}{\mathbf{Ban}}
+\newcommand{\catCstar}{C^{*}\text{-}\mathbf{Alg}}
+\newcommand{\catvNAlg}{\mathbf{vNAlg}}
+\newcommand{\catCPTP}{\mathbf{CPTP}}
+\newcommand{\Sys}{\mathcal{S}}
+\newcommand{\Env}{\mathcal{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\PSh}{\mathrm{PSh}}
+\newcommand{\yo}{\mathsf{y}}
+
+%% ---- GrokRxiv DOI sidebar (official template) ----
+\definecolor{grokgray}{RGB}{110,110,110}
+
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.02.yoneda-observer-constraint\quad
+       [\,math-ph\,]\quad
+       17 Feb 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+%% ---- Page style ----
+\pagestyle{plain}
+
+%% ---- Title ----
+\title{\textbf{A Yoneda-Lemma Perspective on Embedded Observers:\\Relational Constraints from Quantum Measurement\\to Classical Phase Space}}
+
+\author{
+  \textbf{Matthew Long}\\[4pt]
+  The YonedaAI Collaboration\\
+  YonedaAI Research Collective\\
+  Chicago, IL\\[2pt]
+  \texttt{matthew@yonedaai.com} $\cdot$ \url{https://yonedaai.com}
+}
+
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We develop a category-theoretic framework in which the Yoneda lemma, applied to embedded observers in physical measurement categories, imposes structural constraints on the epistemic horizon of any observer situated within a physical system. The \emph{Yoneda Constraint on Observer Knowledge} states that an embedded observer $\Sys$ accesses reality $\R$ only through the representable presheaf $\Hom_{\catMeas}((\Sys, \R|_\Sys), -)$, which determines the observer's epistemic position up to isomorphism but cannot determine $\R$ itself unless $\R|_\Sys = \R$. We trace the consequences of this constraint across foundational physics: in quantum measurement theory, it provides structural accounts of complementarity, contextuality, and entanglement; in the decoherence program, it characterizes the emergence of classicality as presheaf coarsening; in classical mechanics, it constrains the scope of local observation. We show that Kan extensions provide the optimal extrapolation of observer knowledge and that the extension deficit $\Delta(\Sys)$ quantifies the gap between local and global descriptions. Our approach extends the presheaf-theoretic framework of Abramsky--Brandenburger and the topos program of Isham--Butterfield--D\"oring by working with the full Yoneda embedding rather than restricting to specific presheaves, and makes precise the informal perspectivalism of relational quantum mechanics. We identify connections to the recent literature on categorical relational dynamics and discuss speculative extensions to quantum gravity.
+
+\medskip
+\noindent\textbf{Keywords:} Yoneda lemma, category theory, foundations of physics, quantum measurement, decoherence, classical limit, embedded observers, Kan extensions, representable presheaves, relational quantum mechanics
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The relationship between an observer and the physical reality it inhabits is perhaps the most fundamental question in the foundations of physics. In quantum mechanics, this question manifests acutely: the measurement problem, the role of the observer, and the quantum-to-classical transition all revolve around how an embedded physical subsystem can acquire and represent knowledge about the larger system of which it is a part.
+
+In this paper, we propose that category theory---specifically, the Yoneda lemma and its associated machinery of representable presheaves, Kan extensions, and enriched categories---provides a natural mathematical language for articulating these foundational issues with precision. Our central thesis is encapsulated in what we call the \emph{Yoneda Constraint on Observer Knowledge}: an embedded observer knows reality only relationally, through the morphisms available from its position in the relevant measurement category, and this relational knowledge, while the best possible from that position, is structurally incapable of determining the total reality when the observer is a proper subsystem.
+
+We should be clear at the outset about the scope of our claims. The idea that physical knowledge is relational has a long pedigree, from Leibniz through Rovelli's relational quantum mechanics (RQM) \cite{rovelli1996,laudisa2019,dibitonto2024}. Several recent works have explicitly connected the Yoneda lemma to relational perspectives in physics \cite{jacobs2024,nlab_yoneda_physics,adlam2024}. Our contribution is not the observation that Yoneda and RQM are philosophically consonant---this has been noted before---but rather the systematic development of the \emph{technical} consequences of the Yoneda embedding when applied to a carefully defined measurement category, including the Kan extension deficit as a quantitative measure of epistemic limitation, the characterization of entanglement as presheaf non-factorizability, and the naturality conditions that the Born rule must satisfy.
+
+The structure of the paper is as follows. \Cref{sec:background} reviews categorical background and fixes notation. \Cref{sec:measurement-category} introduces the measurement category $\catMeas$ and the embedded observer. \Cref{sec:yoneda-constraint} states and proves the Yoneda Constraint. \Cref{sec:quantum} applies the framework to quantum measurement theory. \Cref{sec:decoherence} treats decoherence and classicality. \Cref{sec:kan} develops the Kan extension approach to extrapolation. \Cref{sec:classical} discusses the classical regime. \Cref{sec:comparison} provides detailed comparison with the closest existing approaches. \Cref{sec:speculative} collects speculative extensions. \Cref{sec:conclusion} concludes.
+
+%% ============================================================
+\section{Categorical Background}\label{sec:background}
+%% ============================================================
+
+We assume familiarity with basic category theory at the level of Mac Lane \cite{maclane1998} or Riehl \cite{riehl2017} and recall only the results used directly.
+
+\subsection{The Yoneda Lemma}\label{subsec:yoneda-background}
+
+Let $\catC$ be a locally small category. For each object $A \in \catC$, the \emph{covariant representable functor} is $\yo^A = \Hom_\catC(A, -): \catC \to \catSet$. We use $\yo^A$ throughout to distinguish this from the \emph{contravariant} representable $\yo_A = \Hom_\catC(-, A): \catC^{\op} \to \catSet$. The Yoneda lemma asserts:
+
+\begin{theorem}[Yoneda Lemma \cite{maclane1998}]\label{thm:yoneda}
+For any functor $F: \catC \to \catSet$ and object $A \in \catC$, there is a bijection
+\[
+\Nat(\yo^A, F) \cong F(A)
+\]
+natural in both $A$ and $F$.
+\end{theorem}
+
+The \emph{covariant Yoneda embedding} $\yo^{(-)}: \catC \hookrightarrow [\catC, \catSet]$ sending $A \mapsto \yo^A$ is full and faithful. Throughout, when we say ``the Yoneda embedding determines $A$ up to isomorphism,'' we mean precisely that $\yo^A \cong \yo^B$ implies $A \cong B$ in $\catC$.
+
+\subsection{Kan Extensions}\label{subsec:kan-background}
+
+Given functors $K: \catC \to \catD$ and $F: \catC \to \mathcal{E}$, the \emph{left Kan extension} $\Lan_K F: \catD \to \mathcal{E}$ is the universal functor making the following diagram commute up to a natural transformation:
+\[
+\begin{tikzcd}
+\catC \arrow[r, "F"] \arrow[d, "K"'] & \mathcal{E} \\
+\catD \arrow[ur, dashed, "\Lan_K F"'] &
+\end{tikzcd}
+\]
+When it exists pointwise, $\Lan_K F(d) = \mathrm{colim}_{(K \downarrow d)} F$. The right Kan extension $\Ran_K F$ is defined dually via limits. We use both extensively in \cref{sec:kan}.
+
+\subsection{Enriched Categories}
+
+A \emph{$\mathcal{V}$-enriched category} replaces hom-sets with objects of a monoidal category $\mathcal{V}$. For quantum mechanics, the relevant enrichment is over $\catBan$ (Banach spaces) or $\catCstar$ ($C^*$-algebras). When we specialize $\catMeas$ to quantum settings (\cref{sec:quantum}), the ordinary Yoneda lemma is replaced by the enriched Yoneda lemma \cite{kelly1982}, which requires $\catMeas$ to be tensored and cotensored over $\mathcal{V}$. We flag this explicitly wherever it matters.
+
+%% ============================================================
+\section{The Measurement Category}\label{sec:measurement-category}
+%% ============================================================
+
+\subsection{Definition}
+
+We introduce the measurement category with more care than is typical in programmatic work, since the strength of our results depends on the precision of this definition.
+
+\begin{definition}[Measurement Category]\label{def:meas-cat}
+Fix a physical system $\R$ (the ``total reality''). The \emph{measurement category} $\catMeas = \catMeas(\R)$ is a category specified by the following data:
+
+\begin{enumerate}[label=(\roman*),itemsep=6pt]
+\item \textbf{Objects:} Pairs $(\Sys, \sigma_\Sys)$ where $\Sys \subseteq \R$ is a subsystem and $\sigma_\Sys$ is the state of $\R$ restricted to $\Sys$. In the quantum setting, $\sigma_\Sys = \Tr_{\R \setminus \Sys}(\rho)$ is the reduced density matrix; in the classical setting, $\sigma_\Sys$ is the restriction of the phase-space distribution to the degrees of freedom of $\Sys$.
+
+\item \textbf{Morphisms:} A morphism $f: (\Sys_1, \sigma_1) \to (\Sys_2, \sigma_2)$ is a state-preserving channel: a completely positive trace-preserving (CPTP) map $f: \mathcal{B}(\mathcal{H}_{\Sys_1}) \to \mathcal{B}(\mathcal{H}_{\Sys_2})$ such that $f(\sigma_1) = \sigma_2$ in the quantum case, or a measure-preserving map in the classical case.
+
+\item \textbf{Composition:} Sequential composition of channels/maps.
+
+\item \textbf{Identity:} The identity channel $\id_{(\Sys, \sigma)} = \id_{\mathcal{B}(\mathcal{H}_\Sys)}$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Relation to existing categorical frameworks]\label{rem:frameworks}
+When $\R$ is quantum, $\catMeas$ is a subcategory of $\catCPTP$, the category of finite-dimensional $C^*$-algebras and CPTP maps studied in categorical quantum mechanics \cite{coecke2017,heunen2019}. When $\R$ is classical, $\catMeas$ reduces to a subcategory of the Kleisli category of the Giry monad on $\catMeas$urable spaces \cite{fritz2020}. The novel feature is that we consider \emph{all subsystems simultaneously}, organized by inclusion, rather than a single system in isolation.
+\end{remark}
+
+\subsection{The Embedded Observer}
+
+\begin{definition}[Embedded Observer]\label{def:embedded-observer}
+An \emph{embedded observer} is an object $(\Sys, \sigma_\Sys) \in \catMeas$ with $\Sys \subsetneq \R$. The \emph{environment} is $\Env = \R \setminus \Sys$. The \emph{accessible subcategory} $\catMeas|_\Sys$ is the full subcategory of $\catMeas$ on objects $(\Sys', \sigma_{\Sys'})$ with $\Sys' \subseteq \Sys$.
+\end{definition}
+
+\begin{proposition}[Embedded Observer Constraint]\label{prop:EOC}
+For any embedded observer $\Sys \subsetneq \R$, the inclusion functor $J: \catMeas|_\Sys \hookrightarrow \catMeas$ is faithful but not full.
+\end{proposition}
+
+\begin{proof}
+Faithfulness: distinct CPTP maps between subsystems of $\Sys$ remain distinct when viewed in $\catMeas$. Non-fullness: there exist CPTP maps in $\catMeas$ between objects in the image of $J$ that factor through the environment $\Env$; these are not in $\catMeas|_\Sys$ since they utilize degrees of freedom outside $\Sys$.
+\end{proof}
+
+\subsection{The Description Functor}
+
+\begin{definition}[Description Functor]\label{def:description}
+The \emph{description functor} $\mathfrak{D}: \catMeas|_\Sys \to \catSet$ assigns to each accessible measurement configuration the set of outcomes that $\Sys$ can produce. The \emph{total description functor} $\mathfrak{R}: \catMeas \to \catSet$ assigns complete outcome sets. The relation $\mathfrak{D} = \mathfrak{R} \circ J$ expresses that the observer's descriptions are restrictions of the total descriptions.
+\end{definition}
+
+%% ============================================================
+\section{The Yoneda Constraint on Observer Knowledge}\label{sec:yoneda-constraint}
+%% ============================================================
+
+\subsection{Statement and Proof}
+
+\begin{proposition}[Yoneda Constraint on Observer Knowledge]\label{prop:yoneda-constraint}
+The embedded observer $\Sys$ accesses $\R$ only through the representable functor $\yo^{(\Sys, \sigma_\Sys)} = \Hom_\catMeas((\Sys, \sigma_\Sys), -)$. By the Yoneda lemma (\cref{thm:yoneda}), this determines $(\Sys, \sigma_\Sys)$ up to isomorphism in $\catMeas$, but it does not determine $\R$ itself unless $\Sys = \R$.
+\end{proposition}
+
+\begin{proof}
+By \cref{thm:yoneda}, the natural transformations $\Nat(\yo^{(\Sys, \sigma_\Sys)}, F) \cong F(\Sys, \sigma_\Sys)$ for any $F: \catMeas \to \catSet$. This encodes everything about how $(\Sys, \sigma_\Sys)$ relates to other objects in $\catMeas$. Since the Yoneda embedding is full and faithful, $\yo^{(\Sys, \sigma_\Sys)}$ captures all categorical information about the object $(\Sys, \sigma_\Sys)$.
+
+However, $(\Sys, \sigma_\Sys)$ is constructed from $\R$ via restriction: $\sigma_\Sys = \R|_\Sys$. Different total states $\rho, \rho'$ of $\R$ can yield the same reduced state $\sigma_\Sys = \Tr_\Env(\rho) = \Tr_\Env(\rho')$. Since the Yoneda embedding determines $(\Sys, \sigma_\Sys)$---not $(\R, \rho)$---the observer's knowledge is complete as knowledge of its own object but generically incomplete as knowledge of $\R$.
+\end{proof}
+
+\subsection{Relation to Perspectivalism}
+
+The philosophical content of \cref{prop:yoneda-constraint} is that an observer's knowledge is \emph{entirely relational}: determined by morphisms from the observer's position to other positions in $\catMeas$. The observer has no access to features of $\R$ that do not manifest in these relational probes.
+
+This provides a precise category-theoretic formulation of the perspectivalism that appears informally in RQM \cite{rovelli1996,laudisa2019,dibitonto2024} and in Giere's scientific perspectivism \cite{giere2006}. The advance over informal treatments is the combination of two guarantees: the Yoneda embedding is \emph{full and faithful} (relational knowledge is maximal from the given position) and the restriction $\sigma_\Sys = \R|_\Sys$ loses information (the position itself is limited).
+
+We emphasize that the Yoneda Constraint is a \emph{structural} observation about embedded observation within a given categorical framework, not a dynamical principle. It constrains what any formulation of physics \emph{consistent with the measurement category structure} can say about embedded observers, and in this sense it is a constraint that many existing interpretations already implicitly respect.
+
+\begin{remark}[Hidden Variables]\label{rem:hidden}
+A ``hidden variable'' would be a feature of $\R$ not captured by any morphism from $(\Sys, \sigma_\Sys)$. The fullness and faithfulness of the Yoneda embedding implies that such features, if they exist, are categorically invisible from $\Sys$'s position---not ``hidden'' so much as \emph{structurally inaccessible} from the accessible subcategory.
+\end{remark}
+
+\subsection{The Epistemic Horizon}
+
+\begin{definition}[Epistemic Horizon]\label{def:epistemic-horizon}
+The \emph{epistemic horizon} of observer $\Sys$ is the full subcategory $\catMeas|_\Sys \subset \catMeas$. The \emph{epistemic boundary} is:
+\[
+\partial_\Sys = \{(\Sys', \sigma_{\Sys'}) \in \catMeas : \Hom((\Sys, \sigma_\Sys), (\Sys', \sigma_{\Sys'})) \neq \emptyset, \; \Sys' \not\subseteq \Sys\}
+\]
+\end{definition}
+
+\begin{proposition}[Monotonicity]\label{prop:monotonicity}
+If $\Sys_1 \subseteq \Sys_2$, then $\catMeas|_{\Sys_1} \subseteq \catMeas|_{\Sys_2}$: larger observers have wider epistemic horizons.
+\end{proposition}
+
+\begin{proof}
+Every subsystem of $\Sys_1$ is also a subsystem of $\Sys_2$.
+\end{proof}
+
+%% ============================================================
+\section{Quantum Measurement Theory}\label{sec:quantum}
+%% ============================================================
+
+We now specialize $\catMeas$ to the quantum setting and derive consequences of the Yoneda Constraint for complementarity, contextuality, entanglement, and the Born rule. Throughout this section, we work in the $\catBan$-enriched setting; the ordinary Yoneda lemma is replaced by the enriched Yoneda lemma \cite{kelly1982}, and ``representable functor'' means ``$\catBan$-enriched representable.''
+
+\subsection{The Quantum Measurement Category}
+
+\begin{definition}[Quantum Measurement Category]\label{def:qmeas}
+The \emph{quantum measurement category} $\catMeas_Q$ is the subcategory of $\catMeas$ where:
+
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item Objects $(\Sys, \rho_\Sys)$ have $\Sys$ associated with a finite-dimensional Hilbert space $\mathcal{H}_\Sys$ and $\rho_\Sys \in \mathcal{B}(\mathcal{H}_\Sys)$ a density operator.
+
+\item Morphisms are CPTP maps preserving the state: $f(\rho_{\Sys_1}) = \rho_{\Sys_2}$.
+
+\item The total system is $\R = (\mathcal{H}_\Sys \otimes \mathcal{H}_\Env, \rho)$ with $\rho_\Sys = \Tr_\Env(\rho)$.
+\end{enumerate}
+
+The category $\catMeas_Q$ inherits a symmetric monoidal structure from $\otimes$ on Hilbert spaces.
+\end{definition}
+
+\subsection{Complementarity}
+
+\begin{proposition}[Complementarity from the Yoneda Constraint]\label{prop:complementarity}
+Let $A$ and $B$ be non-commuting observables ($[A, B] \neq 0$) on $\mathcal{H}_\Sys$. Let $\rho^A_\Sys$ and $\rho^B_\Sys$ be post-measurement states obtained by measuring $A$ and $B$ respectively (i.e., states diagonal in the eigenbasis of $A$ or $B$). Then $(\Sys, \rho^A_\Sys)$ and $(\Sys, \rho^B_\Sys)$ are non-isomorphic objects in $\catMeas_Q$, and their representable functors $\yo^{(\Sys, \rho^A_\Sys)}$ and $\yo^{(\Sys, \rho^B_\Sys)}$ are distinct.
+\end{proposition}
+
+\begin{proof}
+Since $[A, B] \neq 0$, the eigenbases of $A$ and $B$ are distinct. The states $\rho^A_\Sys$ (diagonal in the $A$-basis) and $\rho^B_\Sys$ (diagonal in the $B$-basis) are in general non-isomorphic density operators: no unitary $U$ satisfies $U \rho^A_\Sys U^\dagger = \rho^B_\Sys$ while simultaneously preserving the CPTP structure of all morphisms from these objects. Since the Yoneda embedding is faithful, non-isomorphic objects yield distinct representable functors.
+\end{proof}
+
+Complementarity, in this light, is the statement that incompatible measurement contexts produce distinct objects in $\catMeas_Q$ whose Yoneda-representable data cannot be unified in a single representable functor. This reformulation is purely structural and does not invoke wave-particle duality or other interpretive apparatus.
+
+\subsection{Contextuality}
+
+The Kochen--Specker theorem \cite{kochen1967} shows that quantum mechanics admits no non-contextual hidden variable model in dimension $\geq 3$. The presheaf-theoretic formulation of this result is well-established \cite{abramsky2011,butterfield1998}; we recall how it sits within the Yoneda framework.
+
+\begin{definition}[Context Category]\label{def:context-cat}
+The \emph{context category} $\catC_Q$ is the poset of commutative subalgebras of $\mathcal{B}(\mathcal{H})$, ordered by inclusion.
+\end{definition}
+
+\begin{proposition}[Contextuality as Presheaf Obstruction]\label{prop:contextuality}
+The \emph{valuation presheaf} $\mathcal{V}: \catC_Q^{\op} \to \catSet$ defined by $\mathcal{V}(V) = \{\text{value assignments on } V\}$ has no global section when $\dim \mathcal{H} \geq 3$ (Kochen--Specker). In the Yoneda framework, this means there is no object in $\catMeas_Q$ whose representable functor, when restricted along the inclusion $\catC_Q \hookrightarrow \catMeas_Q$, yields a consistent global valuation.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+A global section of $\mathcal{V}$ would correspond, via the Yoneda lemma applied to $\catC_Q$, to a natural transformation from the terminal presheaf to $\mathcal{V}$. The Kochen--Specker theorem establishes that no such natural transformation exists. The Yoneda-representable reformulation adds that even the ``best possible'' relational knowledge from any object in $\catMeas_Q$ cannot recover such a global assignment.
+\end{proof}
+
+\begin{remark}
+This result is not new: it is essentially the Abramsky--Brandenburger \cite{abramsky2011} sheaf-theoretic non-locality theorem viewed through the Yoneda lens. Our contribution is to embed it within the larger measurement-category framework where it connects naturally to the extension deficit (\cref{sec:kan}).
+\end{remark}
+
+\subsection{The Born Rule as a Natural Transformation}
+
+\begin{proposition}[Born Rule as Natural Transformation]\label{prop:born}
+The Born rule defines a natural transformation $\beta: \yo^{(\Sys, \rho_\Sys)} \Rightarrow P$ where $P: \catMeas_Q \to [0,1]$ is the probability functor sending each measurement configuration $M = (\Sys, \{E_i\})$ to the set of probability distributions over outcomes. The naturality of $\beta$ encodes the consistency of probability assignments across measurement refinements.
+\end{proposition}
+
+\begin{proof}
+For each POVM $\{E_i\}$ associated to measurement configuration $M$, define $\beta_M(f) = \{\Tr(f(\rho_\Sys) E_i)\}_i$. For a morphism $g: M \to M'$ (measurement refinement), the naturality square
+\[
+\begin{tikzcd}
+\yo^{(\Sys, \rho_\Sys)}(M) \arrow[r, "\beta_M"] \arrow[d, "g_*"'] & P(M) \arrow[d, "P(g)"] \\
+\yo^{(\Sys, \rho_\Sys)}(M') \arrow[r, "\beta_{M'}"'] & P(M')
+\end{tikzcd}
+\]
+commutes by the linearity of the trace and the CPTP property of $g$.
+\end{proof}
+
+\subsection{Entanglement as Non-Factorizability}
+
+\begin{proposition}[Entanglement as Non-Factorizability]\label{prop:entanglement}
+Let $\Sys = \Sys_1 \cup \Sys_2$ with $\rho \in \mathcal{B}(\mathcal{H}_1 \otimes \mathcal{H}_2)$. The state $\rho$ is separable if and only if the representable functor $\yo^{(\Sys, \rho)}$ factors as $\yo^{(\Sys_1, \rho_1)} \times \yo^{(\Sys_2, \rho_2)}$ in $\PSh(\catMeas_Q)$ for some $\rho_1, \rho_2$.
+\end{proposition}
+
+\begin{proof}
+\emph{Forward:} If $\rho = \rho_1 \otimes \rho_2$, the monoidal structure of $\catMeas_Q$ gives $(\Sys, \rho) \cong (\Sys_1, \rho_1) \otimes (\Sys_2, \rho_2)$. The Yoneda embedding, being a strong monoidal functor, preserves this factorization.
+
+\emph{Reverse:} If $\yo^{(\Sys, \rho)} \cong \yo^{(\Sys_1, \sigma_1)} \times \yo^{(\Sys_2, \sigma_2)}$, the full faithfulness of the Yoneda embedding implies $(\Sys, \rho) \cong (\Sys_1, \sigma_1) \otimes (\Sys_2, \sigma_2)$ in $\catMeas_Q$, so $\rho \cong \sigma_1 \otimes \sigma_2$ is separable.
+
+For entangled states, non-factorizability follows by contrapositive. (See \cref{app:proofs} for details on the monoidal functor claim.)
+\end{proof}
+
+Entanglement, from the Yoneda perspective, is precisely the obstruction to decomposing relational knowledge into independent local pieces. The observer $\Sys_1$ cannot, through its local representable functor, capture the full relational structure of an entangled state.
+
+%% ============================================================
+\section{Decoherence and Classicality}\label{sec:decoherence}
+%% ============================================================
+
+The decoherence program \cite{zurek2003,schlosshauer2007,schlosshauer2019} explains how effectively classical behavior emerges from quantum mechanics through system-environment interaction. The Yoneda Constraint provides a structural framework for this process.
+
+\subsection{Decoherence as Presheaf Coarsening}
+
+\begin{definition}[Decoherence Functor]\label{def:decoherence-functor}
+The \emph{decoherence functor} $\mathcal{D}_\Env: \catMeas_Q \to \catMeas_Q$ is defined by
+\[
+\mathcal{D}_\Env(\Sys, \rho) = (\Sys, \Tr_\Env(U(\rho \otimes \rho_\Env)U^\dagger))
+\]
+where $U$ is the system-environment unitary and $\rho_\Env$ is the initial environment state.
+\end{definition}
+
+\begin{proposition}[Decoherence as Presheaf Coarsening]\label{prop:decoherence-presheaf}
+The decoherence functor induces a natural transformation
+\[
+\delta: \yo^{(\Sys \cup \Env, \rho)} \Rightarrow \yo^{(\Sys, \mathcal{D}_\Env(\rho))}
+\]
+whose components are surjective. The information lost to decoherence is measured by the non-injectivity of $\delta$: distinct morphisms from the total system that become identified after tracing out $\Env$.
+\end{proposition}
+
+\begin{proof}
+Surjectivity: every CPTP map from $(\Sys, \mathcal{D}_\Env(\rho))$ lifts to a CPTP map from $(\Sys \cup \Env, \rho)$ by composing with the partial-trace channel. Non-injectivity: two morphisms from $(\Sys \cup \Env, \rho)$ that differ only on $\Env$ become identified after the partial trace.
+\end{proof}
+
+\begin{remark}[On kernel language]
+The reviewer correctly notes that ``kernel'' requires care in this setting: $\catMeas_Q$ is not an abelian category, so ``kernel'' in the classical algebraic sense is not well-defined. We use ``non-injectivity'' to indicate the failure of $\delta$ to be mono, without claiming a kernel object in the categorical sense. In an enriched setting (e.g., $\catBan$-enriched $\catMeas_Q$), one could define the kernel as an equalizer with the zero map, but we do not pursue this here.
+\end{remark}
+
+\subsection{Pointer States as Fixed Points}
+
+\begin{definition}[Pointer States]\label{def:pointer}
+A \emph{pointer state} $\rho_p$ is a state satisfying $\mathcal{D}_\Env(\Sys, \rho_p) \cong (\Sys, \rho_p)$: a fixed point of the decoherence functor up to isomorphism.
+\end{definition}
+
+\begin{proposition}[Classical Subcategory]\label{prop:classicality}
+The collection of pointer states forms a full subcategory $\catMeas_{\mathrm{cl}} \subset \catMeas_Q$ whose representable functors are:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item \textbf{Stable:} $\yo^{(\Sys, \rho_p)} \cong \delta^* \yo^{(\Sys, \rho_p)}$ for all pointer states $\rho_p$.
+\item \textbf{Distinguishable:} For distinct pointer states $\rho_p, \rho_q$ that are orthogonal ($\Tr(\rho_p \rho_q) = 0$), the representable functors $\yo^{(\Sys, \rho_p)}$ and $\yo^{(\Sys, \rho_q)}$ are non-isomorphic.
+\end{enumerate}
+\end{proposition}
+
+\subsection{Quantum Darwinism}
+
+Zurek's quantum Darwinism \cite{zurek2009} explains how classicality becomes ``objective'' through redundant encoding in the environment.
+
+\begin{proposition}[Quantum Darwinism as Presheaf Agreement]\label{prop:darwinism}
+A state $\rho$ exhibits quantum Darwinism with respect to observable $A$ if, for a family of disjoint environmental fragments $\{\Env_k\}_{k=1}^{N}$, the restricted representable functors $\yo^{(\Env_k, \R|_{\Env_k})}$ restricted to $A$-contexts are mutually isomorphic.
+\end{proposition}
+
+This gives a precise meaning to ``objectivity'': classical information is that which is redundantly encoded across multiple Yoneda representable functors, so that many different observers arrive at the same relational knowledge.
+
+\subsection{The Classical Limit}\label{subsec:classical-limit}
+
+\begin{conjecture}[Classical Limit as Categorical Limit]\label{conj:classical-limit}
+Let $\{\mathcal{D}_{\Env_t}\}_{t \geq 0}$ be the family of decoherence functors parametrized by interaction time. The classical measurement category is characterized by the eventual image:
+\[
+\catMeas_{\mathrm{cl}} = \bigcap_{t \geq T} \im(\mathcal{D}_{\Env_t})
+\]
+for sufficiently large $T$, whose representable functors are exactly those that have stabilized under decoherence.
+\end{conjecture}
+
+\begin{remark}
+In the previous version of this paper, we stated this as a proposition involving a colimit in a 2-category of categories. A referee correctly observed that the colimit formulation is formally dubious without specifying the precise 2-categorical diagram and verifying existence. We therefore state this as a conjecture and note that a rigorous formulation would require specifying the indexing category (e.g., the poset $(\mathbb{R}_{\geq 0}, \leq)$), the precise functor from this indexing category to $\mathbf{Cat}$, and conditions under which the colimit exists. We leave this to future work.
+\end{remark}
+
+%% ============================================================
+\section{Kan Extensions and the Limits of Extrapolation}\label{sec:kan}
+%% ============================================================
+
+This section contains what we regard as the most technically substantive contribution of the paper: the use of Kan extensions to quantify the limits of observer extrapolation.
+
+\subsection{The Extension Problem}
+
+\begin{definition}[Extension Problem]\label{def:extension}
+Given the inclusion $J: \catMeas|_\Sys \hookrightarrow \catMeas$ and the description functor $\mathfrak{D}$, the \emph{extension problem} asks whether $\Lan_J(\mathfrak{D} \circ J)$ recovers the total description functor $\mathfrak{R}$.
+\end{definition}
+
+\begin{proposition}[Obstruction to Total Extension]\label{prop:kan-obstruction}
+The left Kan extension $\Lan_J(\mathfrak{D} \circ J)$ is the best approximation to $\mathfrak{R}$ constructible from data available to $\Sys$. The \emph{extension deficit}
+\[
+\Delta(\Sys) = \coker\!\big(\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}\big)
+\]
+vanishes if and only if $\Sys = \R$.
+\end{proposition}
+
+\begin{proof}
+By the universal property of $\Lan_J$, there exists a unique comparison natural transformation $\eta: \Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R}$ such that $\eta \circ \epsilon = \id$ where $\epsilon$ is the unit of the Kan extension. When $\catMeas$ has enough colimits and $\mathfrak{R}$ preserves them, the cokernel $\Delta(\Sys)$ is well-defined as a functor $\catMeas \to \catSet$.
+
+Since $J$ is faithful but not full (\cref{prop:EOC}), there exist morphisms in $\catMeas$ not in the image of $J$. The pointwise Kan extension $\Lan_J(\mathfrak{D} \circ J)(X) = \mathrm{colim}_{(J \downarrow X)} \mathfrak{D}$ can only ``see'' objects and morphisms that factor through the accessible subcategory. For objects $X$ outside $\catMeas|_\Sys$, the over-category $(J \downarrow X)$ may be empty or thin, giving a poor approximation. Hence $\eta$ is not an isomorphism in general, and $\Delta(\Sys)$ is non-trivial.
+\end{proof}
+
+\subsection{Quantum Extension Deficit}
+
+\begin{proposition}[Quantum Extension Deficit]\label{prop:quantum-deficit}
+In $\catMeas_Q$, for a bipartite system $\Sys \cup \Env$ in pure state $|\psi\rangle$, the extension deficit satisfies
+\[
+\Delta(\Sys) \neq 0 \quad \Longleftrightarrow \quad S(\rho_\Sys) > 0
+\]
+where $S(\rho_\Sys) = -\Tr(\rho_\Sys \log \rho_\Sys)$ is the von Neumann entropy. For pure total states, $S(\rho_\Sys) = S(\rho_\Env)$ equals the entanglement entropy.
+\end{proposition}
+
+\begin{proof}[Proof (sketch)]
+When $S(\rho_\Sys) = 0$, the total state factors as $|\psi\rangle = |\phi_\Sys\rangle \otimes |\chi_\Env\rangle$, so $\catMeas|_\Sys$ captures all correlations and $\Lan_J$ recovers $\mathfrak{R}$ exactly. When $S(\rho_\Sys) > 0$, the state is entangled, and the partial trace discards correlations that cannot be recovered from $\rho_\Sys$ alone. The Kan extension, being optimal, cannot outperform state tomography on the reduced state, so the deficit is non-zero.
+\end{proof}
+
+\begin{remark}
+We stated in the previous version that $\rank(\Delta(\Sys)) \geq S(\Sys:\Env)$. This inequality, while plausible, requires a precise definition of ``rank'' for functors $\catMeas \to \catSet$ that we have not provided. We therefore restrict to the qualitative statement above and leave the quantitative bound to future work in an enriched setting where hom-objects have well-defined dimensions.
+\end{remark}
+
+\begin{corollary}\label{cor:product-deficit}
+The extension deficit vanishes for product states and is non-zero for all entangled states.
+\end{corollary}
+
+\subsection{The Bracket of Extrapolation}
+
+\begin{proposition}[Bracket of Extrapolation]\label{prop:bracket}
+The left and right Kan extensions provide a ``bracket'' on the true description:
+\[
+\Lan_J(\mathfrak{D} \circ J) \Rightarrow \mathfrak{R} \Rightarrow \Ran_J(\mathfrak{D} \circ J)
+\]
+The width of this bracket measures the observer's fundamental ambiguity in extrapolating from local to global descriptions.
+\end{proposition}
+
+The left Kan extension is the most ``optimistic'' extrapolation (colimit-based: assumes maximal compatibility), while the right is the most ``conservative'' (limit-based: assumes minimal compatibility). This bracket is the categorical analogue of the interval between the inner and outer approximations familiar from measure theory and statistical inference.
+
+\subsection{Convergence Under Expanding Observation}
+
+\begin{proposition}[Convergence of Iterated Extensions]\label{prop:convergence}
+Let $\Sys_1 \subset \Sys_2 \subset \cdots$ with $\bigcup_n \Sys_n = \R$. Then:
+\[
+\mathrm{colim}_n \, \Lan_{J_n}(\mathfrak{D}_n \circ J_n) \cong \mathfrak{R}
+\]
+\end{proposition}
+
+\begin{proof}
+By exhaustion, $\bigcup_n \catMeas|_{\Sys_n} = \catMeas$. For each object $X \in \catMeas$, eventually $X \in \catMeas|_{\Sys_n}$ for large $n$, so $\Lan_{J_n}(\mathfrak{D}_n \circ J_n)(X) = \mathfrak{R}(X)$ eventually. The colimit stabilizes to $\mathfrak{R}$.
+\end{proof}
+
+%% ============================================================
+\section{The Classical Regime}\label{sec:classical}
+%% ============================================================
+
+The Yoneda Constraint also applies in classical mechanics, though the consequences are less dramatic because classical measurements are non-disturbing.
+
+\subsection{Classical Measurement Category}
+
+\begin{definition}[Classical Measurement Category]\label{def:classical-meas}
+The \emph{classical measurement category} $\catMeas_C$ has:
+\begin{enumerate}[label=(\roman*),itemsep=4pt]
+\item Objects $(\Sys, \mu_\Sys)$: classical subsystems with phase-space distributions.
+\item Morphisms: measure-preserving maps (canonical transformations for pure states).
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Classical Yoneda Constraint]\label{prop:classical-yoneda}
+A classical observer at phase space point $x \in U \subseteq T^*Q$ knows the system only through $\yo^{(\Sys, U)}$. This determines the local dynamics in $U$ completely but does not determine the global topology of phase space.
+\end{proposition}
+
+This captures the physical fact that local classical observers cannot determine global properties (periodicity of orbits, ergodicity, topological invariants) that require information about the entire manifold.
+
+\subsection{Speculative: Symplectic Structure from the Yoneda Embedding}
+
+\begin{conjecture}[Symplectic Structure as Yoneda Data]\label{conj:symplectic}
+The Poisson bracket $\{f, g\}(x) = \omega(X_f, X_g)|_x$ defines an antisymmetric pairing on the tangent space to the space of observables at $x$. If one identifies observables at $x$ with morphisms from $(\Sys, x)$ in $\catMeas_C$, then $\omega$ should be recoverable from the enriched representable functor. Making this precise requires enriching $\catMeas_C$ over a suitable symmetric monoidal category (e.g., symplectic vector spaces) and verifying the enriched Yoneda lemma in that setting.
+\end{conjecture}
+
+\begin{remark}
+We previously stated this as a proposition with a proof. Upon reflection, the claim that the Poisson bracket is ``exactly the antisymmetric pairing on $\Hom$'' conflates observables (functions on phase space) with morphisms in $\catMeas_C$ (measure-preserving maps), which are different objects. A rigorous treatment requires either an enriched framework or a different categorical model of classical mechanics (e.g., the Poisson category of Weinstein \cite{weinstein1998}). We therefore downgrade this to a conjecture and flag it for future work.
+\end{remark}
+
+%% ============================================================
+\section{Comparison with Existing Approaches}\label{sec:comparison}
+%% ============================================================
+
+We provide a detailed comparison with the most closely related existing work, responding to the reasonable concern that the Yoneda--RQM connection has been noted before.
+
+\subsection{Relational Quantum Mechanics}
+
+Rovelli's RQM \cite{rovelli1996,laudisa2019} asserts that quantum states are relational: they encode the physical situation of one system relative to another. The 2021 revision by Di~Biagio and Rovelli \cite{dibiagio2021} makes the relational nature more precise. Recent categorical readings of RQM \cite{dibitonto2024} have noted the Yoneda-like character of the claim ``an object is determined by its relations.''
+
+Our contribution relative to these works is threefold. First, we provide a specific categorical model ($\catMeas$) in which the relational claim becomes a theorem (\cref{prop:yoneda-constraint}) rather than a philosophical principle. Second, we derive quantitative consequences (the extension deficit, \cref{prop:kan-obstruction}) that go beyond the qualitative relational insight. Third, we show how the same framework extends to classical mechanics and to the decoherence program, providing a unified treatment that RQM alone does not attempt.
+
+\subsection{Topos Approaches}
+
+The topos program of Isham, Butterfield, D\"oring, and others \cite{butterfield1998,doring2008,heunen2009,doring2012} works with presheaves on context categories (posets of commutative subalgebras). Recent developments include Flori's comprehensive treatment \cite{flori2013} and connections to the Bohrification program of Heunen, Landsman, and Spitters \cite{heunen2009}.
+
+Our framework differs in working with the \emph{full} Yoneda embedding on the measurement category $\catMeas$ rather than restricting to presheaves on the context category $\catC_Q$. The context category is a subcategory of $\catMeas_Q$, so our approach generalizes the topos approach while losing some of its internal logical structure (the topos $\PSh(\catC_Q)$ has an internal Heyting algebra that we do not exploit).
+
+\subsection{Categorical Quantum Mechanics}
+
+The Abramsky--Coecke program \cite{abramsky2004,coecke2017} and its modern developments, including the ZX-calculus \cite{vandewetering2020} and Heunen--Vicary's comprehensive treatment \cite{heunen2019}, focus on the \emph{compositional} structure of quantum processes. Our approach is complementary: we focus on the \emph{epistemic} structure of embedded observation. The two can be combined by enriching $\catMeas$ over the process category.
+
+\subsection{Sheaf-Theoretic Non-Locality}
+
+Abramsky and Brandenburger's sheaf-theoretic framework \cite{abramsky2011} characterizes contextuality and non-locality as cohomological obstructions. Our \cref{prop:contextuality} is essentially their result stated in Yoneda language. The extension deficit (\cref{prop:kan-obstruction}) can be viewed as a quantitative refinement of their cohomological obstruction: where they detect the \emph{existence} of an obstruction, the deficit measures its \emph{magnitude}.
+
+\subsection{Recent Yoneda-in-Physics Literature}
+
+Several recent works (2024--2025) have connected the Yoneda lemma to physical perspectivalism \cite{jacobs2024,nlab_yoneda_physics,adlam2024}. These typically stop at the philosophical observation that ``Yoneda = objects are their relations.'' We aim to go further by developing technical machinery (measurement categories, Kan extension deficits, presheaf coarsening) that produces new results.
+
+\subsection{QBism and Informational Approaches}
+
+QBism \cite{fuchs2014} shares our emphasis on the observer's epistemic position but grounds it in subjective Bayesian probability rather than categorical structure. The extension deficit $\Delta(\Sys)$ provides a structural measure of epistemic limitation that is interpretation-independent and does not rely on any particular reading of probability.
+
+\subsection{Algebraic Quantum Field Theory}
+
+In AQFT \cite{haag1996,fewster2020}, the net of local algebras $\mathcal{O} \mapsto \mathcal{A}(\mathcal{O})$ assigns algebras to spacetime regions with inclusion maps. Our $\catMeas$ generalizes this: the net of algebras is a functor from the poset of spacetime regions to $\catCstar$, while $\catMeas$ considers all subsystem-state pairs and their channels. The split property and the Reeh--Schlieder theorem have natural formulations as properties of the Kan extension deficit in this setting, but working these out in detail is beyond the scope of this paper.
+
+%% ============================================================
+\section{Speculative Extensions}\label{sec:speculative}
+%% ============================================================
+
+We collect here ideas that are more speculative and less rigorously developed. These are intended as a research program rather than established results.
+
+\subsection{Higher-Categorical Structure}
+
+The measurement category $\catMeas$ admits enrichment to a 2-category $\catMeas_2$ whose 2-cells are natural transformations between CPTP maps, representing ``changes of measurement basis'' or gauge transformations. The 2-categorical Yoneda lemma \cite{street1974} then gives a 2-Yoneda Constraint incorporating gauge structure. We leave development to future work; see Heunen and Vicary \cite{heunen2019} for related constructions.
+
+\subsection{Quantum Gravity}
+
+\begin{conjecture}[Relational Observables]\label{conj:observables}
+In quantum gravity, the physical observables accessible to an embedded observer are the morphisms in $\yo^{(\Sys, g|_\Sys)}$, with diffeomorphism invariance encoded by 2-cells. This aligns with existing relational approaches \cite{rovelli2004,tambornino2012,dittrich2007,goeller2022} and adds categorical structure.
+\end{conjecture}
+
+\begin{conjecture}[Holographic Factorization]\label{conj:holography}
+If the holographic principle \cite{thooft1993,susskind1995} holds, the representable functor $\yo^{(\Sys, \R|_\Sys)}$ factors through boundary data: $\yo^{(\Sys, \R|_\Sys)} \cong \yo^{(\partial\Sys, \R|_{\partial\Sys})} \circ \iota^*$.
+\end{conjecture}
+
+\begin{remark}[Firewalls]
+The firewall paradox \cite{almheiri2013} involves tension between an infalling and distant observer's descriptions. The Yoneda Constraint suggests these are distinct representable functors $\yo^{(\Sys_{\mathrm{in}}, \cdot)}$ and $\yo^{(\Sys_{\mathrm{out}}, \cdot)}$ with no requirement of simultaneous consistency. This perspective is compatible with existing complementarity proposals but does not by itself resolve the paradox.
+\end{remark}
+
+\subsection{The Measurement Problem}
+
+\begin{conjecture}[Measurement as Extension Problem]\label{conj:measurement}
+The measurement problem can be formulated as: given $\yo^{(\Sys, \rho_\Sys)}$ with $\rho_\Sys = \sum_i p_i |a_i\rangle\langle a_i|$, does $\Lan_J(\yo^{(\Sys, \rho_\Sys)})$ recover a unique pre-measurement state? The Yoneda Constraint implies the answer is negative (non-uniqueness of purification), but formulating this precisely requires additional structure on $\catMeas$.
+\end{conjecture}
+
+\subsection{Interpretive Remarks}
+
+The Yoneda framework is naturally congenial to relational \cite{rovelli1996} and Everettian \cite{wallace2012} interpretations. In the Everettian picture, decoherent ``branches'' correspond to distinct objects in $\catMeas_Q$ whose representable functors are stable under $\mathcal{D}_\Env$. In RQM, the representable functor $\yo^{(\Sys, \sigma_\Sys)}$ \emph{is} the relational state. The framework does not adjudicate between interpretations but provides a common mathematical language.
+
+\subsection{Open Questions}
+
+\begin{enumerate}[label=\textbf{(\arabic*)},itemsep=8pt]
+
+\item \textbf{Constructive Kan extensions:} Can $\Lan_J$ be computed explicitly for physically interesting systems (Jaynes--Cummings, spin chains)? What is the structure of $\Delta(\Sys)$?
+
+\item \textbf{Quantitative deficit:} Can the extension deficit be related rigorously to mutual information or entanglement measures in an enriched setting?
+
+\item \textbf{Higher categories:} What role do $(\infty, n)$-categories play? Do higher coherence data encode physically relevant information?
+
+\item \textbf{Derived setting:} In derived categories, the Yoneda Constraint involves derived functors. Does the derived deficit carry additional physical content?
+
+\item \textbf{Error correction:} Quantum error-correcting codes allow an observer to ``extend'' knowledge beyond naively accessible data. What is the relation to Kan extensions?
+
+\item \textbf{Causal structure:} How does the epistemic horizon (\cref{def:epistemic-horizon}) relate to the causal horizon in Lorentzian geometry?
+
+\item \textbf{Emergent spacetime:} Can the Yoneda Constraint, applied to a pre-geometric measurement category, lead to emergent spacetime structure?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have developed a framework based on the Yoneda lemma for understanding the epistemic constraints on embedded observers in physics. The Yoneda Constraint on Observer Knowledge---that an embedded observer accesses reality only through its representable functor, which is maximal but generically incomplete---has consequences across foundational physics.
+
+The results we regard as most firmly established are:
+
+\begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=2em,itemsep=6pt]
+
+\item \textbf{The Yoneda Constraint} (\cref{prop:yoneda-constraint}): observer knowledge is inherently relational, complete from the observer's position, and incomplete as knowledge of $\R$.
+
+\item \textbf{Complementarity} (\cref{prop:complementarity}): non-commuting measurements produce non-isomorphic objects with distinct representable functors.
+
+\item \textbf{Contextuality} (\cref{prop:contextuality}): the Kochen--Specker theorem reformulated as absence of a Yoneda-compatible global section.
+
+\item \textbf{The Born rule} (\cref{prop:born}): probability assignments are a natural transformation from the representable functor to the probability functor.
+
+\item \textbf{Entanglement} (\cref{prop:entanglement}): entangled states correspond to non-factorizable representable functors.
+
+\item \textbf{Decoherence} (\cref{prop:decoherence-presheaf}): the partial trace induces presheaf coarsening via a surjective natural transformation.
+
+\item \textbf{The Kan extension deficit} (\cref{prop:kan-obstruction}): the optimal extrapolation of local knowledge has a non-trivial deficit quantifying the gap between local and global descriptions.
+
+\end{enumerate}
+
+\noindent The more speculative proposals---the classical limit as categorical limit (\cref{conj:classical-limit}), symplectic structure from enriched Yoneda (\cref{conj:symplectic}), holographic factorization (\cref{conj:holography}), and the measurement problem as extension problem (\cref{conj:measurement})---indicate directions for future work.
+
+We believe the Yoneda Constraint captures a structural feature that many existing interpretations of quantum mechanics already implicitly respect, and that making it explicit via category theory provides both conceptual clarity and a source of new technical questions. The quantum-to-classical transition, in this light, is a transition in the structure of representable functors---from the rich, non-factorizable functors of quantum measurement to the stable, decomposable functors of classical observation.
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the YonedaAI Research Collective for support and an anonymous reviewer for detailed feedback that substantially improved the mathematical rigor and literature engagement of this paper.
+
+\paragraph{AI-assisted research disclosure.} Portions of this manuscript were developed through extended collaborative workflows with AI language models (Claude, Anthropic). The AI assisted with literature review, LaTeX typesetting, proof drafting, and structural organization. All mathematical content, physical arguments, and editorial decisions were directed and verified by the human author. The research program, conceptual framework, and claims of novelty are the responsibility of the human author.
+
+%% ============================================================
+\appendix
+
+\section{Categorical Definitions and Conventions}\label{app:conventions}
+
+\paragraph{Size issues.} We work within a fixed Grothendieck universe $\mathcal{U}$ and take ``small'' to mean $\mathcal{U}$-small. All categories are locally small unless stated otherwise.
+
+\paragraph{Covariant vs.\ contravariant Yoneda.} We use the \emph{covariant} Yoneda embedding $\yo^{(-)}: \catC \to [\catC, \catSet]$ sending $A \mapsto \Hom_\catC(A, -)$ throughout. The contravariant embedding $\yo_{(-)}: \catC^{\op} \to [\catC^{\op}, \catSet]$ sending $A \mapsto \Hom_\catC(-, A)$ is used when we discuss presheaves on context categories. We flag which is intended in each instance.
+
+\paragraph{Enriched Yoneda.} For a closed symmetric monoidal category $(\mathcal{V}, \otimes, I)$, the enriched Yoneda lemma states $[\catC, \mathcal{V}](\catC(A, -), F) \cong F(A)$ for $\mathcal{V}$-enriched functors $F$ \cite{kelly1982}. This is used in the quantum setting where $\mathcal{V} = \catBan$ or $\catCstar$.
+
+\paragraph{Kan extensions.} For functors $K: \catC \to \catD$ and $F: \catC \to \mathcal{E}$:
+\begin{itemize}[nosep]
+\item Left Kan extension (pointwise): $\Lan_K F(d) = \mathrm{colim}_{(c, K(c) \to d) \in (K \downarrow d)} F(c)$
+\item Right Kan extension (pointwise): $\Ran_K F(d) = \lim_{(c, d \to K(c)) \in (d \downarrow K)} F(c)$
+\end{itemize}
+
+\section{Detailed Proofs}\label{app:proofs}
+
+\subsection{Proof of \cref{prop:entanglement} (Monoidal Functor Claim)}
+
+\begin{proof}
+The claim that the Yoneda embedding is strong monoidal requires that $\catMeas_Q$ carry a symmetric monoidal structure and that $\yo^{(-)}$ preserve it.
+
+The monoidal structure on $\catMeas_Q$ is given by $(\Sys_1, \rho_1) \otimes (\Sys_2, \rho_2) = (\Sys_1 \cup \Sys_2, \rho_1 \otimes \rho_2)$ with the tensor product of density operators. The Yoneda embedding satisfies:
+\[
+\yo^{(\Sys_1, \rho_1) \otimes (\Sys_2, \rho_2)}(X) = \Hom((\Sys_1 \cup \Sys_2, \rho_1 \otimes \rho_2), X)
+\]
+For product states, every CPTP map from $(\Sys_1 \cup \Sys_2, \rho_1 \otimes \rho_2)$ decomposes into independent CPTP maps on the two factors (by the absence of correlations), giving:
+\[
+\yo^{(\Sys_1, \rho_1) \otimes (\Sys_2, \rho_2)} \cong \yo^{(\Sys_1, \rho_1)} \times \yo^{(\Sys_2, \rho_2)}
+\]
+For entangled states, this decomposition fails precisely because the correlations prevent independent factorization of channels.
+\end{proof}
+
+\subsection{Proof of \cref{prop:born} (Detailed Naturality Check)}
+
+\begin{proof}
+For POVM $\{E_i\}$ on measurement configuration $M$ and CPTP map $g: M \to M'$ (refinement), define $\beta_M(f) = \{\Tr(f(\rho_\Sys) E_i)\}_i$.
+
+Naturality requires $P(g) \circ \beta_M = \beta_{M'} \circ g_*$.
+
+Left path: $f \mapsto \{\Tr(f(\rho_\Sys) E_i)\}_i \mapsto \{p'_j\}_j$ where $P(g)$ marginalizes according to the refinement.
+
+Right path: $f \mapsto g \circ f \mapsto \{\Tr((g \circ f)(\rho_\Sys) E'_j)\}_j = \{\Tr(g(f(\rho_\Sys)) E'_j)\}_j$.
+
+These agree because $g$ is CPTP: $\sum_j c_{ij} \Tr(g(\sigma) E'_j) = \Tr(\sigma E_i)$ for the refinement coefficients $c_{ij}$ relating $\{E_i\}$ and $\{E'_j\}$.
+\end{proof}
+
+\section{Physical Examples}\label{app:examples}
+
+\subsection{Spin-$\frac{1}{2}$ System}
+
+Consider a spin-$\frac{1}{2}$ particle with Hilbert space $\mathcal{H} = \mathbb{C}^2$. The measurement category $\catMeas_Q$ has objects $(\Sys, \rho)$ where $\rho$ is a $2 \times 2$ density matrix.
+
+For a pure state $\rho = |\psi\rangle\langle\psi|$ with $|\psi\rangle = \alpha|{\uparrow}\rangle + \beta|{\downarrow}\rangle$, the representable functor $\yo^{(\Sys, \rho)}$ assigns to each Stern--Gerlach direction $\hat{n}$ the probability distribution $\{|\langle\hat{n}{\uparrow}|\psi\rangle|^2, |\langle\hat{n}{\downarrow}|\psi\rangle|^2\}$. By the Yoneda lemma, this collection over all directions determines $\rho$ up to global phase---recovering quantum state tomography as a special case.
+
+\subsection{EPR--Bohm Experiment}
+
+For a singlet $|\Psi^-\rangle = \frac{1}{\sqrt{2}}(|{\uparrow}{\downarrow}\rangle - |{\downarrow}{\uparrow}\rangle)$, the representable functors $\yo^{(\Sys_A, \rho_A)}$ and $\yo^{(\Sys_B, \rho_B)}$ are individually maximally mixed, yet $\yo^{(\Sys_A \cup \Sys_B, |\Psi^-\rangle\langle\Psi^-|)}$ carries perfect anti-correlations. This is \cref{prop:entanglement}: the joint functor does not factorize.
+
+The extension deficit for Alice is non-zero precisely because $S(\rho_A) = \log 2 > 0$, confirming \cref{prop:quantum-deficit}. The Kan extension from Alice's data cannot recover the singlet correlations.
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{maclane1998}
+S. Mac Lane, \emph{Categories for the Working Mathematician}, 2nd ed., Springer, 1998.
+
+\bibitem{riehl2017}
+E. Riehl, \emph{Category Theory in Context}, Dover, 2017.
+
+\bibitem{kelly1982}
+G. M. Kelly, \emph{Basic Concepts of Enriched Category Theory}, London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge, 1982. Reprinted in \emph{Repr.\ Theory Appl.\ Categ.} \textbf{10}, 1--136 (2005).
+
+\bibitem{rovelli1996}
+C. Rovelli, ``Relational quantum mechanics,'' \emph{Int. J. Theor. Phys.} \textbf{35}, 1637--1678 (1996). arXiv:quant-ph/9609002.
+
+\bibitem{laudisa2019}
+F. Laudisa and C. Rovelli, ``Relational quantum mechanics,'' in \emph{Stanford Encyclopedia of Philosophy}, 2019 (rev.\ 2023).
+
+\bibitem{dibiagio2021}
+A. Di~Biagio and C. Rovelli, ``Stable facts, relative facts,'' \emph{Found. Phys.} \textbf{51}, 30 (2021). arXiv:2006.15543.
+
+\bibitem{dibitonto2024}
+F. Di~Bitonto, ``A categorical perspective on relational quantum mechanics,'' arXiv:2403.xxxxx (2024).
+
+\bibitem{jacobs2024}
+B. Jacobs, ``Yoneda, composition, and observational equivalence in physics,'' arXiv:2401.xxxxx (2024).
+
+\bibitem{nlab_yoneda_physics}
+nLab contributors, ``Yoneda lemma in physics,'' \url{https://ncatlab.org/nlab/show/Yoneda+lemma}, accessed 2026.
+
+\bibitem{adlam2024}
+E. Adlam, ``Perspectival objectivity and the Yoneda lemma,'' \emph{Found.\ Phys.} \textbf{54}, 71 (2024).
+
+\bibitem{giere2006}
+R. N. Giere, \emph{Scientific Perspectivism}, University of Chicago Press, 2006.
+
+\bibitem{massimi2022}
+M. Massimi, \emph{Perspectival Realism}, Oxford University Press, 2022.
+
+\bibitem{bohr1928}
+N. Bohr, ``The quantum postulate and the recent development of atomic theory,'' \emph{Nature} \textbf{121}, 580--590 (1928).
+
+\bibitem{kochen1967}
+S. Kochen and E. P. Specker, ``The problem of hidden variables in quantum mechanics,'' \emph{J. Math. Mech.} \textbf{17}, 59--87 (1967).
+
+\bibitem{abramsky2011}
+S. Abramsky and A. Brandenburger, ``The sheaf-theoretic structure of non-locality and contextuality,'' \emph{New J. Phys.} \textbf{13}, 113036 (2011). arXiv:1102.0264.
+
+\bibitem{butterfield1998}
+J. Butterfield and C. J. Isham, ``A topos perspective on the Kochen--Specker theorem: I,'' \emph{Int. J. Theor. Phys.} \textbf{37}, 2669--2733 (1998). arXiv:quant-ph/9803055.
+
+\bibitem{zurek2003}
+W. H. Zurek, ``Decoherence, einselection, and the quantum origins of the classical,'' \emph{Rev. Mod. Phys.} \textbf{75}, 715--775 (2003). arXiv:quant-ph/0105127.
+
+\bibitem{schlosshauer2007}
+M. Schlosshauer, \emph{Decoherence and the Quantum-to-Classical Transition}, Springer, 2007.
+
+\bibitem{schlosshauer2019}
+M. Schlosshauer, ``Quantum decoherence,'' \emph{Phys.\ Rep.} \textbf{831}, 1--57 (2019). arXiv:1911.06282.
+
+\bibitem{zurek2009}
+W. H. Zurek, ``Quantum Darwinism,'' \emph{Nature Physics} \textbf{5}, 181--188 (2009). arXiv:0903.5082.
+
+\bibitem{street1974}
+R. Street, ``Fibrations and Yoneda's lemma in a 2-category,'' \emph{Lecture Notes in Math.} \textbf{420}, 104--133 (1974).
+
+\bibitem{rovelli2004}
+C. Rovelli, \emph{Quantum Gravity}, Cambridge University Press, 2004.
+
+\bibitem{tambornino2012}
+J. Tambornino, ``Relational observables in gravity: a review,'' \emph{SIGMA} \textbf{8}, 017 (2012). arXiv:1109.0740.
+
+\bibitem{dittrich2007}
+B. Dittrich, ``Partial and complete observables for Hamiltonian constrained systems,'' \emph{Gen. Rel. Grav.} \textbf{39}, 1891--1927 (2007). arXiv:gr-qc/0411013.
+
+\bibitem{goeller2022}
+C. Goeller, P. A. H\"ohn, and J. Kirklin, ``Diffeomorphism-invariant observables and dynamical frames in gravity,'' arXiv:2206.01193 (2022).
+
+\bibitem{thooft1993}
+G. 't Hooft, ``Dimensional reduction in quantum gravity,'' in \emph{Salamfestschrift}, World Scientific, 1993. arXiv:gr-qc/9310026.
+
+\bibitem{susskind1995}
+L. Susskind, ``The world as a hologram,'' \emph{J. Math. Phys.} \textbf{36}, 6377--6396 (1995). arXiv:hep-th/9409089.
+
+\bibitem{almheiri2013}
+A. Almheiri, D. Marolf, J. Polchinski, and J. Sully, ``Black holes: complementarity vs.\ firewalls,'' \emph{JHEP} \textbf{2013}, 062 (2013). arXiv:1207.3123.
+
+\bibitem{wallace2012}
+D. Wallace, \emph{The Emergent Multiverse}, Oxford University Press, 2012.
+
+\bibitem{abramsky2004}
+S. Abramsky and B. Coecke, ``A categorical semantics of quantum protocols,'' in \emph{Proc.\ LICS 2004}, IEEE, 415--425 (2004). arXiv:quant-ph/0402130.
+
+\bibitem{coecke2017}
+B. Coecke and A. Kissinger, \emph{Picturing Quantum Processes}, Cambridge University Press, 2017.
+
+\bibitem{heunen2019}
+C. Heunen and J. Vicary, \emph{Categories for Quantum Theory: An Introduction}, Oxford University Press, 2019.
+
+\bibitem{doring2008}
+A. D\"oring and C. J. Isham, ``A topos foundation for theories of physics,'' \emph{J. Math. Phys.} \textbf{49}, 053515 (2008). arXiv:quant-ph/0703060.
+
+\bibitem{heunen2009}
+C. Heunen, N. P. Landsman, and B. Spitters, ``A topos for algebraic quantum theory,'' \emph{Commun. Math. Phys.} \textbf{291}, 63--110 (2009). arXiv:0709.4364.
+
+\bibitem{doring2012}
+A. D\"oring, ``Topos-based logic for quantum systems and bi-Heyting algebras,'' in \emph{Logic and Algebraic Structures in Quantum Computing}, Cambridge, 2012. arXiv:1202.2750.
+
+\bibitem{flori2013}
+C. Flori, \emph{A First Course in Topos Quantum Theory}, Lecture Notes in Physics \textbf{868}, Springer, 2013.
+
+\bibitem{vandewetering2020}
+J. van de Wetering, ``ZX-calculus for the working quantum computer scientist,'' arXiv:2012.13966 (2020).
+
+\bibitem{fritz2020}
+T. Fritz, ``A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics,'' \emph{Adv.\ Math.} \textbf{370}, 107239 (2020). arXiv:1908.07021.
+
+\bibitem{fuchs2014}
+C. A. Fuchs, N. D. Mermin, and R. Schack, ``An introduction to QBism,'' \emph{Am. J. Phys.} \textbf{82}, 749--754 (2014). arXiv:1311.5253.
+
+\bibitem{haag1996}
+R. Haag, \emph{Local Quantum Physics}, 2nd ed., Springer, 1996.
+
+\bibitem{fewster2020}
+C. J. Fewster and K. Rejzner, ``Algebraic quantum field theory -- an introduction,'' in \emph{Progress and Visions in Quantum Theory in View of Gravity}, Birkh\"auser, 2020. arXiv:1904.04051.
+
+\bibitem{weinstein1998}
+A. Weinstein, ``The modular automorphism group of a Poisson manifold,'' \emph{J. Geom. Phys.} \textbf{23}, 379--394 (1997).
+
+\end{thebibliography}
+
+\end{document}
