@@ -151,6 +151,25 @@ mv "images/$SUBJECT-1.png" "images/$SUBJECT.png"
 - One image per paper (first page only)
 - Images directory must exist before writing
 
+#### Stage 7 — Facebook Post
+| Field | Value |
+|-------|-------|
+| Input | `papers/latex/$SUBJECT.tex` |
+| Output | `posts/$SUBJECT.md` |
+| Task | Write an engaging Facebook post about the paper |
+
+**Format rules** (Facebook does NOT render markdown):
+- PLAIN TEXT ONLY — no `**bold**`, no `*italic*`, no `# headers`, no `- ` bullets
+- Use emojis for visual structure and emphasis
+- Use line breaks (blank lines) to separate sections
+- Use ALL CAPS sparingly for emphasis
+- Use em dashes (—) and smart quotes for polish
+- Use Unicode section dividers (e.g. _____)
+- Structure: hook → problem → insight → why it matters → link → hashtags
+- Hashtags on their own line at the end, no `**` wrapping
+- Link to https://magnetonio.github.io/yoneda-ai/
+- Tone: accessible to science-curious audience, not academic
+
 ---
 
 ## Adding More Agents
