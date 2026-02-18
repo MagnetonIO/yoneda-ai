@@ -140,13 +140,9 @@ rm -f *.aux *.log *.toc *.out *.bbl *.blg *.nav *.snm *.vrb *.fls *.fdb_latexmk 
 
 ```bash
 mkdir -p images
-# Using sips (macOS) via PDF→PNG conversion, or magick/convert if available
-magick -density 300 "papers/pdf/$SUBJECT.pdf[0]" -quality 95 "images/$SUBJECT.png"
-
-# Fallback if ImageMagick not available:
-sips -s format png --resampleWidth 2400 "papers/pdf/$SUBJECT.pdf" --out "images/$SUBJECT.png" 2>/dev/null \
-  || pdftoppm -png -f 1 -l 1 -r 300 "papers/pdf/$SUBJECT.pdf" "images/$SUBJECT" \
-  && mv "images/$SUBJECT-1.png" "images/$SUBJECT.png" 2>/dev/null
+# Use pdftoppm (poppler) — ImageMagick produces black pages on macOS
+pdftoppm -png -f 1 -l 1 -r 300 "papers/pdf/$SUBJECT.pdf" "images/$SUBJECT"
+mv "images/$SUBJECT-1.png" "images/$SUBJECT.png"
 ```
 
 **Rules**:
