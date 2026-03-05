@@ -282,6 +282,19 @@
       font-size: 0.9rem;
     }
 
+    #research-select:hover,
+    #research-select:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    #research-select option {
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px;
+    }
+
     @media (max-width: 640px) {
       h1 { font-size: 2rem; }
       header { padding: 48px 0 40px; }
@@ -313,6 +326,37 @@
 
     <section>
       <div class="section-title">Papers</div>
+
+      <!-- Research dropdown -->
+      <div style="margin-bottom: 24px;">
+        <select id="research-select" style="
+          width: 100%;
+          max-width: 480px;
+          padding: 12px 16px;
+          font-size: 0.95rem;
+          font-family: inherit;
+          background: var(--surface);
+          color: var(--text);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          cursor: pointer;
+          appearance: none;
+          -webkit-appearance: none;
+          background-image: url('data:image/svg+xml;utf8,<svg fill="%238888a0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          background-size: 20px;
+        ">
+          <option value="">Select a research paper...</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/black-hole-information-paradox.pdf">Black Hole Information Paradox (hep-th)</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/hidden-variable-debates.pdf">Hidden Variable Debates (quant-ph)</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/measurement-problem.pdf">Measurement Problem (quant-ph)</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/wigners-friend.pdf">Wigner's Friend (quant-ph)</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/horizon-problems.pdf">Horizon Problems (hep-th)</option>
+          <option value="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/limits-quantum-gravity-observation.pdf">Limits of Quantum Gravity Observation (gr-qc)</option>
+        </select>
+      </div>
+
       <div class="papers-grid">
 
         <a class="paper-card" href="https://github.com/MagnetonIO/yoneda-ai/raw/main/papers/pdf/black-hole-information-paradox.pdf">
@@ -435,5 +479,13 @@
       <a href="https://github.com/MagnetonIO/yoneda-ai">GitHub</a>
     </footer>
   </div>
+  <script>
+    document.getElementById('research-select').addEventListener('change', function() {
+      if (this.value) {
+        window.open(this.value, '_blank');
+        this.selectedIndex = 0;
+      }
+    });
+  </script>
 </body>
 </html>
