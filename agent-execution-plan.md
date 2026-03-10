@@ -167,8 +167,142 @@ mv "images/$SUBJECT-1.png" "images/$SUBJECT.png"
 - Use Unicode section dividers (e.g. _____)
 - Structure: hook → problem → insight → why it matters → link → hashtags
 - Hashtags on their own line at the end, no `**` wrapping
-- Link to https://magnetonio.github.io/yoneda-ai/
+- Link to $PAGES_URL
 - Tone: accessible to science-curious audience, not academic
+
+#### Stage 8 — HTML Conversion
+| Field | Value |
+|-------|-------|
+| Input | `papers/latex/$SUBJECT.tex` + HTML template |
+| Output | `docs/papers/$SUBJECT.html` |
+| Task | Convert LaTeX paper to readable, mobile-friendly HTML5 page |
+| Tool | `scripts/latex2html.py` (pandoc + post-processing) |
+
+**Conversion tool** (`scripts/latex2html.py`):
+
+Uses pandoc for LaTeX→HTML5 conversion, then cleans remaining LaTeX artifacts
+(`\texttt`, `\textbf`, `\emph`, `\vspace`, lstlisting remnants, etc.) via regex
+post-processing. Injects content into a styled HTML template with dark theme,
+sidebar TOC, and KaTeX math rendering.
+
+```bash
+# Convert all papers using config file
+python3 scripts/latex2html.py --config papers.yaml
+
+# Or specify inline
+python3 scripts/latex2html.py \
+  --latex-dir papers/latex \
+  --html-dir docs/papers \
+  --template scripts/paper-template.html \
+  --project-title "$PROJECT_TITLE" \
+  --papers "$SUBJECT_A:$TITLE_A:Part I" "$SUBJECT_B:$TITLE_B:Part II"
+```
+
+**Config file format** (`papers.yaml`):
+```yaml
+project_title: "The AI Operating System"
+latex_dir: "papers/latex"
+html_dir: "docs/papers"
+template: "scripts/paper-template.html"
+papers:
+  - name: "agent-scheduler"
+    title: "Agent Scheduler"
+    part: "Part I"
+  - name: "tool-interface"
+    title: "Tool Interface Layer"
+    part: "Part II"
+```
+
+**Dependencies**: `pandoc` (brew install pandoc)
+
+**Template** (`scripts/paper-template.html`):
+- Dark theme with CSS variables (--bg, --surface, --accent, etc.)
+- KaTeX CDN for math rendering ($...$ inline, $$...$$ display)
+- Sticky sidebar TOC auto-generated from h2/h3 headings via JS
+- Responsive: hamburger menu on mobile, sidebar collapse
+- PDF download link, series navigation
+- Placeholders: `{{TITLE}}`, `{{PART}}`, `{{PDF_LINK}}`, `{{BODY}}`
+
+**Post-conversion QA**:
+After running the conversion, launch a frontend analysis agent per file to check for:
+- Remaining LaTeX artifacts
+- Broken code blocks or tables
+- Missing TikZ figures (pandoc can't convert these — add notes or use PDF reference)
+- KaTeX math rendering issues
+- Dark theme consistency
+
+#### Stage 9 — Slack Notification (optional)
+| Field | Value |
+|-------|-------|
+| Input | Completed paper metadata |
+| Output | Slack message in configured channel |
+| Task | Send completion notification with paper title, links, and summary |
+
+**Config**:
+```yaml
+slack_channel: "$SLACK_CHANNEL"   # channel name or ID
+notify_on: "completion"            # "completion" | "each_stage"
+```
+
+---
+
+## Infrastructure Steps (run once per project, after all workers complete)
+
+### Step I — Create Directory Structure
+```bash
+mkdir -p $PROJECT/{papers/{latex,pdf},src,reviews,posts,images,docs/papers,.github/workflows}
+cd $PROJECT && git init
+```
+
+### Step II — GitHub Pages Site
+| Field | Value |
+|-------|-------|
+| Input | Paper metadata + CSS template |
+| Output | `docs/index.html` |
+| Task | Create landing page with paper cards, architecture diagram, links |
+
+**Requirements**:
+- Dark theme (match YonedaAI style)
+- Responsive (mobile + desktop)
+- Paper cards with "Read" (HTML), "PDF", and "Code" links
+- Architecture diagram
+- Author info and project description
+
+### Step III — GitHub Actions Workflow
+| Field | Value |
+|-------|-------|
+| Output | `.github/workflows/pages.yml` |
+| Task | GitHub Pages deployment from `docs/` directory |
+
+### Step IV — Remote Repo
+```bash
+# Create repo
+gh repo create $GITHUB_ORG/$PROJECT --public \
+  --description "$DESCRIPTION" \
+  --homepage "$PAGES_URL"
+git remote add origin https://github.com/$GITHUB_ORG/$PROJECT.git
+
+# Enable Actions for the repo
+gh api repos/$GITHUB_ORG/$PROJECT/actions/permissions -X PUT -f enabled=true
+
+# Enable GitHub Pages with Actions as the build source
+gh api repos/$GITHUB_ORG/$PROJECT/pages -X POST -f build_type=workflow
+# If Pages already exists, switch to Actions build:
+# gh api repos/$GITHUB_ORG/$PROJECT/pages -X PUT -f build_type=workflow
+```
+
+### Step V — README
+| Field | Value |
+|-------|-------|
+| Output | `README.md` |
+| Task | Project overview with architecture, paper table, tech stack |
+
+### Step VI — Commit (don't push unless instructed)
+```bash
+git add . && git commit -m "$COMMIT_MESSAGE"
+# Only push if explicitly instructed:
+# git push -u origin main
+```
 
 ---
 
@@ -235,12 +369,182 @@ $EMAIL · $URL
 
 ### Output Structure
 ```
-papers/
-  $SUBJECT.tex          # final paper with GrokRxiv sidebar
-  $SUBJECT.pdf          # compiled PDF (final deliverable)
-reviews/
-  $SUBJECT-review.md    # peer review feedback
-src/
-  $SUBJECT/             # accompanying code
-    Main.hs (or .py, .lean, etc.)
+$PROJECT/
+  papers/
+    latex/$SUBJECT.tex      # final paper with GrokRxiv sidebar
+    latex/$SUBJECT.pdf      # compiled PDF (final deliverable)
+  reviews/
+    $SUBJECT-review.md      # peer review feedback
+  src/
+    $SUBJECT/               # accompanying code
+      Main.hs (or .ex, .py, .lean, etc.)
+  scripts/
+    latex2html.py           # reusable LaTeX→HTML converter (pandoc + post-processing)
+    paper-template.html     # dark-theme HTML template with sidebar TOC + KaTeX
+  docs/
+    index.html              # GitHub Pages landing page
+    og-image.png            # Open Graph social image (1200x630)
+    papers/$SUBJECT.html    # readable HTML version of each paper
+  images/
+    $SUBJECT.png            # cover image (first PDF page, 300 DPI)
+  posts/
+    $SUBJECT.md             # social media post
+  .github/workflows/
+    pages.yml               # GitHub Pages deployment
+  README.md
+```
+
+---
+
+## Runnable Config (agent-planner format)
+
+To execute this plan, provide a YAML config block. The planner reads it and executes all phases automatically.
+
+```yaml
+# ── Project Config ──
+project: "$PROJECT"                    # directory name
+project_path: "$PROJECT_PATH"         # absolute path to create project
+github_org: "$GITHUB_ORG"             # GitHub organization
+pages_url: "https://$GITHUB_ORG.github.io/$PROJECT/"
+
+# ── Author Block ──
+author: "$AUTHOR"
+collaboration: "$COLLABORATION"
+institution: "$INSTITUTION"
+location: "$LOCATION"
+email: "$EMAIL"
+url: "$URL"
+
+# ── Research Config ──
+perspective: "$PERSPECTIVE"            # framing for all papers
+language: "$LANG"                      # code language (Haskell, Elixir, Python, Lean4)
+peer_reviewer: "gemini"                # gemini | claude | grok
+
+# ── Subjects (one worker agent per subject) ──
+workers:
+  - subject: "$SUBJECT_A"
+    description: "$DESCRIPTION_A"
+  - subject: "$SUBJECT_B"
+    description: "$DESCRIPTION_B"
+  - subject: "$SUBJECT_N"
+    description: "$DESCRIPTION_N"
+
+# ── Optional: Synthesis Paper ──
+synthesis:
+  enabled: true                        # generate a final unifying paper
+  subject: "$SYNTHESIS_SUBJECT"
+  depends_on: all                      # waits for all workers to complete
+
+# ── Optional: Infrastructure ──
+infrastructure:
+  github_pages: true
+  github_actions: true
+  remote_repo: true
+  readme: true
+  cover_images: true
+  html_conversion: true
+  social_posts: true
+  slack_notification:
+    enabled: false
+    channel: "$SLACK_CHANNEL"
+
+# ── Knowledge Base Sources ──
+sources:
+  - "sources/**/*.{tex,md,pdf}"        # glob patterns for input files
+  - "$ADDITIONAL_SOURCE_PATHS"
+```
+
+### Example: AI Operating System
+
+```yaml
+project: "agent-os"
+project_path: "/Users/mlong/Documents/Development/agentherowork/agent-os"
+github_org: "AgentHeroWork"
+pages_url: "https://agentherowork.github.io/agent-os/"
+
+author: "Matthew Long"
+collaboration: "The YonedaAI Collaboration"
+institution: "YonedaAI Research Collective"
+location: "Chicago, IL"
+email: "matthew@yonedaai.com"
+url: "https://yonedaai.com"
+
+perspective: "AI Operating System through category theory"
+language: "Elixir"
+peer_reviewer: "gemini"
+
+workers:
+  - subject: "agent-scheduler"
+    description: "Complex orchestration as process management — agents as objects"
+  - subject: "tool-interface"
+    description: "Morphisms, security, and capability abstraction — tools as morphisms"
+  - subject: "memory-layer"
+    description: "Typed filesystem for persistent agent cognition — memory as functor"
+  - subject: "planner-engine"
+    description: "Order book dynamics and natural transformation — planner as nat. trans."
+
+synthesis:
+  enabled: true
+  subject: "synthesis"
+  depends_on: all
+
+infrastructure:
+  github_pages: true
+  github_actions: true
+  remote_repo: true
+  readme: true
+  cover_images: true
+  html_conversion: true
+  social_posts: true
+  slack_notification:
+    enabled: true
+    channel: "agenthero"
+
+sources:
+  - "../agent-hero/**/*.ts"
+  - "../agent-testing-framework/**/*.ts"
+  - "../../contextfs-ai/contextfs/src/**/*.py"
+```
+
+---
+
+## Execution Phases (what `run agent-planner` does)
+
+```
+Phase 1: Setup
+  ├─ Create directory structure
+  └─ Initialize git repo
+
+Phase 2: Knowledge Base (Agent 1)
+  ├─ Glob all source files
+  ├─ Extract architecture, patterns, key abstractions
+  └─ Write .knowledge-base.md
+
+Phase 3: Workers (Agents 2..N, parallel)
+  For each worker:
+    ├─ Stage 1: Draft paper + code
+    ├─ Stage 2: Peer review (Gemini/Claude/Grok)
+    ├─ Stage 3: Revise based on feedback
+    ├─ Stage 4: Final formatting + GrokRxiv sidebar
+    ├─ Stage 5: Compile PDF (pdflatex, fix errors)
+    ├─ Stage 6: Generate cover image (pdftoppm)
+    ├─ Stage 7: Social post
+    └─ Stage 8: HTML conversion
+
+Phase 4: Synthesis (if enabled, depends on Phase 3)
+  ├─ Draft synthesis paper referencing all worker papers
+  ├─ Peer review + revise
+  ├─ Compile PDF + image + HTML
+  └─ Social post
+
+Phase 5: Infrastructure (parallel)
+  ├─ GitHub Pages site (docs/index.html)
+  ├─ GitHub Actions workflow
+  ├─ Remote repo creation
+  ├─ README.md
+  └─ Slack notification (if enabled)
+
+Phase 6: Finalize
+  ├─ git add + commit
+  └─ (push only if explicitly instructed)
 ```
